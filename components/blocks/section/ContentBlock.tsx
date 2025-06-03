@@ -41,7 +41,9 @@ const ContentBlock: React.FC<ContentBlockProps> = ({ block }) => {
 	const containerStyle = containerStyles[theme];
 
 	return (
-		<div className={`min-h-[50vh] w-full ${styles} relative transition-colors duration-300`}>
+		<div
+			className={`min-h-[50vh] w-full ${styles} relative transition-colors duration-300`}
+		>
 			<div className={containerStyle}>
 				<div className="prose prose-lg max-w-none">
 					<PortableText

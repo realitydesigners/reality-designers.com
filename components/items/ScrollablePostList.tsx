@@ -44,10 +44,10 @@ export const PostItem: FC<PostItemProps> = ({ block, slug }) => {
 
 	const formattedDate = publicationDate
 		? new Date(publicationDate).toLocaleDateString("en-US", {
-			year: "numeric",
-			month: "short",
-			day: "numeric",
-		})
+				year: "numeric",
+				month: "short",
+				day: "numeric",
+		  })
 		: "Date not available";
 
 	const renderHeading = () => {

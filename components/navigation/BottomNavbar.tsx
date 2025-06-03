@@ -155,10 +155,11 @@ export default function BottomNavbar() {
 				<div
 					id="nav-content"
 					role="menu"
-					className={`absolute  bottom-6 right-0 right-0 mt-12 flex h-[95vh] w-full items-center justify-end overflow-y-auto rounded-[0em] bg-black/80 pb-6 shadow-lg  transition-transform duration-0 ease-in-out lg:mt-16  lg:h-[70vh] lg:w-1/3  lg:justify-center lg:rounded-[1em] lg:pb-0 ${isNavOpen
-						? "right-0 translate-x-0 lg:right-4 lg:border lg:border-gray-600/25 lg:shadow-lg"
-						: "translate-x-full"
-						}  flex flex-col justify-start p-3 `}
+					className={`absolute  bottom-6 right-0 right-0 mt-12 flex h-[95vh] w-full items-center justify-end overflow-y-auto rounded-[0em] bg-black/80 pb-6 shadow-lg  transition-transform duration-0 ease-in-out lg:mt-16  lg:h-[70vh] lg:w-1/3  lg:justify-center lg:rounded-[1em] lg:pb-0 ${
+						isNavOpen
+							? "right-0 translate-x-0 lg:right-4 lg:border lg:border-gray-600/25 lg:shadow-lg"
+							: "translate-x-full"
+					}  flex flex-col justify-start p-3 `}
 				>
 					<div className="h-[125px]  w-full  rounded-lg">
 						<Link href="/" onClick={closeNav}>
