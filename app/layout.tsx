@@ -9,7 +9,7 @@ import "./global.css";
 export const metadata: Metadata = {
 	title: "Reality Designers",
 	description:
-		"Reality Designers is a collective of artists, designers, and engineers who are building the next generation of immersive experiences.",
+		"Reality Designers is a collective of artists, designers, dreamers, and engineers who are building the next generation of immersive experiences.",
 };
 
 export default async function RootLayout({
