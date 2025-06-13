@@ -16,25 +16,19 @@ export const metadata: Metadata = {
 export default function ServicesPage() {
 	return (
 		<main className="flex w-full flex-col min-h-screen bg-white">
-			{/* Main Services Showcase */}
 			<ServicesHeroSection />
 			<ServicesRealmsSection />
-			<ServicesCTASection />
+		{/* 	<ServicesCTASection />
 			
-			{/* Hero Narrative Section */}
 			<HeroNarrativeSection />
 
-			{/* Services Narrative Section */}
 			<ServicesNarrativeSection />
 
-			{/* Technology Showcase Section */}
 			<TechnologyShowcaseSection />
 
-			{/* Process Timeline Section */}
 			<ProcessTimelineSection />
 
-			{/* Call to Action Section */}
-			<CallToActionSection />
+			<CallToActionSection /> */}
 		</main>
 	);
 } 
