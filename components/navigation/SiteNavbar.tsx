@@ -17,12 +17,12 @@ export default function SiteNavbar() {
 	const [isAnyDropdownActive, setIsAnyDropdownActive] = useState(false);
 	const [isNavbarHovered, setIsNavbarHovered] = useState(false);
 	const navbarTheme = useSmartNavbar();
-	
+
 	// Track scroll for subtle effects
 	useEffect(() => {
 		const handleScroll = () => setScrollY(window.scrollY);
-		window.addEventListener('scroll', handleScroll);
-		return () => window.removeEventListener('scroll', handleScroll);
+		window.addEventListener("scroll", handleScroll);
+		return () => window.removeEventListener("scroll", handleScroll);
 	}, []);
 
 	// Handle navbar area hover - keeps dropdowns open while in navbar zone
@@ -84,39 +84,81 @@ export default function SiteNavbar() {
 	};
 
 	const Links = [
-		{ 
-			href: "/story", 
-			label: "Story", 
+		{
+			href: "/story",
+			label: "Story",
 			icon: "story",
 			dropdown: {
 				title: "Our Journey",
-				description: "Discover how Reality Designers is shaping the future of immersive experiences.",
+				description:
+					"Discover how Reality Designers is shaping the future of immersive experiences.",
 				spline: "https://prod.spline.design/WV4nziwJaLKBH2tE/scene.splinecode",
 				links: [
-					{ href: "/story", label: "About Us", description: "Learn about our mission and vision" },
-					{ href: "/story/team", label: "Meet the Team", description: "The minds behind Reality Designers" },
-					{ href: "/story/history", label: "Our History", description: "From concept to reality" },
-					{ href: "/story/culture", label: "Company Culture", description: "What drives us forward" }
-				]
-			}
+					{
+						href: "/story",
+						label: "About Us",
+						description: "Learn about our mission and vision",
+					},
+					{
+						href: "/story/team",
+						label: "Meet the Team",
+						description: "The minds behind Reality Designers",
+					},
+					{
+						href: "/story/history",
+						label: "Our History",
+						description: "From concept to reality",
+					},
+					{
+						href: "/story/culture",
+						label: "Company Culture",
+						description: "What drives us forward",
+					},
+				],
+			},
 		},
-		{ 
-			href: "/services", 
-			label: "Services", 
+		{
+			href: "/services",
+			label: "Services",
 			icon: "video",
 			dropdown: {
 				title: "Design Reality",
-				description: "Transform your ideas into immersive digital experiences that captivate and inspire.",
+				description:
+					"Transform your ideas into immersive digital experiences that captivate and inspire.",
 				spline: "https://prod.spline.design/WV4nziwJaLKBH2tE/scene.splinecode",
 				links: [
-					{ href: "/services/immersive", label: "Immersive Design", description: "VR, AR & Mixed Reality experiences" },
-					{ href: "/services/branding", label: "Brand Identity", description: "Complete visual identity systems" },
-					{ href: "/services/web", label: "Web Development", description: "Next-gen websites and applications" },
-					{ href: "/services/motion", label: "Motion Graphics", description: "Dynamic animations and videos" },
-					{ href: "/services/mobile", label: "Mobile Apps", description: "iOS and Android applications" },
-					{ href: "/services/strategy", label: "Digital Strategy", description: "Comprehensive digital transformation" }
-				]
-			}
+					{
+						href: "/services/immersive",
+						label: "Immersive Design",
+						description: "VR, AR & Mixed Reality experiences",
+					},
+					{
+						href: "/services/branding",
+						label: "Brand Identity",
+						description: "Complete visual identity systems",
+					},
+					{
+						href: "/services/web",
+						label: "Web Development",
+						description: "Next-gen websites and applications",
+					},
+					{
+						href: "/services/motion",
+						label: "Motion Graphics",
+						description: "Dynamic animations and videos",
+					},
+					{
+						href: "/services/mobile",
+						label: "Mobile Apps",
+						description: "iOS and Android applications",
+					},
+					{
+						href: "/services/strategy",
+						label: "Digital Strategy",
+						description: "Comprehensive digital transformation",
+					},
+				],
+			},
 		},
 		{
 			href: "https://www.youtube.com/@realitydesigners",
@@ -124,68 +166,136 @@ export default function SiteNavbar() {
 			icon: "video",
 			dropdown: {
 				title: "Visual Stories",
-				description: "Explore our latest projects, tutorials, and behind-the-scenes content.",
+				description:
+					"Explore our latest projects, tutorials, and behind-the-scenes content.",
 				spline: "https://prod.spline.design/WV4nziwJaLKBH2tE/scene.splinecode",
 				links: [
-					{ href: "/videos/showcase", label: "Project Showcase", description: "Our best work in action" },
-					{ href: "/videos/tutorials", label: "Tutorials", description: "Learn design techniques" },
-					{ href: "/videos/behind-scenes", label: "Behind the Scenes", description: "Our creative process" },
-					{ href: "https://www.youtube.com/@realitydesigners", label: "YouTube Channel", description: "Subscribe for more content" }
-				]
-			}
+					{
+						href: "/videos/showcase",
+						label: "Project Showcase",
+						description: "Our best work in action",
+					},
+					{
+						href: "/videos/tutorials",
+						label: "Tutorials",
+						description: "Learn design techniques",
+					},
+					{
+						href: "/videos/behind-scenes",
+						label: "Behind the Scenes",
+						description: "Our creative process",
+					},
+					{
+						href: "https://www.youtube.com/@realitydesigners",
+						label: "YouTube Channel",
+						description: "Subscribe for more content",
+					},
+				],
+			},
 		},
-		{ 
-			href: "#", 
-			label: "Library", 
+		{
+			href: "#",
+			label: "Library",
 			icon: "lock",
 			dropdown: {
 				title: "Knowledge Base",
-				description: "Access our collection of resources, templates, and design assets.",
+				description:
+					"Access our collection of resources, templates, and design assets.",
 				spline: "https://prod.spline.design/WV4nziwJaLKBH2tE/scene.splinecode",
 				links: [
-					{ href: "/library/resources", label: "Design Resources", description: "Free templates and assets" },
-					{ href: "/library/documentation", label: "Documentation", description: "Guides and best practices" },
-					{ href: "/library/case-studies", label: "Case Studies", description: "In-depth project analysis" },
-					{ href: "/library/blog", label: "Blog", description: "Latest insights and trends" }
-				]
-			}
+					{
+						href: "/library/resources",
+						label: "Design Resources",
+						description: "Free templates and assets",
+					},
+					{
+						href: "/library/documentation",
+						label: "Documentation",
+						description: "Guides and best practices",
+					},
+					{
+						href: "/library/case-studies",
+						label: "Case Studies",
+						description: "In-depth project analysis",
+					},
+					{
+						href: "/library/blog",
+						label: "Blog",
+						description: "Latest insights and trends",
+					},
+				],
+			},
 		},
-		{ 
-			href: "/lab", 
-			label: "Lab", 
+		{
+			href: "/lab",
+			label: "Lab",
 			icon: "video",
 			dropdown: {
 				title: "Innovation Lab",
-				description: "Experimental projects and cutting-edge technology explorations.",
+				description:
+					"Experimental projects and cutting-edge technology explorations.",
 				spline: "https://prod.spline.design/WV4nziwJaLKBH2tE/scene.splinecode",
 				links: [
-					{ href: "/lab/experiments", label: "Experiments", description: "Latest tech explorations" },
-					{ href: "/lab/prototypes", label: "Prototypes", description: "Work-in-progress projects" },
-					{ href: "/lab/research", label: "Research", description: "Industry insights and studies" },
-					{ href: "/lab/open-source", label: "Open Source", description: "Community contributions" }
-				]
-			}
+					{
+						href: "/lab/experiments",
+						label: "Experiments",
+						description: "Latest tech explorations",
+					},
+					{
+						href: "/lab/prototypes",
+						label: "Prototypes",
+						description: "Work-in-progress projects",
+					},
+					{
+						href: "/lab/research",
+						label: "Research",
+						description: "Industry insights and studies",
+					},
+					{
+						href: "/lab/open-source",
+						label: "Open Source",
+						description: "Community contributions",
+					},
+				],
+			},
 		},
-		{ 
-			href: "#", 
-			label: "Contact", 
+		{
+			href: "#",
+			label: "Contact",
 			icon: "lock",
 			dropdown: {
 				title: "Get in Touch",
-				description: "Ready to bring your vision to life? Let's start a conversation.",
+				description:
+					"Ready to bring your vision to life? Let's start a conversation.",
 				spline: "https://prod.spline.design/WV4nziwJaLKBH2tE/scene.splinecode",
 				links: [
-					{ href: "/contact", label: "Start a Project", description: "Begin your journey with us" },
-					{ href: "/contact/support", label: "Support", description: "Get help with existing projects" },
-					{ href: "/contact/careers", label: "Careers", description: "Join our team" },
-					{ href: "/contact/partnerships", label: "Partnerships", description: "Collaborate with us" }
-				]
-			}
+					{
+						href: "/contact",
+						label: "Start a Project",
+						description: "Begin your journey with us",
+					},
+					{
+						href: "/contact/support",
+						label: "Support",
+						description: "Get help with existing projects",
+					},
+					{
+						href: "/contact/careers",
+						label: "Careers",
+						description: "Join our team",
+					},
+					{
+						href: "/contact/partnerships",
+						label: "Partnerships",
+						description: "Collaborate with us",
+					},
+				],
+			},
 		},
 	];
 
 	const getIcon = (name) => {
-		const iconColor = navbarTheme === 'dark' ? '#fff' : '#000000';
+		const iconColor = navbarTheme === "dark" ? "#fff" : "#000000";
 		const icons = {
 			menu: (
 				// biome-ignore lint/a11y/noSvgWithoutTitle: <explanation>
@@ -226,43 +336,39 @@ export default function SiteNavbar() {
 
 			{/* Interdimensional Navbar Container */}
 			<div className="fixed top-0 left-0 right-0 z-50 pointer-events-none">
-			
-				
 				{/* Morphing navbar */}
 				<nav
 					id="navbar"
 					className={`relative transition-all duration-700 pointer-events-auto ${
-						isScrolled 
-							? 'mx-0 mt-0 rounded-none' 
-							: 'mx-3 mt-3 lg:mx-6 lg:mt-4 rounded-2xl'
+						isScrolled
+							? "mx-0 mt-0 rounded-none"
+							: "mx-3 mt-3 lg:mx-6 lg:mt-4 rounded-2xl"
 					} ${
-						isScrolled 
-							? (navbarTheme === 'dark' 
-								? 'bg-black/90  shadow-lg backdrop-blur-sm' 
-								: 'bg-gradient-to-b from-white/90 via-white/50 to-white/0')
-							: (navbarTheme === 'dark' 
-								? 'bg-black/15 border border-white/10  shadow-lg shadow-black/10 backdrop-blur-2xl' 
-								: 'bg-white/15 border border-gray-900/10  shadow-lg shadow-black/10 backdrop-blur-2xl')
+						isScrolled
+							? navbarTheme === "dark"
+								? "bg-black/90  shadow-lg backdrop-blur-sm"
+								: "bg-gradient-to-b from-white/90 via-white/50 to-white/0"
+							: navbarTheme === "dark"
+							  ? "bg-black/15 border border-white/10  shadow-lg shadow-black/10 backdrop-blur-2xl"
+							  : "bg-white/15 border border-gray-900/10  shadow-lg shadow-black/10 backdrop-blur-2xl"
 					}`}
 				>
-		
-					
 					{/* Main navbar content */}
-					<div className="relative z-10 flex h-14 w-full items-center justify-between px-4 lg:px-8">
+					<div className="relative z-10 flex h-14 w-full items-center justify-between px-4 lg:px-">
 						{/* Left side - Logo */}
 						<div className="flex items-center ">
 							<Link
 								href="/"
 								className={`flex items-center gap-2 transition-all duration-500 transform ${
-									navbarTheme === 'dark' ? 'text-white' : 'text-black'
+									navbarTheme === "dark" ? "text-white" : "text-black"
 								}`}
 								onClick={closeNav}
 							>
-									<Logo 
-										size={30} 
-										iconColor={navbarTheme === 'dark' ? '#fff' : '#1f2937'} 
-									/>
-						
+								<Logo
+									size={30}
+									iconColor={navbarTheme === "dark" ? "#fff" : "#1f2937"}
+								/>
+
 								<div className="flex flex-col">
 									<span className="font-russo text-md  leading-none tracking-wider">
 										REALITY
@@ -275,7 +381,7 @@ export default function SiteNavbar() {
 						</div>
 
 						{/* Center - Desktop Navigation */}
-						<div 
+						<div
 							className="hidden lg:flex items-center gap-1 relative"
 							onMouseEnter={handleNavbarEnter}
 							onMouseLeave={handleNavbarLeave}
@@ -289,12 +395,20 @@ export default function SiteNavbar() {
 									<Link
 										href={href}
 										className={`group relative px-4 py-2 rounded-xl transition-all duration-300 transform hover:scale-105 block ${
-											navbarTheme === 'dark' 
-												? `hover:bg-white/5 text-white/80 hover:text-white border border-transparent hover:border-white/10 ${activeDropdown === label ? 'bg-white/5 text-white' : ''}` 
-												: `hover:bg-black/5 text-black/80 hover:text-black border border-transparent hover:border-black/10 ${activeDropdown === label ? 'bg-black/5 text-black' : ''}`
+											navbarTheme === "dark"
+												? `hover:bg-white/5 text-white/80 hover:text-white border border-transparent hover:border-white/10 ${
+														activeDropdown === label
+															? "bg-white/5 text-white"
+															: ""
+												  }`
+												: `hover:bg-black/5 text-black/80 hover:text-black border border-transparent hover:border-black/10 ${
+														activeDropdown === label
+															? "bg-black/5 text-black"
+															: ""
+												  }`
 										}`}
-										style={{ 
-											animationDelay: `${index * 50}ms`
+										style={{
+											animationDelay: `${index * 50}ms`,
 										}}
 									>
 										<div className="flex items-center gap-2">
@@ -305,17 +419,24 @@ export default function SiteNavbar() {
 												{label}
 											</span>
 											{dropdown && (
-												<svg 
-													className={`w-3 h-3 transition-transform duration-200 ${activeDropdown === label ? 'rotate-180' : ''}`} 
-													fill="none" 
-													viewBox="0 0 24 24" 
+												<svg
+													className={`w-3 h-3 transition-transform duration-200 ${
+														activeDropdown === label ? "rotate-180" : ""
+													}`}
+													fill="none"
+													viewBox="0 0 24 24"
 													stroke="currentColor"
 												>
-													<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+													<path
+														strokeLinecap="round"
+														strokeLinejoin="round"
+														strokeWidth={2}
+														d="M19 9l-7 7-7-7"
+													/>
 												</svg>
 											)}
 										</div>
-										
+
 										{/* Subtle hover effect */}
 										<div className="absolute inset-0 rounded-xl bg-gradient-to-r from-blue-500/5 via-purple-500/5 to-pink-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
 									</Link>
@@ -340,18 +461,18 @@ export default function SiteNavbar() {
 						<div className="flex items-center gap-3">
 							{/* Desktop action buttons */}
 							<div className="hidden lg:flex items-center gap-3">
-								<Button 
-									variant="navbar" 
-									size="sm" 
+								<Button
+									variant="navbar"
+									size="sm"
 									href="/login"
 									theme={navbarTheme}
 									className="text-xs"
 								>
 									Login
 								</Button>
-								<Button 
-									variant="primary" 
-									size="sm" 
+								<Button
+									variant="primary"
+									size="sm"
 									href="/contact"
 									theme={navbarTheme}
 									className="text-xs"
@@ -359,16 +480,16 @@ export default function SiteNavbar() {
 									Work with us
 								</Button>
 							</div>
-							
+
 							{/* Mobile menu button */}
 							<div className="lg:hidden">
 								<button
 									type="button"
 									onClick={toggleNav}
 									className={`p-2 rounded-xl transition-all duration-300 transform hover:scale-105 ${
-										navbarTheme === 'dark' 
-											? 'hover:bg-white/10 text-white border border-white/10' 
-											: 'hover:bg-black/10 text-white border border-black/10'
+										navbarTheme === "dark"
+											? "hover:bg-white/10 text-white border border-white/10"
+											: "hover:bg-black/10 text-white border border-black/10"
 									}`}
 								>
 									{getIcon("menu")}
@@ -390,30 +511,31 @@ export default function SiteNavbar() {
 				{/* Background with interdimensional effects */}
 				<div className="absolute inset-0 bg-black/95 backdrop-blur-2xl">
 					{/* Animated grid pattern */}
-					<div 
+					<div
 						className="absolute inset-0 opacity-20"
 						style={{
 							backgroundImage: `
 								linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px),
 								linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)
 							`,
-							backgroundSize: '40px 40px',
-							animation: 'gridFloat 20s ease-in-out infinite'
+							backgroundSize: "40px 40px",
+							animation: "gridFloat 20s ease-in-out infinite",
 						}}
 					></div>
-					
+
 					{/* Floating geometric shapes */}
 					<div className="absolute inset-0 overflow-hidden">
 						<div className="absolute top-1/4 left-1/4 w-32 h-32 border border-white/10 rounded-full animate-pulse"></div>
-						<div className="absolute top-3/4 right-1/4 w-24 h-24 border border-white/5 rotate-45 animate-spin" style={{animationDuration: '30s'}}></div>
+						<div
+							className="absolute top-3/4 right-1/4 w-24 h-24 border border-white/5 rotate-45 animate-spin"
+							style={{ animationDuration: "30s" }}
+						></div>
 						<div className="absolute top-1/2 left-1/2 w-16 h-16 border border-white/10 transform -translate-x-1/2 -translate-y-1/2 animate-pulse delay-1000"></div>
 					</div>
-					
+
 					{/* Gradient overlay */}
 					<div className="absolute inset-0 bg-gradient-to-br from-blue-900/10 via-transparent to-purple-900/10"></div>
 				</div>
-				
-
 
 				{/* Mobile menu content */}
 				<div className="relative z-10 flex h-full flex-col">
@@ -465,21 +587,21 @@ export default function SiteNavbar() {
 								</Link>
 							))}
 						</div>
-						
+
 						{/* Mobile action buttons */}
 						<div className="mt-8 pt-8 border-t border-white/10 space-y-4">
-							<Button 
-								variant="secondary" 
-								size="md" 
+							<Button
+								variant="secondary"
+								size="md"
 								href="/login"
 								className="w-full"
 								onClick={closeNav}
 							>
 								Login
 							</Button>
-							<Button 
-								variant="primary" 
-								size="md" 
+							<Button
+								variant="primary"
+								size="md"
 								href="/contact"
 								className="w-full"
 								onClick={closeNav}

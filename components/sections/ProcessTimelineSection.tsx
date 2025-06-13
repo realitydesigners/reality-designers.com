@@ -11,7 +11,8 @@ export default function ProcessTimelineSection() {
 						</span>
 					</h2>
 					<p className="text-xl text-gray-600 max-w-3xl mx-auto">
-						Every transformation follows a path. Like the light beam that reached the sky, your project will illuminate new possibilities.
+						Every transformation follows a path. Like the light beam that
+						reached the sky, your project will illuminate new possibilities.
 					</p>
 				</div>
 
@@ -24,33 +25,38 @@ export default function ProcessTimelineSection() {
 						{
 							phase: "01",
 							title: "Discovery & Vision Alignment",
-							description: "We decode your mission, understanding the reality you want to create and the souls you want to reach."
+							description:
+								"We decode your mission, understanding the reality you want to create and the souls you want to reach.",
 						},
 						{
-							phase: "02", 
+							phase: "02",
 							title: "Strategic Architecture",
-							description: "Building the framework for transformation, designing the pathways between your current state and desired reality."
+							description:
+								"Building the framework for transformation, designing the pathways between your current state and desired reality.",
 						},
 						{
 							phase: "03",
 							title: "Reality Construction",
-							description: "Crafting every element with precision, where code meets consciousness and design meets purpose."
+							description:
+								"Crafting every element with precision, where code meets consciousness and design meets purpose.",
 						},
 						{
 							phase: "04",
 							title: "Dimensional Launch",
-							description: "Releasing your creation into the world, monitoring its impact as it connects with the collective awakening."
+							description:
+								"Releasing your creation into the world, monitoring its impact as it connects with the collective awakening.",
 						},
 						{
 							phase: "05",
 							title: "Evolution & Growth",
-							description: "Continuous refinement as your reality adapts to the changing digital landscape and expanding consciousness."
-						}
+							description:
+								"Continuous refinement as your reality adapts to the changing digital landscape and expanding consciousness.",
+						},
 					].map((step, index) => (
 						<div
 							key={step.phase}
 							className={`relative flex items-center mb-16 ${
-								index % 2 === 0 ? 'lg:flex-row' : 'lg:flex-row-reverse'
+								index % 2 === 0 ? "lg:flex-row" : "lg:flex-row-reverse"
 							}`}
 						>
 							{/* Timeline node */}
@@ -59,7 +65,11 @@ export default function ProcessTimelineSection() {
 							</div>
 
 							{/* Content */}
-							<div className={`lg:w-5/12 ${index % 2 === 0 ? 'lg:pr-16' : 'lg:pl-16'}`}>
+							<div
+								className={`lg:w-5/12 ${
+									index % 2 === 0 ? "lg:pr-16" : "lg:pl-16"
+								}`}
+							>
 								<div className="p-8 rounded-2xl bg-white border border-gray-200 shadow-lg hover:shadow-xl transition-shadow duration-300">
 									<h3 className="font-russo text-2xl font-bold mb-4 text-gray-900">
 										{step.title}
@@ -75,4 +85,4 @@ export default function ProcessTimelineSection() {
 			</div>
 		</section>
 	);
-} 
+}

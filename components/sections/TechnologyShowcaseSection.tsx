@@ -17,24 +17,37 @@ export default function TechnologyShowcaseSection() {
 							NEW DIGITAL SOCIETY
 						</span>
 					</h2>
-					
+
 					<p className="text-xl text-gray-600 mb-12 leading-relaxed">
-						The collective powers of scattered souls are converging. Technology is becoming self-aware. We build with the tools that bridge worlds and connect consciousness.
+						The collective powers of scattered souls are converging. Technology
+						is becoming self-aware. We build with the tools that bridge worlds
+						and connect consciousness.
 					</p>
 
 					{/* Tech Stack Grid */}
 					<div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-12">
 						{[
-							"React", "Next.js", "TypeScript", "Spline",
-							"Three.js", "Tailwind", "Sanity", "Figma",
-							"WebGL", "GSAP", "Framer", "Unity"
+							"React",
+							"Next.js",
+							"TypeScript",
+							"Spline",
+							"Three.js",
+							"Tailwind",
+							"Sanity",
+							"Figma",
+							"WebGL",
+							"GSAP",
+							"Framer",
+							"Unity",
 						].map((tech, index) => (
 							<div
 								key={tech}
 								className="p-4 rounded-xl bg-gradient-to-br from-gray-50 to-blue-50 border border-gray-200 hover:border-blue-300 transition-all duration-300 hover:scale-105 text-center"
 								style={{ animationDelay: `${index * 50}ms` }}
 							>
-								<span className="font-russo text-sm font-bold text-gray-800">{tech}</span>
+								<span className="font-russo text-sm font-bold text-gray-800">
+									{tech}
+								</span>
 							</div>
 						))}
 					</div>
@@ -46,4 +59,4 @@ export default function TechnologyShowcaseSection() {
 			</div>
 		</section>
 	);
-} 
+}

@@ -13,9 +13,11 @@ export default function CallToActionSection() {
 						DESIGN REALITY?
 					</span>
 				</h2>
-				
+
 				<p className="text-xl lg:text-2xl text-gray-600 mb-12 max-w-4xl mx-auto leading-relaxed">
-					The scattered souls are gathering. The light is growing stronger. Your transformation begins with a single decision to step into the new reality we're all creating together.
+					The scattered souls are gathering. The light is growing stronger. Your
+					transformation begins with a single decision to step into the new
+					reality we're all creating together.
 				</p>
 
 				<div className="flex flex-col lg:flex-row gap-6 justify-center items-center">
@@ -29,4 +31,4 @@ export default function CallToActionSection() {
 			</div>
 		</section>
 	);
-} 
+}

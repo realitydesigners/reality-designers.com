@@ -7,11 +7,15 @@ interface LogoProps {
 	iconColor?: string;
 }
 
-export default function Logo({ size = 24, className = "", iconColor = "#fff" }: LogoProps) {
+export default function Logo({
+	size = 24,
+	className = "",
+	iconColor = "#fff",
+}: LogoProps) {
 	// Determine if we're using dark or light theme based on iconColor
 	const isDark = iconColor === "#fff";
 	const scanColor = isDark ? "white" : "black";
-	
+
 	return (
 		<div className={`relative group cursor-pointer ${className}`}>
 			{/* Logo with rotation animation */}
@@ -31,48 +35,48 @@ export default function Logo({ size = 24, className = "", iconColor = "#fff" }: 
 						className="transition-all duration-500 group-hover:stroke-[7]"
 					/>
 				</svg>
-				
+
 				{/* Subtle glow effect */}
-				<div 
+				<div
 					className="absolute inset-0 rounded-full opacity-0 group-hover:opacity-20 transition-all duration-500 group-hover:scale-125 blur-sm"
 					style={{ backgroundColor: iconColor }}
 				></div>
 			</div>
-			
+
 			{/* Futuristic scan frame */}
 			<div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-all duration-500 pointer-events-none">
 				{/* Top and bottom lines */}
-				<div 
+				<div
 					className="absolute top-0 left-0 right-0 h-px transition-all duration-500"
-					style={{ 
-						background: `linear-gradient(to right, transparent, ${scanColor}40, transparent)` 
+					style={{
+						background: `linear-gradient(to right, transparent, ${scanColor}40, transparent)`,
 					}}
 				></div>
-				<div 
+				<div
 					className="absolute bottom-0 left-0 right-0 h-px transition-all duration-500"
-					style={{ 
-						background: `linear-gradient(to right, transparent, ${scanColor}30, transparent)` 
+					style={{
+						background: `linear-gradient(to right, transparent, ${scanColor}30, transparent)`,
 					}}
 				></div>
-				
+
 				{/* Corner brackets */}
-				<div 
+				<div
 					className="absolute -top-0.5 -left-0.5 w-2 h-2 border-l border-t transition-all duration-500 group-hover:scale-110"
 					style={{ borderColor: `${scanColor}60` }}
 				></div>
-				<div 
+				<div
 					className="absolute -top-0.5 -right-0.5 w-2 h-2 border-r border-t transition-all duration-500 group-hover:scale-110"
 					style={{ borderColor: `${scanColor}60` }}
 				></div>
-				<div 
+				<div
 					className="absolute -bottom-0.5 -left-0.5 w-2 h-2 border-l border-b transition-all duration-500 group-hover:scale-110"
 					style={{ borderColor: `${scanColor}60` }}
 				></div>
-				<div 
+				<div
 					className="absolute -bottom-0.5 -right-0.5 w-2 h-2 border-r border-b transition-all duration-500 group-hover:scale-110"
 					style={{ borderColor: `${scanColor}60` }}
 				></div>
 			</div>
 		</div>
 	);
-} 
+}
