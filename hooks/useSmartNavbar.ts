@@ -22,7 +22,7 @@ export const useSmartNavbar = () => {
         if (rect.top <= navbarCenter && rect.bottom >= navbarCenter) {
           const sectionTheme = section.getAttribute('data-theme');
           currentTheme = sectionTheme === 'dark' ? 'dark' : 'light';
-          console.log('Navbar theme detected:', currentTheme, 'from section:', section);
+      
         }
       });
 
