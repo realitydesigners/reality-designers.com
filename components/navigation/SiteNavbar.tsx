@@ -1,12 +1,24 @@
 "use client";
 import Spline from "@splinetool/react-spline";
 import Link from "next/link";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { BiBook, BiLock, BiVideo } from "react-icons/bi";
 import { IoBookOutline } from "react-icons/io5";
+import { useSmartNavbar } from "@/hooks/useSmartNavbar";
+import Logo from "@/components/ui/Logo";
+import Button from "@/components/ui/Button";
 
 export default function SiteNavbar() {
 	const [isNavOpen, setIsNavOpen] = useState(false);
+	const [scrollY, setScrollY] = useState(0);
+	const navbarTheme = useSmartNavbar();
+	
+	// Track scroll for subtle effects
+	useEffect(() => {
+		const handleScroll = () => setScrollY(window.scrollY);
+		window.addEventListener('scroll', handleScroll);
+		return () => window.removeEventListener('scroll', handleScroll);
+	}, []);
 
 	const toggleNav = () => {
 		setIsNavOpen(!isNavOpen);
@@ -22,6 +34,7 @@ export default function SiteNavbar() {
 
 	const Links = [
 		{ href: "/story", label: "Story", icon: "story" },
+		{ href: "/services", label: "Services", icon: "video" },
 		{
 			href: "https://www.youtube.com/@realitydesigners",
 			label: "Videos",
@@ -33,31 +46,16 @@ export default function SiteNavbar() {
 	];
 
 	const getIcon = (name) => {
+		const iconColor = navbarTheme === 'dark' ? '#fff' : '#000000';
 		const icons = {
-			logo: (
-				// biome-ignore lint/a11y/noSvgWithoutTitle: <explanation>
-				<svg
-					width="35"
-					height="35"
-					viewBox="0 0 80 80"
-					fill="none"
-					xmlns="http://www.w3.org/2000/svg"
-				>
-					<path
-						d="M47.1279 70.8731L33.5967 55.3087M43.4729 23.3416L10.6978 28.9689L33.5967 55.3087M43.4729 23.3416L33.5967 55.3087M43.4729 23.3416L68.3831 51.4708L33.5967 55.3087M43.4729 23.3416L30.6805 9.58502"
-						stroke="#fff" //{logoColor}
-						strokeWidth="6"
-					/>
-				</svg>
-			),
 			menu: (
 				// biome-ignore lint/a11y/noSvgWithoutTitle: <explanation>
 				<svg
-					width="35"
-					height="35"
+					width="24"
+					height="24"
 					fill="none"
 					viewBox="0 0 24 24"
-					stroke="#fff" //{logoColor}
+					stroke={iconColor}
 				>
 					<path
 						strokeLinecap="round"
@@ -67,13 +65,15 @@ export default function SiteNavbar() {
 					/>
 				</svg>
 			),
-			library: <BiBook size={24} />,
-			lock: <BiLock size={24} />,
-			story: <IoBookOutline size={24} />,
-			video: <BiVideo size={24} />,
+			library: <BiBook size={18} color={iconColor} />,
+			lock: <BiLock size={18} color={iconColor} />,
+			story: <IoBookOutline size={18} color={iconColor} />,
+			video: <BiVideo size={18} color={iconColor} />,
 		};
 		return icons[name] || null;
 	};
+
+	const isScrolled = scrollY > 50;
 
 	return (
 		<>
@@ -85,79 +85,249 @@ export default function SiteNavbar() {
 				/>
 			)}
 
-			<nav
-				id="navbar"
-				className="fixed  top-0 z-50 flex h-12 w-full items-center justify-between p-2 "
-			>
-				<div className="relative z-10 flex w-full items-center justify-center pl-[2.3em]">
-					<Link
-						href="/"
-						className={`  flex flex-row items-center pb-2  pt-2 text-gray-200`}
-						onClick={closeNav}
-					>
-						<div className=" absolute left-2 ">{getIcon("logo")}</div>
-						<div className="flex font-russo   h-auto w-full flex-col items-center justify-center">
-							<span className="text-[1.1rem] leading-none tracking-wide">
-								REALITY
-							</span>
-							<span className=" text-[.8rem] leading-none tracking-wide">
-								DESIGNERS
-							</span>
-						</div>
-					</Link>
-				</div>
-
-				<div className="relative ">
-					<button
-						id="nav-toggle"
-						className="relative z-20 flex h-10  w-10 items-center  justify-center "
-						aria-label="Toggle Menu"
-						onClick={toggleNav}
-						type="button"
-					>
-						{getIcon("menu")}
-					</button>
-				</div>
-
-				<div
-					id="nav-content"
-					role="menu"
-					className={`lg:duration-600 absolute right-0 top-0 mt-12 h-[95vh] h-full w-full flex-col rounded-[0em] bg-black shadow-lg transition-transform duration-0 ease-in-out lg:mt-0  lg:h-[100vh] lg:w-full lg:rounded-[1em] lg:bg-black/80 lg:py-16 ${
-						isNavOpen ? "translate-x-0 " : "translate-x-full "
-					} flex h-screen w-full flex-col justify-start p-3`}
+			{/* Interdimensional Navbar Container */}
+			<div className="fixed top-0 left-0 right-0 z-50 pointer-events-none">
+				{/* Background blur layer */}
+				<div 
+					className={`absolute inset-0 transition-all duration-700 ${
+						isScrolled ? 'h-14' : 'h-20'
+					} ${
+						navbarTheme === 'dark' 
+							? 'bg-gradient-to-b from-black/30 via-black/20 to-transparent backdrop-blur-xl' 
+							: 'bg-gradient-to-b from-white/30 via-white/20 to-transparent backdrop-blur-xl'
+					}`}
+				></div>
+				
+				{/* Morphing navbar */}
+				<nav
+					id="navbar"
+					className={`relative transition-all duration-700 pointer-events-auto ${
+						isScrolled 
+							? 'mx-0 mt-0 rounded-none' 
+							: 'mx-3 mt-3 lg:mx-6 lg:mt-4 rounded-2xl'
+					} ${
+						isScrolled 
+							? (navbarTheme === 'dark' 
+								? 'bg-black/90 border-b border-white/20 shadow-lg backdrop-blur-sm' 
+								: 'bg-white/90 border-b border-gray-900/20 shadow-lg backdrop-blur-sm')
+							: (navbarTheme === 'dark' 
+								? 'bg-black/15 border border-white/10 shadow-xl shadow-black/30 backdrop-blur-2xl' 
+								: 'bg-white/15 border border-gray-900/10 shadow-xl shadow-gray-900/15 backdrop-blur-2xl')
+					}`}
 				>
-					<div className="h-full overflow-y-auto lg:flex lg:justify-between">
-						<div className="mb-2 block w-full border border-gray-600/25 lg:order-2 lg:mb-0 lg:h-full lg:w-2/3">
-							<Link href="/" onClick={closeNav}>
-								<Spline scene="https://prod.spline.design/WV4nziwJaLKBH2tE/scene.splinecode" />
+		
+					
+					{/* Main navbar content */}
+					<div className="relative z-10 flex h-14 w-full items-center justify-between px-4 lg:px-8">
+						{/* Left side - Logo */}
+						<div className="flex items-center ">
+							<Link
+								href="/"
+								className={`flex items-center gap-2 transition-all duration-500 transform ${
+									navbarTheme === 'dark' ? 'text-white' : 'text-black'
+								}`}
+								onClick={closeNav}
+							>
+									<Logo 
+										size={30} 
+										iconColor={navbarTheme === 'dark' ? '#fff' : '#1f2937'} 
+									/>
+						
+								<div className="flex flex-col">
+									<span className="font-russo text-md  leading-none tracking-wider">
+										REALITY
+									</span>
+									<span className="font-russo text-xs  leading-none tracking-wider">
+										DESIGNERS
+									</span>
+								</div>
 							</Link>
 						</div>
-						<div className="h-full w-full lg:w-1/3 ">
-							<ul className="grid grid-cols-1 gap-2 pr-2 lg:order-1">
-								{Links.map(({ href, label, icon }) => (
-									<li key={label} className="flex items-center">
-										<Link
-											href={href}
-											className={` font-russo   block flex h-full w-full items-center justify-center border border-gray-600/25 bg-black/10 p-4 text-left text-4xl font-bold uppercase text-gray-200 backdrop-blur-[20px] transition-all duration-200 ease-in-out hover:bg-white hover:text-black lg:text-7xl`}
-											onClick={closeNav}
-										>
-											<div className="mr-6 flex min-h-10 min-w-10 items-center">
-												{getIcon(icon)}
-											</div>
-											<span className="flex-grow text-[10vw] lg:text-[5vw]">
-												{label}
-											</span>
-										</Link>
-									</li>
-								))}
-							</ul>
-							<div className="text-md text-gray-200  w-full font-kodemono tracking-wide py-4 text-center ">
-								hey@reality-designers.com{" "}
+
+						{/* Center - Desktop Navigation */}
+						<div className="hidden lg:flex items-center gap-1">
+							{Links.map(({ href, label, icon }, index) => (
+								<Link
+									key={label}
+									href={href}
+									className={`group relative px-4 py-2 rounded-xl transition-all duration-300 transform hover:scale-105 ${
+										navbarTheme === 'dark' 
+											? 'hover:bg-white/5 hover:text-white border border-transparent hover:border-white/10' 
+											: 'hover:bg-black/5 text-black hover:text-white border border-transparent hover:border-black/10'
+									}`}
+									style={{ 
+										animationDelay: `${index * 50}ms`
+									}}
+								>
+									<div className="flex items-center gap-2">
+										<div className="w-4 h-4 flex items-center justify-center">
+											{getIcon(icon)}
+										</div>
+										<span className="font-russo text-xs font-bold uppercase tracking-wide">
+											{label}
+										</span>
+									</div>
+									
+									{/* Subtle hover effect */}
+									<div className="absolute inset-0 rounded-xl bg-gradient-to-r from-blue-500/5 via-purple-500/5 to-pink-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+								</Link>
+							))}
+						</div>
+
+						{/* Right side - Action buttons and mobile menu */}
+						<div className="flex items-center gap-3">
+							{/* Desktop action buttons */}
+							<div className="hidden lg:flex items-center gap-3">
+								<Button 
+									variant="navbar" 
+									size="sm" 
+									href="/login"
+									theme={navbarTheme}
+									className="text-xs"
+								>
+									Login
+								</Button>
+								<Button 
+									variant="primary" 
+									size="sm" 
+									href="/contact"
+									theme={navbarTheme}
+									className="text-xs"
+								>
+									Work with us
+								</Button>
+							</div>
+							
+							{/* Mobile menu button */}
+							<div className="lg:hidden">
+								<button
+									type="button"
+									onClick={toggleNav}
+									className={`p-2 rounded-xl transition-all duration-300 transform hover:scale-105 ${
+										navbarTheme === 'dark' 
+											? 'hover:bg-white/10 text-white border border-white/10' 
+											: 'hover:bg-black/10 text-white border border-black/10'
+									}`}
+								>
+									{getIcon("menu")}
+								</button>
 							</div>
 						</div>
 					</div>
+				</nav>
+			</div>
+
+			{/* Mobile Navigation Menu */}
+			<div
+				className={`fixed inset-0 z-50 transform transition-all duration-500 lg:hidden ${
+					isNavOpen
+						? "translate-x-0 opacity-100"
+						: "translate-x-full opacity-0 pointer-events-none"
+				}`}
+			>
+				{/* Background with interdimensional effects */}
+				<div className="absolute inset-0 bg-black/95 backdrop-blur-2xl">
+					{/* Animated grid pattern */}
+					<div 
+						className="absolute inset-0 opacity-20"
+						style={{
+							backgroundImage: `
+								linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px),
+								linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)
+							`,
+							backgroundSize: '40px 40px',
+							animation: 'gridFloat 20s ease-in-out infinite'
+						}}
+					></div>
+					
+					{/* Floating geometric shapes */}
+					<div className="absolute inset-0 overflow-hidden">
+						<div className="absolute top-1/4 left-1/4 w-32 h-32 border border-white/10 rounded-full animate-pulse"></div>
+						<div className="absolute top-3/4 right-1/4 w-24 h-24 border border-white/5 rotate-45 animate-spin" style={{animationDuration: '30s'}}></div>
+						<div className="absolute top-1/2 left-1/2 w-16 h-16 border border-white/10 transform -translate-x-1/2 -translate-y-1/2 animate-pulse delay-1000"></div>
+					</div>
+					
+					{/* Gradient overlay */}
+					<div className="absolute inset-0 bg-gradient-to-br from-blue-900/10 via-transparent to-purple-900/10"></div>
 				</div>
-			</nav>
+				
+
+
+				{/* Mobile menu content */}
+				<div className="relative z-10 flex h-full flex-col">
+					{/* Header */}
+					<div className="flex items-center justify-between p-6 border-b border-white/10">
+						<Link
+							href="/"
+							className="flex items-center gap-3 text-white"
+							onClick={closeNav}
+						>
+							<div className="p-2 rounded-xl bg-white/10 border border-white/20">
+								<Logo size={24} iconColor="#fff" />
+							</div>
+							<div className="flex flex-col">
+								<span className="font-russo text-lg font-bold leading-none tracking-wide">
+									REALITY
+								</span>
+								<span className="font-russo text-xs leading-none tracking-wider opacity-70">
+									DESIGNERS
+								</span>
+							</div>
+						</Link>
+						<button
+							type="button"
+							onClick={toggleNav}
+							className="p-2 rounded-xl hover:bg-white/10 text-white border border-white/10"
+						>
+							{getIcon("menu")}
+						</button>
+					</div>
+
+					{/* Navigation links */}
+					<div className="flex-1 px-6 py-8">
+						<div className="space-y-4">
+							{Links.map(({ href, label, icon }, index) => (
+								<Link
+									key={label}
+									href={href}
+									onClick={closeNav}
+									className="group flex items-center gap-4 p-4 rounded-xl hover:bg-white/5 text-white/80 hover:text-white border border-white/10 hover:border-white/20 transition-all duration-300 transform hover:scale-105"
+									style={{ animationDelay: `${index * 100}ms` }}
+								>
+									<div className="w-6 h-6 flex items-center justify-center">
+										{getIcon(icon)}
+									</div>
+									<span className="font-russo text-lg font-bold uppercase tracking-wide">
+										{label}
+									</span>
+								</Link>
+							))}
+						</div>
+						
+						{/* Mobile action buttons */}
+						<div className="mt-8 pt-8 border-t border-white/10 space-y-4">
+							<Button 
+								variant="secondary" 
+								size="md" 
+								href="/login"
+								className="w-full"
+								onClick={closeNav}
+							>
+								Login
+							</Button>
+							<Button 
+								variant="primary" 
+								size="md" 
+								href="/contact"
+								className="w-full"
+								onClick={closeNav}
+							>
+								Work with us
+							</Button>
+						</div>
+					</div>
+				</div>
+			</div>
 		</>
 	);
 }
