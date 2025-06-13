@@ -8,8 +8,6 @@
   --font-outfit: var(--font-outfit);
   --font-oxanium: var(--font-oxanium);
   --font-russo: var(--font-russo);
-
-  --color-black: #000;
 }
 
 /*
@@ -70,7 +68,7 @@
       "Helvetica", sans-serif;
     text-rendering: optimizeLegibility;
     -moz-osx-font-smoothing: grayscale;
-    @apply bg-black text-white antialiased;
+    @apply bg-white text-black antialiased;
   }
 
   body {

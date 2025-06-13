@@ -17,7 +17,7 @@ export default async function IndexPage() {
 	const postsListData = posts.slice(13, 40);
 
 	return (
-		<main className="flex w-full flex-col bg-black">
+		<main className="flex w-full flex-col">
 			<SectionPosts
 				topPostData={topPostData}
 				sidePostData={sidePostData}

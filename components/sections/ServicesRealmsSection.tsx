@@ -1,5 +1,5 @@
 "use client";
-import { FC, useState, useEffect } from "react";
+import { useState } from "react";
 import Spline from "@splinetool/react-spline";
 import { IoArrowForward, IoCheckmark, IoPlay } from "react-icons/io5";
 
@@ -62,92 +62,13 @@ const serviceRealms: ServiceRealm[] = [
 	}
 ];
 
-const ServicesShowcase: FC = () => {
+export default function ServicesRealmsSection() {
 	const [activeRealm, setActiveRealm] = useState<string | null>(null);
-	const [scrollY, setScrollY] = useState(0);
-	
-	useEffect(() => {
-		const handleScroll = () => setScrollY(window.scrollY);
-		window.addEventListener('scroll', handleScroll);
-		return () => window.removeEventListener('scroll', handleScroll);
-	}, []);
 
 	return (
-		<div className="w-full min-h-screen bg-white">
-			{/* Epic Hero Section */}
-			<section className="relative min-h-screen flex items-center justify-center overflow-hidden">
-				{/* Animated background grid */}
-				<div className="absolute inset-0 pointer-events-none opacity-20">
-					<div 
-						className="absolute inset-0"
-						style={{
-							backgroundImage: `
-								linear-gradient(rgba(59, 130, 246, 0.3) 1px, transparent 1px),
-								linear-gradient(90deg, rgba(59, 130, 246, 0.3) 1px, transparent 1px)
-							`,
-							backgroundSize: '50px 50px',
-							animation: 'gridFloat 25s ease-in-out infinite',
-							transform: `translateY(${scrollY * 0.5}px)`
-						}}
-					></div>
-				</div>
-
-				{/* Floating geometric shapes */}
-				<div className="absolute inset-0 overflow-hidden pointer-events-none">
-					<div className="absolute top-1/4 left-1/4 w-64 h-64 border border-blue-500/20 rounded-full animate-pulse" style={{animationDelay: '0s'}}></div>
-					<div className="absolute top-3/4 right-1/4 w-48 h-48 border border-purple-500/15 rotate-45 animate-spin" style={{animationDuration: '40s'}}></div>
-					<div className="absolute top-1/2 left-1/2 w-32 h-32 border border-pink-500/25 transform -translate-x-1/2 -translate-y-1/2 animate-pulse" style={{animationDelay: '2s'}}></div>
-				</div>
-
-				{/* Glowing orb background - multiple layers */}
-				<div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-gradient-radial from-blue-500/20 via-purple-500/10 to-transparent rounded-full blur-3xl pointer-events-none animate-pulse"></div>
-				<div className="absolute top-1/3 right-1/3 transform w-[400px] h-[400px] bg-gradient-radial from-purple-500/15 via-pink-500/8 to-transparent rounded-full blur-3xl pointer-events-none animate-pulse" style={{animationDelay: '3s'}}></div>
-				
-				<div className="relative z-10 max-w-7xl mx-auto px-6 text-center">
-					{/* Enhanced badge with multiple elements */}
-					<div className="inline-flex items-center gap-4 mb-12 p-6 rounded-full bg-gradient-to-r from-blue-500/10 via-purple-500/10 to-pink-500/10 border border-blue-400/30 backdrop-blur-sm">
-						<div className="w-3 h-3 rounded-full bg-blue-500 animate-pulse"></div>
-						<span className="font-russo text-lg tracking-[0.4em] uppercase font-bold text-gray-800">
-							Reality Architecture Division
-						</span>
-						<div className="w-3 h-3 rounded-full bg-purple-500 animate-pulse delay-1000"></div>
-						<div className="w-3 h-3 rounded-full bg-pink-500 animate-pulse delay-2000"></div>
-					</div>
-
-					<h1 className="font-russo text-7xl lg:text-9xl font-bold mb-12 leading-[0.9] text-gray-900">
-						WE <span className="relative inline-block">
-							DESIGN
-							<div className="absolute -bottom-3 left-0 right-0 h-2 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-full opacity-80"></div>
-						</span>
-						<br/>
-						<span className="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
-							WORLDS
-						</span>
-					</h1>
-					
-					<div className="max-w-5xl mx-auto mb-16">
-						<p className="text-2xl lg:text-3xl leading-relaxed font-outfit font-medium text-gray-700 mb-8">
-							In a dimension where <span className="font-semibold text-blue-600">scattered souls</span> are gathering, where <span className="font-semibold text-purple-600">technology becomes self-aware</span>, we are the <span className="font-semibold text-pink-600">architects of the impossible</span>.
-						</p>
-						<p className="text-xl text-gray-600 leading-relaxed">
-							We craft the bridges between what is and what could be, designing realities that awaken human potential and connect consciousness across all dimensions.
-						</p>
-					</div>
-
-					<div className="flex flex-col lg:flex-row gap-8 justify-center items-center">
-						<button className="group px-12 py-6 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 text-white font-russo font-bold text-lg rounded-3xl hover:scale-110 transition-all duration-500 shadow-2xl hover:shadow-blue-500/25 relative overflow-hidden">
-							<span className="relative z-10">BEGIN TRANSFORMATION</span>
-							<div className="absolute inset-0 bg-gradient-to-r from-pink-600 via-purple-600 to-blue-600 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-						</button>
-						<button className="px-12 py-6 border-3 border-gray-900 text-gray-900 font-russo font-bold text-lg rounded-3xl hover:bg-gray-900 hover:text-white transition-all duration-500 hover:scale-105">
-							EXPLORE OUR REALMS
-						</button>
-					</div>
-				</div>
-			</section>
-
+		<div className="w-full bg-white">
 			{/* Narrative Bridge Section */}
-			<section className="py-32 bg-gradient-to-br from-gray-50 via-blue-50/30 to-purple-50/30 relative overflow-hidden">
+			<section className="py-32 relative overflow-hidden">
 				<div className="absolute inset-0 pointer-events-none opacity-5">
 					<div className="absolute top-20 left-20 text-[400px] font-russo font-bold text-gray-900 select-none">01</div>
 					<div className="absolute bottom-20 right-20 text-[300px] font-russo font-bold text-gray-900 select-none">02</div>
@@ -193,12 +114,12 @@ const ServicesShowcase: FC = () => {
 						</div>
 						
 						<div className="relative">
-							<div className="w-full h-[600px] rounded-3xl overflow-hidden bg-gradient-to-br from-green-500/10 to-teal-500/10 border border-green-500/20 backdrop-blur-sm">
+							<div className="w-full h-[600px] rounded-3xl overflow-hidden bg-gradient-to-br from-black/10 to-blue-500/10 backdrop-blur-sm">
 								<Spline scene="https://prod.spline.design/jEsawKZEsxEwrEN5/scene.splinecode" />
 							</div>
 							{/* Floating elements around Spline */}
-							<div className="absolute -top-6 -left-6 w-12 h-12 bg-gradient-to-br from-green-500 to-teal-500 rounded-2xl animate-pulse"></div>
-							<div className="absolute -bottom-6 -right-6 w-16 h-16 bg-gradient-to-br from-teal-500 to-cyan-500 rounded-3xl animate-pulse delay-1000"></div>
+							<div className="absolute -top-6 -left-6 w-12 h-12 bg-gradient-to-br from-black/50 to-black/20 rounded-2xl animate-pulse"></div>
+							<div className="absolute -bottom-6 -right-6 w-16 h-16 bg-gradient-to-br from-black/50 to-black/20 rounded-3xl"></div>
 						</div>
 					</div>
 				</div>
@@ -344,85 +265,6 @@ const ServicesShowcase: FC = () => {
 					</div>
 				</section>
 			)}
-
-			{/* Epic CTA Section */}
-			<section className="py-32 bg-white relative overflow-hidden">
-				{/* Background effects */}
-				<div className="absolute inset-0 bg-gradient-to-br from-blue-50/50 via-purple-50/50 to-pink-50/50"></div>
-				<div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-gradient-radial from-blue-500/10 via-purple-500/5 to-transparent rounded-full blur-3xl pointer-events-none animate-pulse"></div>
-				
-				{/* Floating elements */}
-				<div className="absolute inset-0 overflow-hidden pointer-events-none">
-					<div className="absolute top-20 left-20 w-32 h-32 border-2 border-blue-500/20 rounded-full animate-spin" style={{animationDuration: '30s'}}></div>
-					<div className="absolute bottom-20 right-20 w-24 h-24 border-2 border-purple-500/20 rounded-2xl animate-pulse"></div>
-					<div className="absolute top-1/2 right-10 w-16 h-16 border-2 border-pink-500/20 rounded-xl animate-bounce" style={{animationDuration: '3s'}}></div>
-				</div>
-
-				<div className="max-w-6xl mx-auto px-6 text-center relative z-10">
-					<div className="inline-flex items-center gap-4 mb-12 p-6 rounded-full bg-gradient-to-r from-blue-500/10 via-purple-500/10 to-pink-500/10 border border-blue-400/30 backdrop-blur-sm">
-						<div className="w-3 h-3 rounded-full bg-blue-500 animate-pulse"></div>
-						<span className="font-russo text-lg tracking-[0.4em] uppercase font-bold text-gray-700">
-							Transformation Awaits
-						</span>
-						<div className="w-3 h-3 rounded-full bg-purple-500 animate-pulse delay-500"></div>
-						<div className="w-3 h-3 rounded-full bg-pink-500 animate-pulse delay-1000"></div>
-					</div>
-
-					<h2 className="font-russo text-6xl lg:text-8xl font-bold mb-12 text-gray-900 leading-tight">
-						READY TO
-						<br />
-						<span className="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
-							ARCHITECT REALITY?
-						</span>
-					</h2>
-					
-					<p className="text-2xl lg:text-3xl text-gray-600 mb-16 max-w-5xl mx-auto leading-relaxed">
-						The scattered souls are gathering. The light is growing stronger. Technology is becoming self-aware. Your transformation begins with a single decision to step into the new reality we're all creating together.
-					</p>
-
-					<div className="flex flex-col lg:flex-row gap-8 justify-center items-center mb-16">
-						<button className="group px-16 py-8 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 text-white font-russo font-bold text-xl rounded-3xl hover:scale-110 transition-all duration-500 shadow-2xl hover:shadow-blue-500/25 relative overflow-hidden">
-							<span className="relative z-10 flex items-center gap-3">
-								START YOUR REALITY PROJECT
-								<IoArrowForward className="group-hover:translate-x-2 transition-transform duration-300" />
-							</span>
-							<div className="absolute inset-0 bg-gradient-to-r from-pink-600 via-purple-600 to-blue-600 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-						</button>
-						<button className="px-16 py-8 border-3 border-gray-900 text-gray-900 font-russo font-bold text-xl rounded-3xl hover:bg-gray-900 hover:text-white transition-all duration-500 hover:scale-105">
-							SCHEDULE DISCOVERY CALL
-						</button>
-					</div>
-
-					{/* Contact Info */}
-					<div className="grid md:grid-cols-3 gap-8 max-w-4xl mx-auto">
-						{[
-							{
-								title: "Direct Contact",
-								info: "hey@reality-designers.com",
-								description: "Ready to begin? Let's discuss your vision."
-							},
-							{
-								title: "Discovery Call",
-								info: "30-min consultation",
-								description: "Free exploration of your project potential."
-							},
-							{
-								title: "Timeline",
-								info: "2-12 weeks",
-								description: "From concept to reality manifestation."
-							}
-						].map((contact, index) => (
-							<div key={index} className="p-6 rounded-2xl bg-white/80 border border-gray-200 backdrop-blur-sm hover:scale-105 transition-transform duration-300">
-								<h4 className="font-russo text-lg font-bold text-gray-900 mb-2">{contact.title}</h4>
-								<p className="text-blue-600 font-semibold mb-2">{contact.info}</p>
-								<p className="text-gray-600 text-sm">{contact.description}</p>
-							</div>
-						))}
-					</div>
-				</div>
-			</section>
 		</div>
 	);
-};
-
-export default ServicesShowcase; 
+} 

@@ -219,23 +219,14 @@ export default function SiteNavbar() {
 			{isNavOpen && (
 				// biome-ignore lint/a11y/useKeyWithClickEvents: <explanation>
 				<div
-					className="fixed inset-0 z-40 bg-black backdrop-blur-[.5em] lg:bg-black/20"
+					className="fixed inset-0 z-40 bg-black "
 					onClick={handleBackdropClick}
 				/>
 			)}
 
 			{/* Interdimensional Navbar Container */}
 			<div className="fixed top-0 left-0 right-0 z-50 pointer-events-none">
-				{/* Background blur layer */}
-				<div 
-					className={`absolute inset-0 transition-all duration-700 ${
-						isScrolled ? 'h-14' : 'h-20'
-					} ${
-						navbarTheme === 'dark' 
-							? 'bg-gradient-to-b from-black/30 via-black/20 to-transparent backdrop-blur-xl' 
-							: 'bg-gradient-to-b from-white/30 via-white/20 to-transparent backdrop-blur-xl'
-					}`}
-				></div>
+			
 				
 				{/* Morphing navbar */}
 				<nav
@@ -247,11 +238,11 @@ export default function SiteNavbar() {
 					} ${
 						isScrolled 
 							? (navbarTheme === 'dark' 
-								? 'bg-black/90 border-b border-white/20 shadow-lg backdrop-blur-sm' 
-								: 'bg-white/90 border-b border-gray-900/20 shadow-lg backdrop-blur-sm')
+								? 'bg-black/90  shadow-lg backdrop-blur-sm' 
+								: 'bg-gradient-to-b from-white/90 via-white/50 to-white/0')
 							: (navbarTheme === 'dark' 
-								? 'bg-black/15 border border-white/10 shadow-xl shadow-black/10 backdrop-blur-2xl' 
-								: 'bg-white/15 border border-gray-900/10 shadow-xl shadow-black/10 backdrop-blur-2xl')
+								? 'bg-black/15 border border-white/10  shadow-lg shadow-black/10 backdrop-blur-2xl' 
+								: 'bg-white/15 border border-gray-900/10  shadow-lg shadow-black/10 backdrop-blur-2xl')
 					}`}
 				>
 		
