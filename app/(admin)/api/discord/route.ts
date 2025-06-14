@@ -39,12 +39,13 @@ export async function POST(request: NextRequest) {
 
 		switch (postData._type) {
 			case "posts":
-				messageContent = `@everyone **New Post**: *${heading}*\n[Read More](https://www.reality-designers.com/posts/${slug})`;
+				messageContent = `@everyone **New Post**: *${heading}*\n\n📖 [Read More](https://www.reality-designers.com/posts/${slug})`;
 				break;
 			case "video": {
 				const videoUrl =
 					postData.videoUrl || "https://www.youtube.com/@realitydesigners";
-				messageContent = `@everyone **New Video**: *${heading}*\n[Check out post](https://www.reality-designers.com/videos/${slug})\n\n[Watch on YouTube](${videoUrl})\n\n`;
+				// Just include the YouTube URL - Discord will auto-embed it
+				messageContent = `@everyone **New Video**: *${heading}*\n\n🎥 [View Post](https://www.reality-designers.com/videos/${slug})\n\n${videoUrl}`;
 				break;
 			}
 			default:
