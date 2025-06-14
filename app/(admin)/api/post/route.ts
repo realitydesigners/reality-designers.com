@@ -149,7 +149,7 @@ export async function POST(request: NextRequest) {
 		try {
 			await resend.emails.send({
 				from: "Reality Designers <hey@reality-designers.com>",
-				to: "raymond.luke.spartz@gmail.com",
+				to: "wearerealitydesigners@gmail.com",
 				subject: `New ${contentType}: ${heading}`,
 				react: emailContent as React.ReactElement,
 				headers: {
