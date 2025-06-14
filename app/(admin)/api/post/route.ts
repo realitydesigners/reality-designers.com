@@ -82,9 +82,11 @@ export async function POST(request: NextRequest) {
 		
 		let discordMessage = "";
 		if (body._type === "posts") {
-			discordMessage = `@everyone **New Post**: *${heading}*\n\n📖 [Read More](https://www.reality-designers.com/posts/${slug})`;
+			// Include full URL so Discord can scrape metadata
+			discordMessage = `@everyone **New Post**: *${heading}*\n\nhttps://www.reality-designers.com/posts/${slug}`;
 		} else {
-			discordMessage = `@everyone **New Video**: *${heading}*\n\n🎥 [View Post](https://www.reality-designers.com/videos/${slug})\n\n${videoUrl}`;
+			// Include both website link and video URL for maximum metadata
+			discordMessage = `@everyone **New Video**: *${heading}*\n\nhttps://www.reality-designers.com/videos/${slug}\n\n${videoUrl}`;
 		}
 
 		const discordWebhookUrl = "https://discord.com/api/webhooks/1383538696204193904/N7AMlgRXGBAoKAHd6whZmvYSy6Unej7cwQeZ3OuZj9lK0KfKzftadCLFOjH1iGidh4zC";
@@ -103,7 +105,7 @@ export async function POST(request: NextRequest) {
 		}
 
 		// 📧 SEND EMAIL
-		console.log("📧 Sending email notification...");
+		console.log("📧 Sending email notifications...");
 		
 		// Prepare enhanced data for email templates
 		const emailTeam = body.team?.name ? {
@@ -146,20 +148,110 @@ export async function POST(request: NextRequest) {
 		}
 
 		let emailSuccess = false;
+		let emailsSent = 0;
+		let emailsFailed = 0;
+
 		try {
-			await resend.emails.send({
-				from: "Reality Designers <hey@reality-designers.com>",
-				to: "wearerealitydesigners@gmail.com",
-				subject: `New ${contentType}: ${heading}`,
-				react: emailContent as React.ReactElement,
-				headers: {
-					"X-Entity-Ref-ID": "RD-Notification",
-				},
-			});
-			emailSuccess = true;
-			console.log("✅ Email notification sent!");
+			// Check if we're in test mode or production mode
+			const isTestMode = process.env.NODE_ENV !== "production" || process.env.EMAIL_TEST_MODE === "true";
+			const audienceId = process.env.RESEND_AUDIENCE_ID;
+
+			if (isTestMode || !audienceId) {
+				// Test mode: send only to test email
+				console.log("📧 Running in test mode - sending to test email only");
+				await resend.emails.send({
+					from: "Reality Designers <hey@reality-designers.com>",
+					to: "wearerealitydesigners@gmail.com",
+					subject: `[TEST] New ${contentType}: ${heading}`,
+					react: emailContent as React.ReactElement,
+					headers: {
+						"X-Entity-Ref-ID": "RD-Notification-Test",
+					},
+				});
+				emailSuccess = true;
+				emailsSent = 1;
+				console.log("✅ Test email notification sent!");
+			} else {
+				// Production mode: send to all audience members
+				console.log("📧 Production mode - sending to audience:", audienceId);
+				
+				// Get all contacts from the audience
+				const contactsResponse = await resend.contacts.list({ audienceId });
+				const contacts = Array.isArray(contactsResponse.data) ? contactsResponse.data : [];
+				
+				console.log(`📧 Found ${contacts.length} contacts in audience`);
+
+				if (contacts.length === 0) {
+					console.log("⚠️ No contacts found in audience - sending test email instead");
+					await resend.emails.send({
+						from: "Reality Designers <hey@reality-designers.com>",
+						to: "wearerealitydesigners@gmail.com",
+						subject: `[NO AUDIENCE] New ${contentType}: ${heading}`,
+						react: emailContent as React.ReactElement,
+						headers: {
+							"X-Entity-Ref-ID": "RD-Notification-NoAudience",
+						},
+					});
+					emailSuccess = true;
+					emailsSent = 1;
+				} else {
+					// Send emails in batches to avoid rate limits
+					const batchSize = 10;
+					const batches = [];
+					
+					for (let i = 0; i < contacts.length; i += batchSize) {
+						batches.push(contacts.slice(i, i + batchSize));
+					}
+
+					console.log(`📧 Sending emails in ${batches.length} batches of ${batchSize}`);
+
+					for (let batchIndex = 0; batchIndex < batches.length; batchIndex++) {
+						const batch = batches[batchIndex];
+						console.log(`📧 Processing batch ${batchIndex + 1}/${batches.length} (${batch.length} emails)`);
+
+						const emailPromises = batch
+							.filter(contact => !contact.unsubscribed) // Only send to subscribed contacts
+							.map(async (contact) => {
+								try {
+									await resend.emails.send({
+										from: "Reality Designers <hey@reality-designers.com>",
+										to: contact.email,
+										subject: `New ${contentType}: ${heading}`,
+										react: emailContent as React.ReactElement,
+										headers: {
+											"X-Entity-Ref-ID": "RD-Notification",
+											"List-Unsubscribe": `<https://www.reality-designers.com/unsubscribe?email=${encodeURIComponent(contact.email)}>`,
+										},
+									});
+									return { success: true, email: contact.email };
+								} catch (error) {
+									console.error(`❌ Failed to send to ${contact.email}:`, error);
+									return { success: false, email: contact.email, error };
+								}
+							});
+
+						const batchResults = await Promise.all(emailPromises);
+						const batchSuccesses = batchResults.filter(r => r.success).length;
+						const batchFailures = batchResults.filter(r => !r.success).length;
+						
+						emailsSent += batchSuccesses;
+						emailsFailed += batchFailures;
+
+						console.log(`✅ Batch ${batchIndex + 1} complete: ${batchSuccesses} sent, ${batchFailures} failed`);
+
+						// Add delay between batches to respect rate limits
+						if (batchIndex < batches.length - 1) {
+							await new Promise(resolve => setTimeout(resolve, 1000)); // 1 second delay
+						}
+					}
+
+					emailSuccess = emailsSent > 0;
+					console.log(`📧 Email campaign complete: ${emailsSent} sent, ${emailsFailed} failed`);
+				}
+			}
 		} catch (emailError) {
-			console.error("❌ Email failed:", emailError);
+			console.error("❌ Email sending failed:", emailError);
+			emailSuccess = false;
 		}
 
 		// Return comprehensive response
@@ -168,7 +260,12 @@ export async function POST(request: NextRequest) {
 			message: `${contentType} published successfully`,
 			notifications: {
 				discord: discordSuccess ? "✅ Sent" : "❌ Failed",
-				email: emailSuccess ? "✅ Sent" : "❌ Failed"
+				email: emailSuccess ? `✅ Sent to ${emailsSent} contacts` : "❌ Failed",
+				emailStats: {
+					sent: emailsSent,
+					failed: emailsFailed,
+					total: emailsSent + emailsFailed
+				}
 			},
 			content: {
 				type: body._type,

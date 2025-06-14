@@ -7,6 +7,7 @@ import ServicesNarrativeSection from "@/components/sections/ServicesNarrativeSec
 import TechnologyShowcaseSection from "@/components/sections/TechnologyShowcaseSection";
 import ProcessTimelineSection from "@/components/sections/ProcessTimelineSection";
 import CallToActionSection from "@/components/sections/CallToActionSection";
+import NewsletterSignup from "@/components/forms/NewsletterSignup";
 
 export const metadata: Metadata = {
 	title: "Services - Reality Designers",
@@ -18,6 +19,20 @@ export default function ServicesPage() {
 	return (
 		<main className="flex w-full flex-col min-h-screen bg-white">
 			<ServicesHeroSection />
+			
+			{/* Newsletter Signup Section */}
+			<section className="w-full py-16 lg:py-24">
+				<div className="container mx-auto px-4">
+					<NewsletterSignup 
+						variant="featured"
+						title="Stay Ahead of the Curve"
+						description="Be the first to know about our latest projects, design insights, and cutting-edge techniques. Join our community of forward-thinking designers and developers."
+						className="rounded-3xl"
+					/>
+				</div>
+			</section>
+			
+			{/* Uncomment these sections as needed */}
 			{/* <ServicesRealmsSection /> */}
 			{/* 	<ServicesCTASection />
 			
