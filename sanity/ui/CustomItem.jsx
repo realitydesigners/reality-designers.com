@@ -1,3 +1,5 @@
+import { ClipboardIcon } from "@sanity/icons";
+
 const iconStyle = {
 	display: "flex",
 	width: "100%",
@@ -5,13 +7,6 @@ const iconStyle = {
 	color: "#fff",
 };
 
-const iconMap = {
-	headingBlock: <MasterDetailIcon style={iconStyle} />,
-	contentBlock: <DashboardIcon style={iconStyle} />,
-	teamBlock: <UserIcon style={iconStyle} />,
-	imageCanvasBlock: <UserIcon style={iconStyle} />,
-	headingSplineBlock: <DatabaseIcon style={iconStyle} />,
-};
 
 const defaultIcon = <ClipboardIcon style={{ ...iconStyle, color: "#fff" }} />;
 
@@ -20,7 +15,7 @@ export function CustomItem({ title, value, renderDefault, ...restProps }) {
 		e.dataTransfer.setData("item", JSON.stringify(value));
 	};
 
-	const iconComponent = iconMap[value._type] || defaultIcon;
+
 
 	const containerStyle = {
 		width: "auto",
@@ -56,7 +51,7 @@ export function CustomItem({ title, value, renderDefault, ...restProps }) {
 		<div draggable="true" onDragStart={handleDragStart} style={containerStyle}>
 			<div style={{ display: "flex", width: "100%", alignItems: "center" }}>
 				<div style={iconContainerStyle}>
-					{iconComponent}
+					
 					<div style={titleStyle}>{title?.toUpperCase()}</div>
 				</div>
 				<div style={{ width: "90%", height: "100%" }}>
