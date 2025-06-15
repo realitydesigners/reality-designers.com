@@ -75,6 +75,12 @@ export const postsQuery = groq`
        image,
        shortBio,
      },
+     
+     category->{
+       ...,
+       title,
+       slug,
+     },
     },
      
    

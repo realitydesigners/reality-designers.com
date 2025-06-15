@@ -97,7 +97,7 @@ const HeadingBlock = ({ block }) => {
 							/>
 						</div>
 
-						<div className="flex w-full flex-wrap p-2 lg:w-1/2">
+						<div className="flex w-full flex-wrap p-2 lg:w-1/2 px-32">
 							<div className="h-full w-full object-contain object-cover">
 								<Image
 									src={imageUrl}
@@ -140,7 +140,64 @@ const HeadingBlock = ({ block }) => {
 				</div>
 			);
 		case "light":
-			return <div className="h-auto w-full bg-gray-200 pt-20 lg:pt-32"></div>;
+			return (
+				<div className="h-auto w-full pt-20 lg:py-24">
+					<div className="flex w-full flex-wrap justify-center">
+						<div
+							className={
+								"flex-cols flex w-full flex-wrap   items-center justify-between px-2 lg:hidden"
+							}
+						>
+							{block.category && <RenderCategory category={block.category} />}
+
+							<FormattedDate
+								date={publicationDate}
+								className={` my-1 w-auto text-gray-200/50 font-kodemono text-xs uppercase tracking-widest  `}
+							/>
+						</div>
+
+						<div className="flex w-full flex-wrap p-2 lg:w-1/2">
+							<div className="h-full w-full object-contain object-cover">
+								<Image
+									src={imageUrl}
+									alt={"this"}
+									width={1000}
+									height={1000}
+									className="w-full h-full object-cover"
+								/>
+								<p className=" flex  py-2 text-[8px] uppercase tracking-wide text-gray-200/50">
+									{imageAlt}
+								</p>
+							</div>
+						</div>
+						<div className="flex-cols flex w-full justify-center p-2 pr-4 pt-2 lg:w-1/2 lg:pr-20 lg:pt-4 ">
+							<div className="w-full ">
+								<div className="mb-6 hidden w-full items-center justify-between lg:flex">
+									{block.category && (
+										<RenderCategory category={block.category} />
+									)}
+
+									<FormattedDate
+										date={publicationDate}
+										className={` w-auto  text-gray-200/50 font-kodemono   text-xs uppercase tracking-widest`}
+									/>
+								</div>
+								<Heading
+									heading={block.heading}
+									className={` font-russo text-black p-1 text-[10vw] font-bold uppercase leading-none  lg:text-[4vw]`}
+								/>
+								<SubHeading
+									heading={block.subheading}
+									className={`text-black/80 font-outfit p-1 text-xl leading-tight`}
+								/>
+								<div className="w-full ">
+									<TeamSection team={block.team} theme={className} />
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			);
 
 		default:
 			return null;

@@ -10,11 +10,11 @@ interface NewsletterSignupProps {
 	variant?: "default" | "minimal" | "featured" | "enhanced";
 }
 
-export default function NewsletterSignup({ 
+export default function NewsletterSignup({
 	className = "",
 	title = "Stay in the Loop",
 	description = "Get notified when we drop new videos, articles, and insights about the future of design.",
-	variant = "default"
+	variant = "default",
 }: NewsletterSignupProps) {
 	const [email, setEmail] = useState("");
 	const [firstName, setFirstName] = useState("");
@@ -25,7 +25,7 @@ export default function NewsletterSignup({
 
 	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault();
-		
+
 		if (!email) {
 			setStatus("error");
 			setMessage("Please enter your email address");
@@ -45,7 +45,7 @@ export default function NewsletterSignup({
 					action: "add-contact",
 					email,
 					firstName,
-					lastName
+					lastName,
 					// audienceId will be handled server-side from env
 				}),
 			});
@@ -73,7 +73,10 @@ export default function NewsletterSignup({
 	if (variant === "minimal") {
 		return (
 			<div className={`${className}`}>
-				<form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-3 max-w-md">
+				<form
+					onSubmit={handleSubmit}
+					className="flex flex-col sm:flex-row gap-3 max-w-md"
+				>
 					<input
 						type="email"
 						value={email}
@@ -90,9 +93,13 @@ export default function NewsletterSignup({
 						{isLoading ? "Joining..." : "Join Newsletter"}
 					</button>
 				</form>
-				
+
 				{status !== "idle" && (
-					<p className={`mt-2 text-sm ${status === "success" ? "text-green-600" : "text-red-600"}`}>
+					<p
+						className={`mt-2 text-sm ${
+							status === "success" ? "text-green-600" : "text-red-600"
+						}`}
+					>
 						{message}
 					</p>
 				)}
@@ -102,7 +109,10 @@ export default function NewsletterSignup({
 
 	if (variant === "enhanced") {
 		return (
-			<section className={`w-full relative bg-gradient-to-br from-blue-50/50 via-white to-purple-50/30 overflow-hidden ${className}`} data-theme="light">
+			<section
+				className={`w-full relative bg-gradient-to-br from-blue-50/50 via-white to-purple-50/30 overflow-hidden ${className}`}
+				data-theme="light"
+			>
 				{/* Sophisticated Background Effects */}
 				<div className="absolute inset-0 pointer-events-none">
 					{/* Mesh gradient overlay */}
@@ -131,7 +141,7 @@ export default function NewsletterSignup({
 
 					{/* Floating geometric elements */}
 					<div className="absolute top-1/4 left-1/4 w-64 h-64 border border-blue-200/30 rounded-full animate-pulse opacity-40"></div>
-					<div 
+					<div
 						className="absolute top-3/4 right-1/4 w-32 h-32 border border-purple-200/20 rotate-45 opacity-30"
 						style={{ animation: "spin 30s linear infinite" }}
 					></div>
@@ -153,7 +163,8 @@ export default function NewsletterSignup({
 								STAY CONNECTED
 							</h2>
 							<p className="text-lg text-gray-600 font-outfit max-w-2xl mx-auto">
-								Subscribe to receive exclusive insights, project updates, and early access to our latest innovations.
+								Subscribe to receive exclusive insights, project updates, and
+								early access to our latest innovations.
 							</p>
 						</div>
 
@@ -164,20 +175,31 @@ export default function NewsletterSignup({
 								<div className="relative bg-transparent">
 									{/* Simple Background Accent */}
 									<div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-96 h-96 bg-gradient-to-br from-blue-50 to-purple-50 rounded-full blur-3xl opacity-30"></div>
-									
+
 									{/* Main Content */}
 									<div className="relative px-6 py-16">
 										<div className="max-w-lg mx-auto text-center">
-											
 											{/* Icon & Badge */}
 											<div className="mb-8">
 												<div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gradient-to-br from-blue-500 to-purple-500 mb-4">
-													<svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-														<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+													<svg
+														className="w-8 h-8 text-white"
+														fill="none"
+														stroke="currentColor"
+														viewBox="0 0 24 24"
+													>
+														<path
+															strokeLinecap="round"
+															strokeLinejoin="round"
+															strokeWidth={2}
+															d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+														/>
 													</svg>
 												</div>
 												<div className="inline-block px-4 py-2 bg-gray-100 rounded-full">
-													<span className="font-russo text-xs uppercase tracking-wider font-bold text-gray-700">Newsletter</span>
+													<span className="font-russo text-xs uppercase tracking-wider font-bold text-gray-700">
+														Newsletter
+													</span>
 												</div>
 											</div>
 
@@ -213,7 +235,7 @@ export default function NewsletterSignup({
 															disabled={isLoading}
 														/>
 													</div>
-													
+
 													{/* Email Field */}
 													<input
 														type="email"
@@ -224,7 +246,7 @@ export default function NewsletterSignup({
 														className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-blue-500 focus:outline-none bg-white transition-all duration-300"
 														disabled={isLoading}
 													/>
-													
+
 													{/* Submit Button */}
 													<button
 														type="submit"
@@ -237,19 +259,41 @@ export default function NewsletterSignup({
 
 												{/* Status Message */}
 												{status !== "idle" && (
-													<div className={`mt-4 p-4 rounded-xl text-sm ${
-														status === "success" 
-															? "bg-green-100 text-green-700 border border-green-200" 
-															: "bg-red-100 text-red-700 border border-red-200"
-													}`}>
+													<div
+														className={`mt-4 p-4 rounded-xl text-sm ${
+															status === "success"
+																? "bg-green-100 text-green-700 border border-green-200"
+																: "bg-red-100 text-red-700 border border-red-200"
+														}`}
+													>
 														<div className="flex items-center gap-2">
 															{status === "success" ? (
-																<svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-																	<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+																<svg
+																	className="w-4 h-4"
+																	fill="none"
+																	stroke="currentColor"
+																	viewBox="0 0 24 24"
+																>
+																	<path
+																		strokeLinecap="round"
+																		strokeLinejoin="round"
+																		strokeWidth={2}
+																		d="M5 13l4 4L19 7"
+																	/>
 																</svg>
 															) : (
-																<svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-																	<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+																<svg
+																	className="w-4 h-4"
+																	fill="none"
+																	stroke="currentColor"
+																	viewBox="0 0 24 24"
+																>
+																	<path
+																		strokeLinecap="round"
+																		strokeLinejoin="round"
+																		strokeWidth={2}
+																		d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+																	/>
 																</svg>
 															)}
 															<span className="font-outfit">{message}</span>
@@ -261,14 +305,34 @@ export default function NewsletterSignup({
 											{/* Trust Indicators */}
 											<div className="flex items-center justify-center gap-6 text-sm text-gray-500">
 												<div className="flex items-center gap-2">
-													<svg className="w-4 h-4 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-														<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+													<svg
+														className="w-4 h-4 text-green-500"
+														fill="none"
+														stroke="currentColor"
+														viewBox="0 0 24 24"
+													>
+														<path
+															strokeLinecap="round"
+															strokeLinejoin="round"
+															strokeWidth={2}
+															d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+														/>
 													</svg>
 													<span>No spam</span>
 												</div>
 												<div className="flex items-center gap-2">
-													<svg className="w-4 h-4 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-														<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+													<svg
+														className="w-4 h-4 text-green-500"
+														fill="none"
+														stroke="currentColor"
+														viewBox="0 0 24 24"
+													>
+														<path
+															strokeLinecap="round"
+															strokeLinejoin="round"
+															strokeWidth={2}
+															d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
+														/>
 													</svg>
 													<span>Unsubscribe anytime</span>
 												</div>
@@ -277,7 +341,9 @@ export default function NewsletterSignup({
 											{/* Social Proof */}
 											<div className="mt-6 text-center">
 												<p className="text-sm text-gray-500 font-outfit">
-													Join <span className="font-semibold text-black">100+</span> people who are designing their reality
+													Join{" "}
+													<span className="font-semibold text-black">100+</span>{" "}
+													people who are designing their reality
 												</p>
 											</div>
 										</div>
@@ -315,20 +381,31 @@ export default function NewsletterSignup({
 			<div className={`relative bg-white ${className}`}>
 				{/* Simple Background Accent */}
 				<div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-96 h-96 bg-gradient-to-br from-blue-50 to-purple-50 rounded-full blur-3xl opacity-30"></div>
-				
+
 				{/* Main Content */}
 				<div className="relative px-6 py-16">
 					<div className="max-w-lg mx-auto text-center">
-						
 						{/* Icon & Badge */}
 						<div className="mb-8">
 							<div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gradient-to-br from-blue-500 to-purple-500 mb-4">
-								<svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-									<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+								<svg
+									className="w-8 h-8 text-white"
+									fill="none"
+									stroke="currentColor"
+									viewBox="0 0 24 24"
+								>
+									<path
+										strokeLinecap="round"
+										strokeLinejoin="round"
+										strokeWidth={2}
+										d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+									/>
 								</svg>
 							</div>
 							<div className="inline-block px-4 py-2 bg-gray-100 rounded-full">
-								<span className="font-russo text-xs uppercase tracking-wider font-bold text-gray-700">Newsletter</span>
+								<span className="font-russo text-xs uppercase tracking-wider font-bold text-gray-700">
+									Newsletter
+								</span>
 							</div>
 						</div>
 
@@ -364,7 +441,7 @@ export default function NewsletterSignup({
 										disabled={isLoading}
 									/>
 								</div>
-								
+
 								{/* Email Field */}
 								<input
 									type="email"
@@ -375,7 +452,7 @@ export default function NewsletterSignup({
 									className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-blue-500 focus:outline-none bg-white transition-all duration-300"
 									disabled={isLoading}
 								/>
-								
+
 								{/* Submit Button */}
 								<button
 									type="submit"
@@ -388,19 +465,41 @@ export default function NewsletterSignup({
 
 							{/* Status Message */}
 							{status !== "idle" && (
-								<div className={`mt-4 p-4 rounded-xl text-sm ${
-									status === "success" 
-										? "bg-green-100 text-green-700 border border-green-200" 
-										: "bg-red-100 text-red-700 border border-red-200"
-								}`}>
+								<div
+									className={`mt-4 p-4 rounded-xl text-sm ${
+										status === "success"
+											? "bg-green-100 text-green-700 border border-green-200"
+											: "bg-red-100 text-red-700 border border-red-200"
+									}`}
+								>
 									<div className="flex items-center gap-2">
 										{status === "success" ? (
-											<svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-												<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+											<svg
+												className="w-4 h-4"
+												fill="none"
+												stroke="currentColor"
+												viewBox="0 0 24 24"
+											>
+												<path
+													strokeLinecap="round"
+													strokeLinejoin="round"
+													strokeWidth={2}
+													d="M5 13l4 4L19 7"
+												/>
 											</svg>
 										) : (
-											<svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-												<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+											<svg
+												className="w-4 h-4"
+												fill="none"
+												stroke="currentColor"
+												viewBox="0 0 24 24"
+											>
+												<path
+													strokeLinecap="round"
+													strokeLinejoin="round"
+													strokeWidth={2}
+													d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+												/>
 											</svg>
 										)}
 										<span className="font-outfit">{message}</span>
@@ -412,14 +511,34 @@ export default function NewsletterSignup({
 						{/* Trust Indicators */}
 						<div className="flex items-center justify-center gap-6 text-sm text-gray-500">
 							<div className="flex items-center gap-2">
-								<svg className="w-4 h-4 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-									<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+								<svg
+									className="w-4 h-4 text-green-500"
+									fill="none"
+									stroke="currentColor"
+									viewBox="0 0 24 24"
+								>
+									<path
+										strokeLinecap="round"
+										strokeLinejoin="round"
+										strokeWidth={2}
+										d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+									/>
 								</svg>
 								<span>No spam</span>
 							</div>
 							<div className="flex items-center gap-2">
-								<svg className="w-4 h-4 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-									<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+								<svg
+									className="w-4 h-4 text-green-500"
+									fill="none"
+									stroke="currentColor"
+									viewBox="0 0 24 24"
+								>
+									<path
+										strokeLinecap="round"
+										strokeLinejoin="round"
+										strokeWidth={2}
+										d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
+									/>
 								</svg>
 								<span>Unsubscribe anytime</span>
 							</div>
@@ -428,7 +547,8 @@ export default function NewsletterSignup({
 						{/* Social Proof */}
 						<div className="mt-6 text-center">
 							<p className="text-sm text-gray-500 font-outfit">
-								Join <span className="font-semibold text-black">100+</span> people who are designing their reality
+								Join <span className="font-semibold text-black">100+</span>{" "}
+								people who are designing their reality
 							</p>
 						</div>
 					</div>
@@ -444,9 +564,7 @@ export default function NewsletterSignup({
 				<h3 className="text-2xl font-bold text-gray-900 mb-2 font-russo">
 					{title}
 				</h3>
-				<p className="text-gray-600 mb-6">
-					{description}
-				</p>
+				<p className="text-gray-600 mb-6">{description}</p>
 
 				<form onSubmit={handleSubmit} className="space-y-4">
 					<div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -467,7 +585,7 @@ export default function NewsletterSignup({
 							disabled={isLoading}
 						/>
 					</div>
-					
+
 					<input
 						type="email"
 						value={email}
@@ -477,7 +595,7 @@ export default function NewsletterSignup({
 						className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:border-black focus:outline-none text-sm"
 						disabled={isLoading}
 					/>
-					
+
 					<button
 						type="submit"
 						disabled={isLoading}
@@ -488,11 +606,13 @@ export default function NewsletterSignup({
 				</form>
 
 				{status !== "idle" && (
-					<div className={`mt-4 p-3 rounded-lg text-sm ${
-						status === "success" 
-							? "bg-green-100 text-green-800 border border-green-200" 
-							: "bg-red-100 text-red-800 border border-red-200"
-					}`}>
+					<div
+						className={`mt-4 p-3 rounded-lg text-sm ${
+							status === "success"
+								? "bg-green-100 text-green-800 border border-green-200"
+								: "bg-red-100 text-red-800 border border-red-200"
+						}`}
+					>
 						{message}
 					</div>
 				)}
@@ -503,4 +623,4 @@ export default function NewsletterSignup({
 			</div>
 		</div>
 	);
-} 
+}

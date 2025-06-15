@@ -56,6 +56,12 @@ export interface BlockItem extends BaseItem {
 	layout?: string;
 	publicationDate?: string;
 	team?: TeamMember;
+	category?: {
+		title: string;
+		slug?: {
+			current: string;
+		};
+	};
 	media?: any;
 	videoRefData?: Array<VideoPayload>;
 	audioRefData?: any;

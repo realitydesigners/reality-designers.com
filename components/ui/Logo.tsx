@@ -35,13 +35,10 @@ export default function Logo({
 						className="transition-all duration-500 group-hover:stroke-[7]"
 					/>
 				</svg>
-
 			</div>
 
 			{/* Futuristic scan frame */}
 			<div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-all duration-500 pointer-events-none">
-			
-
 				{/* Corner brackets */}
 				<div
 					className="absolute -top-0.5 -left-0.5 w-2 h-2 border-l border-t transition-all duration-500 group-hover:scale-110"

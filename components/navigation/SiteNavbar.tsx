@@ -26,7 +26,7 @@ export default function SiteNavbar() {
 	useEffect(() => {
 		const handleScroll = () => {
 			const currentScrollY = window.scrollY;
-			
+
 			// Determine scroll direction
 			if (currentScrollY > lastScrollY && currentScrollY > 50) {
 				// Scrolling down and past threshold
@@ -35,7 +35,7 @@ export default function SiteNavbar() {
 				// Scrolling up
 				setIsScrollingDown(false);
 			}
-			
+
 			setScrollY(currentScrollY);
 			setLastScrollY(currentScrollY);
 		};
@@ -115,23 +115,26 @@ export default function SiteNavbar() {
 
 	// Clean navbar styling logic
 	const getNavbarStyles = () => {
-		const baseClasses = "relative transition-all duration-300 pointer-events-auto";
-		
+		const baseClasses =
+			"relative transition-all duration-300 pointer-events-auto";
+
 		if (isFlat) {
 			// Flat (scrolled) version - gradient from top to bottom transparent, no blur, no shadow
 			const flatClasses = "mx-0 mt-0 rounded-none";
-			const flatBackground = navbarTheme === "dark" 
-				? "bg-gradient-to-b from-black/90 via-black/50 to-black/0 border border-transparent"
-				: "bg-gradient-to-b from-white/90 via-white/50 to-white/0 border border-transparent";
-			
+			const flatBackground =
+				navbarTheme === "dark"
+					? "bg-gradient-to-b from-black/90 via-black/50 to-black/0  border-transparent"
+					: "bg-gradient-to-b from-white/90 via-white/50 to-white/0  border-transparent";
+
 			return `${baseClasses} ${flatClasses} ${flatBackground}`;
 		} else {
 			// Rounded (top) version - solid with blur
 			const roundedClasses = "mx-3 mt-3 lg:mx-6 lg:mt-4 rounded-2xl";
-			const roundedBackground = navbarTheme === "dark"
-				? "bg-black/60 border border-white/10 shadow-lg shadow-black/10 backdrop-blur-2xl"
-				: "bg-white/60 border border-gray-900/10 shadow-lg shadow-black/10 backdrop-blur-2xl";
-			
+			const roundedBackground =
+				navbarTheme === "dark"
+					? "bg-black/60 border border-white/10 shadow-lg shadow-black/10 backdrop-blur-2xl"
+					: "bg-white/60 border border-gray-900/10 shadow-lg shadow-black/10 backdrop-blur-2xl";
+
 			return `${baseClasses} ${roundedClasses} ${roundedBackground}`;
 		}
 	};
@@ -178,20 +181,25 @@ export default function SiteNavbar() {
 			)}
 
 			{/* Interdimensional Navbar Container */}
-			<div 
+			<div
 				className={`fixed top-0 left-0 right-0 z-[9999] pointer-events-none transition-opacity duration-500 ease-out ${
-					showNavbar ? 'opacity-100' : 'opacity-0'
+					showNavbar ? "opacity-100" : "opacity-0"
 				}`}
 			>
 				{/* Morphing navbar */}
 				<nav
 					id="navbar"
 					className={getNavbarStyles()}
-					style={{
-						// CSS custom properties for smoother theme transitions
-						'--text-color': navbarTheme === "dark" ? '#ffffff' : '#000000',
-						'--text-color-secondary': navbarTheme === "dark" ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.8)',
-					} as React.CSSProperties}
+					style={
+						{
+							// CSS custom properties for smoother theme transitions
+							"--text-color": navbarTheme === "dark" ? "#ffffff" : "#000000",
+							"--text-color-secondary":
+								navbarTheme === "dark"
+									? "rgba(255,255,255,0.1)"
+									: "rgba(0,0,0,0.8)",
+						} as React.CSSProperties
+					}
 				>
 					{/* Main navbar content */}
 					<div className="relative z-10 flex h-14 w-full items-center justify-between px-4 lg:px-">

@@ -6,7 +6,8 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 export async function GET(request: NextRequest) {
 	const { searchParams } = new URL(request.url);
 	const action = searchParams.get("action");
-	const audienceId = searchParams.get("audienceId") || process.env.RESEND_AUDIENCE_ID;
+	const audienceId =
+		searchParams.get("audienceId") || process.env.RESEND_AUDIENCE_ID;
 
 	try {
 		switch (action) {
@@ -16,14 +17,20 @@ export async function GET(request: NextRequest) {
 
 			case "list-contacts":
 				if (!audienceId) {
-					return Response.json({ error: "audienceId required" }, { status: 400 });
+					return Response.json(
+						{ error: "audienceId required" },
+						{ status: 400 },
+					);
 				}
 				const contacts = await resend.contacts.list({ audienceId });
 				return Response.json({ success: true, contacts });
 
 			case "get-audience":
 				if (!audienceId) {
-					return Response.json({ error: "audienceId required" }, { status: 400 });
+					return Response.json(
+						{ error: "audienceId required" },
+						{ status: 400 },
+					);
 				}
 				const audience = await resend.audiences.get(audienceId);
 				return Response.json({ success: true, audience });
@@ -33,10 +40,13 @@ export async function GET(request: NextRequest) {
 		}
 	} catch (error) {
 		console.error("Audience API error:", error);
-		return Response.json({ 
-			error: "Failed to process request",
-			message: error instanceof Error ? error.message : "Unknown error"
-		}, { status: 500 });
+		return Response.json(
+			{
+				error: "Failed to process request",
+				message: error instanceof Error ? error.message : "Unknown error",
+			},
+			{ status: 500 },
+		);
 	}
 }
 
@@ -49,7 +59,10 @@ export async function POST(request: NextRequest) {
 			case "create-audience":
 				const { name } = body;
 				if (!name) {
-					return Response.json({ error: "Audience name required" }, { status: 400 });
+					return Response.json(
+						{ error: "Audience name required" },
+						{ status: 400 },
+					);
 				}
 				const newAudience = await resend.audiences.create({ name });
 				return Response.json({ success: true, audience: newAudience });
@@ -57,32 +70,45 @@ export async function POST(request: NextRequest) {
 			case "add-contact":
 				const { email, firstName, lastName, audienceId } = body;
 				const finalAudienceId = audienceId || process.env.RESEND_AUDIENCE_ID;
-				
+
 				if (!email || !finalAudienceId) {
-					return Response.json({ error: "Email and audienceId required" }, { status: 400 });
+					return Response.json(
+						{ error: "Email and audienceId required" },
+						{ status: 400 },
+					);
 				}
-				
+
 				const newContact = await resend.contacts.create({
 					email,
-					firstName: firstName || '',
-					lastName: lastName || '',
+					firstName: firstName || "",
+					lastName: lastName || "",
 					unsubscribed: false,
-					audienceId: finalAudienceId
+					audienceId: finalAudienceId,
 				});
 				return Response.json({ success: true, contact: newContact });
 
 			case "remove-contact":
 				const { contactEmail, contactId, audienceId: removeAudienceId } = body;
-				const finalRemoveAudienceId = removeAudienceId || process.env.RESEND_AUDIENCE_ID;
-				
+				const finalRemoveAudienceId =
+					removeAudienceId || process.env.RESEND_AUDIENCE_ID;
+
 				if ((!contactEmail && !contactId) || !finalRemoveAudienceId) {
-					return Response.json({ error: "Contact email/id and audienceId required" }, { status: 400 });
+					return Response.json(
+						{ error: "Contact email/id and audienceId required" },
+						{ status: 400 },
+					);
 				}
-				
+
 				if (contactId) {
-					await resend.contacts.remove({ id: contactId, audienceId: finalRemoveAudienceId });
+					await resend.contacts.remove({
+						id: contactId,
+						audienceId: finalRemoveAudienceId,
+					});
 				} else {
-					await resend.contacts.remove({ email: contactEmail, audienceId: finalRemoveAudienceId });
+					await resend.contacts.remove({
+						email: contactEmail,
+						audienceId: finalRemoveAudienceId,
+					});
 				}
 				return Response.json({ success: true });
 
@@ -91,9 +117,12 @@ export async function POST(request: NextRequest) {
 		}
 	} catch (error) {
 		console.error("Audience API error:", error);
-		return Response.json({ 
-			error: "Failed to process request",
-			message: error instanceof Error ? error.message : "Unknown error"
-		}, { status: 500 });
+		return Response.json(
+			{
+				error: "Failed to process request",
+				message: error instanceof Error ? error.message : "Unknown error",
+			},
+			{ status: 500 },
+		);
 	}
-} 
+}

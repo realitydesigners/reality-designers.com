@@ -46,7 +46,7 @@ export async function POST(request: NextRequest) {
 		// Validate Sanity webhook
 		const { body, isValidSignature } = await parseBody<SanityWebhookBody>(
 			request as any,
-			process.env.NEXT_PUBLIC_SANITY_HOOK_SECRET
+			process.env.NEXT_PUBLIC_SANITY_HOOK_SECRET,
 		);
 
 		if (!isValidSignature) {
@@ -57,8 +57,6 @@ export async function POST(request: NextRequest) {
 			return new Response("Bad Request", { status: 400 });
 		}
 
-
-
 		// Only process posts and video types
 		if (!["posts", "video"].includes(body._type)) {
 			return new Response("OK - Ignored", { status: 200 });
@@ -66,23 +64,24 @@ export async function POST(request: NextRequest) {
 
 		// Extract data for notifications
 		const heading = body.block?.[0]?.heading || body.title || "New Content";
-		
+
 		// Extract slug (now comes as string directly from Sanity projection)
 		let slug = "no-slug";
-		if (body.slug && typeof body.slug === 'string') {
+		if (body.slug && typeof body.slug === "string") {
 			slug = body.slug;
 		} else if (body._id) {
 			// Use document ID as fallback
-			slug = body._id.replace(/[^a-zA-Z0-9-]/g, '-').toLowerCase();
+			slug = body._id.replace(/[^a-zA-Z0-9-]/g, "-").toLowerCase();
 		}
 
-		const excerpt = body.excerpt || body.block?.[0]?.subheading || "No description available";
+		const excerpt =
+			body.excerpt || body.block?.[0]?.subheading || "No description available";
 		const imageUrl = body.imageUrl || "";
 		const videoUrl = body.videoUrl || "";
 		const contentType = body._type === "video" ? "Video" : "Post";
 
 		// 🎯 SEND TO DISCORD
-		
+
 		let discordMessage = "";
 		if (body._type === "posts") {
 			// Include full URL so Discord can scrape metadata
@@ -92,8 +91,9 @@ export async function POST(request: NextRequest) {
 			discordMessage = `@everyone **New Video**: *${heading}*\n\nhttps://www.reality-designers.com/videos/${slug}\n\n${videoUrl}`;
 		}
 
-		const discordWebhookUrl = "https://discord.com/api/webhooks/1383538696204193904/N7AMlgRXGBAoKAHd6whZmvYSy6Unej7cwQeZ3OuZj9lK0KfKzftadCLFOjH1iGidh4zC";
-		
+		const discordWebhookUrl =
+			"https://discord.com/api/webhooks/1383538696204193904/N7AMlgRXGBAoKAHd6whZmvYSy6Unej7cwQeZ3OuZj9lK0KfKzftadCLFOjH1iGidh4zC";
+
 		const discordResponse = await fetch(discordWebhookUrl, {
 			method: "POST",
 			headers: { "Content-Type": "application/json" },
@@ -103,20 +103,24 @@ export async function POST(request: NextRequest) {
 		const discordSuccess = discordResponse.ok;
 
 		// 📧 SEND EMAIL
-		
+
 		// Prepare enhanced data for email templates
-		const emailTeam = body.team?.name ? {
-			name: body.team.name,
-			role: body.team.role || "Team Member",
-			image: body.team.image?.asset?.url
-		} : body.block?.find(b => b.team)?.team ? {
-			name: body.block.find(b => b.team)!.team!.name,
-			role: body.block.find(b => b.team)!.team!.role || "Team Member",
-			image: body.block.find(b => b.team)!.team!.image?.asset?.url
-		} : undefined;
+		const emailTeam = body.team?.name
+			? {
+					name: body.team.name,
+					role: body.team.role || "Team Member",
+					image: body.team.image?.asset?.url,
+			  }
+			: body.block?.find((b) => b.team)?.team
+			  ? {
+						name: body.block.find((b) => b.team)!.team!.name,
+						role: body.block.find((b) => b.team)!.team!.role || "Team Member",
+						image: body.block.find((b) => b.team)!.team!.image?.asset?.url,
+				  }
+			  : undefined;
 
 		let emailContent;
-		
+
 		if (body._type === "video") {
 			// Use video-specific template
 			emailContent = NewVideo({
@@ -128,7 +132,7 @@ export async function POST(request: NextRequest) {
 				videoUrl,
 				image: imageUrl || body.image?.asset?.url,
 				team: emailTeam,
-				blocks: body.block?.slice(0, 3) // Preview first 3 blocks
+				blocks: body.block?.slice(0, 3), // Preview first 3 blocks
 			});
 		} else {
 			// Use enhanced post template
@@ -140,7 +144,7 @@ export async function POST(request: NextRequest) {
 				slug,
 				image: imageUrl || body.image?.asset?.url,
 				team: emailTeam,
-				blocks: body.block?.slice(0, 3) // Preview first 3 blocks
+				blocks: body.block?.slice(0, 3), // Preview first 3 blocks
 			});
 		}
 
@@ -165,31 +169,34 @@ export async function POST(request: NextRequest) {
 				emailStats: {
 					sent: emailsSent,
 					failed: emailsFailed,
-					total: emailsSent + emailsFailed
-				}
+					total: emailsSent + emailsFailed,
+				},
 			},
 			content: {
 				type: body._type,
 				heading,
 				slug,
-				url: body._type === "posts" 
-					? `https://www.reality-designers.com/posts/${slug}`
-					: `https://www.reality-designers.com/videos/${slug}`
-			}
+				url:
+					body._type === "posts"
+						? `https://www.reality-designers.com/posts/${slug}`
+						: `https://www.reality-designers.com/videos/${slug}`,
+			},
 		};
 
 		return new Response(JSON.stringify(response), {
 			status: 200,
 			headers: { "Content-Type": "application/json" },
 		});
-
 	} catch (error) {
-		return new Response(JSON.stringify({ 
-			error: "Internal server error",
-			message: error instanceof Error ? error.message : "Unknown error"
-		}), {
-			status: 500,
-			headers: { "Content-Type": "application/json" },
-		});
+		return new Response(
+			JSON.stringify({
+				error: "Internal server error",
+				message: error instanceof Error ? error.message : "Unknown error",
+			}),
+			{
+				status: 500,
+				headers: { "Content-Type": "application/json" },
+			},
+		);
 	}
-} 
+}

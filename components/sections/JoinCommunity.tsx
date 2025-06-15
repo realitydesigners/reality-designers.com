@@ -58,7 +58,7 @@ export default function JoinCommunitySection() {
 					{ left: 60, top: 85, duration: 5.0, delay: 1.0 },
 					{ left: 30, top: 5, duration: 3.8, delay: 1.7 },
 					{ left: 85, top: 35, duration: 4.6, delay: 0.1 },
-					{ left: 50, top: 95, duration: 4.0, delay: 1.21 }
+					{ left: 50, top: 95, duration: 4.0, delay: 1.21 },
 				].map((particle, i) => (
 					<div
 						key={i}

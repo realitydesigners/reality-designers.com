@@ -5,20 +5,19 @@ const nextConfig = {
     inlineCss: true,
   },
   images: {
+    domains: ["cdn.sanity.io", "source.unsplash.com"],
     remotePatterns: [
       {
         hostname: "cdn.sanity.io",
         protocol: "https",
-        pathname: `/images/${process.env.NEXT_PUBLIC_SANITY_PROJECT_ID}/${process.env.NEXT_PUBLIC_SANITY_DATASET}/**`,
-        search: "",
-        port: "",
+        pathname: "/**",
       },
       {
         hostname: "source.unsplash.com",
         protocol: "https",
         pathname: "**",
-        search: "",
         port: "",
+        search: "",
       },
     ],
   },
