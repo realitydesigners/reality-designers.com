@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg version="1.2" baseProfile="tiny" xmlns="http://www.w3.org/2000/svg" 
+     width="272" height="266" viewBox="0 0 272 266">
+  <title>Reality Designers Logo</title>
+  <desc>Reality Designers brand logo for BIMI email authentication</desc>
+  
+  <!-- Black background -->
+  <rect width="272" height="266" fill="#000000"/>
+  
+  <!-- Main logo path with simplified styling -->
+  <path d="M117.248 38L225.306 162.683L121.361 173.779L149.309 86.6858L46 98.5604L158.809 227.993" 
+        stroke="#FFFFFF" 
+        stroke-width="18" 
+        fill="none" 
+        stroke-linecap="round" 
+        stroke-linejoin="round"/>
+  
+  <!-- Subtle drop shadow effect (BIMI-compatible) -->
+  <path d="M117.248 42L225.306 166.683L121.361 177.779L149.309 90.6858L46 102.5604L158.809 231.993" 
+        stroke="#333333" 
+        stroke-width="18" 
+        fill="none" 
+        stroke-linecap="round" 
+        stroke-linejoin="round" 
+        opacity="0.3"/>
+</svg> 
