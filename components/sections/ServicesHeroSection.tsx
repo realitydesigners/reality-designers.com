@@ -25,16 +25,24 @@ export default function ServicesHeroSection() {
 	const [visibleCards, setVisibleCards] = useState<number[]>([]);
 	const [isLoaded, setIsLoaded] = useState(false);
 	const [particles, setParticles] = useState(() => generateParticles(25));
+	const [scrollProgress, setScrollProgress] = useState(0);
 	const containerRef = useRef<HTMLDivElement>(null);
 	const heroRef = useRef<HTMLDivElement>(null);
 
-	// Advanced scroll handling with performance optimization
+	// Advanced scroll handling with performance optimization and scroll progress
 	useEffect(() => {
 		let ticking = false;
 		const handleScroll = () => {
 			if (!ticking) {
 				requestAnimationFrame(() => {
-					setScrollY(window.scrollY);
+					const currentScrollY = window.scrollY;
+					setScrollY(currentScrollY);
+					
+					// Calculate scroll progress for smooth transitions
+					const heroHeight = window.innerHeight;
+					const progress = Math.min(currentScrollY / heroHeight, 1);
+					setScrollProgress(progress);
+					
 					ticking = false;
 				});
 				ticking = true;
@@ -148,6 +156,15 @@ export default function ServicesHeroSection() {
 	const mouseParallaxX = (mousePosition.x - 50) * 0.02;
 	const mouseParallaxY = (mousePosition.y - 50) * 0.02;
 
+	// Smooth scroll-based transformations
+	const scrollTransform = {
+		scale: 1 + scrollProgress * 0.1,
+		opacity: 1 - scrollProgress * 0.3,
+		blur: scrollProgress * 2,
+		gridOpacity: (1 - scrollProgress * 1.2) * 0.4,
+		parallaxIntensity: 1 - scrollProgress * 0.5,
+	};
+
 	return (
 		<>
 		<section
@@ -155,42 +172,82 @@ export default function ServicesHeroSection() {
 			className="relative h-auto pt-24 xl:pt-0 xl:h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50/30 overflow-hidden"
 			 data-theme="light"
 		>
-			{/* Revolutionary Dynamic Background */}
-			<div className="absolute inset-0 pointer-events-none">
+			{/* Revolutionary Dynamic Background with Scroll Effects */}
+			<div 
+				className="absolute inset-0 pointer-events-none transition-all duration-300 ease-out"
+				style={{
+					transform: `scale(${scrollTransform.scale}) translateZ(0)`,
+					opacity: scrollTransform.opacity,
+					filter: `blur(${scrollTransform.blur}px)`,
+				}}
+			>
 				{/* Advanced mesh gradient */}
 				<div
-					className="absolute inset-0 opacity-40"
+					className="absolute inset-0"
 					style={{
+						opacity: scrollTransform.gridOpacity,
 						background: `
 							radial-gradient(circle at 20% 80%, rgba(59, 130, 246, 0.1) 0%, transparent 50%),
 							radial-gradient(circle at 80% 20%, rgba(168, 85, 247, 0.08) 0%, transparent 50%),
 							radial-gradient(circle at 40% 40%, rgba(236, 72, 153, 0.05) 0%, transparent 50%),
 							linear-gradient(135deg, rgba(59, 130, 246, 0.02) 0%, rgba(168, 85, 247, 0.02) 100%)
 						`,
-						transform: `translate(${mouseParallaxX}px, ${mouseParallaxY}px)`,
+						transform: `translate(${mouseParallaxX * scrollTransform.parallaxIntensity}px, ${mouseParallaxY * scrollTransform.parallaxIntensity}px) translateZ(0)`,
 					}}
 				/>
 
-				{/* Revolutionary grid system */}
+				{/* Revolutionary grid system with scroll morphing */}
 				<div
-					className="absolute inset-0"
+					className="absolute inset-0 transition-all duration-500 ease-out"
 					style={{
+						opacity: scrollTransform.gridOpacity,
 						backgroundImage: `
-							linear-gradient(rgba(59, 130, 246, 0.08) 1px, transparent 1px),
-							linear-gradient(90deg, rgba(59, 130, 246, 0.08) 1px, transparent 1px),
-							linear-gradient(rgba(168, 85, 247, 0.04) 1px, transparent 1px),
-							linear-gradient(90deg, rgba(168, 85, 247, 0.04) 1px, transparent 1px)
+							linear-gradient(rgba(59, 130, 246, ${0.08 * (1 - scrollProgress)}) 1px, transparent 1px),
+							linear-gradient(90deg, rgba(59, 130, 246, ${0.08 * (1 - scrollProgress)}) 1px, transparent 1px),
+							linear-gradient(rgba(168, 85, 247, ${0.04 * (1 - scrollProgress)}) 1px, transparent 1px),
+							linear-gradient(90deg, rgba(168, 85, 247, ${0.04 * (1 - scrollProgress)}) 1px, transparent 1px)
 						`,
-						backgroundSize: "120px 120px, 120px 120px, 40px 40px, 40px 40px",
-						transform: `translate(${mouseParallaxX * 2}px, ${
-							mouseParallaxY * 2
-						}px)`,
+						backgroundSize: `${120 + scrollProgress * 60}px ${120 + scrollProgress * 60}px, ${120 + scrollProgress * 60}px ${120 + scrollProgress * 60}px, ${40 + scrollProgress * 20}px ${40 + scrollProgress * 20}px, ${40 + scrollProgress * 20}px ${40 + scrollProgress * 20}px`,
+						transform: `translate(${mouseParallaxX * 2 * scrollTransform.parallaxIntensity}px, ${mouseParallaxY * 2 * scrollTransform.parallaxIntensity}px) rotate(${scrollProgress * 5}deg) translateZ(0)`,
 					}}
 				/>
+
+				{/* Floating particles with scroll interaction */}
+				<div className="absolute inset-0">
+					{particles.map((particle) => (
+						<div
+							key={particle.id}
+							className={`absolute w-1 h-1 rounded-full bg-${particle.color}-400 transition-all duration-300`}
+							style={{
+								left: `${particle.x}%`,
+								top: `${particle.y}%`,
+								opacity: particle.opacity * (1 - scrollProgress * 0.8),
+								transform: `scale(${1 - scrollProgress * 0.5}) translateZ(0)`,
+								filter: `blur(${scrollProgress}px)`,
+							}}
+						/>
+					))}
+				</div>
 			</div>
 
+			{/* Scroll-triggered overlay for smooth blending */}
+			<div 
+				className="absolute inset-0 pointer-events-none transition-all duration-500 ease-out"
+				style={{
+					background: `linear-gradient(180deg, transparent ${(1 - scrollProgress) * 100}%, rgba(248, 250, 252, ${scrollProgress * 0.9}) 100%)`,
+					opacity: scrollProgress,
+				}}
+			/>
+
 			{/* Main Content Container */}
-			<div ref={heroRef} className="relative z-10 h-auto xl:h-screen flex items-center">
+			<div 
+				ref={heroRef} 
+				className="relative z-10 h-auto xl:h-screen flex items-center transition-all duration-500 ease-out"
+				style={{
+					transform: `translateY(${scrollProgress * -50}px) translateZ(0)`,
+					opacity: 1 - scrollProgress * 0.6,
+				}}
+			>
 				<div className="w-full px-4 lg:px-32 pt-20">
 					<div className="flex items-center h-full">
 						{/* Left Column - Revolutionary Content */}
@@ -308,15 +365,16 @@ export default function ServicesHeroSection() {
 						</div>
 
 						{/* Spline 3D Scene - Desktop Only */}
-						<div className="hidden xl:block absolute top-0 right-0 w-2/3 h-screen z-10">
-							<div className="absolute insWet-0 w-full h-full">
+						<div 
+							className="hidden xl:block absolute top-0 right-0 w-2/3 h-screen z-10 transition-all duration-500 ease-out"
+							style={{
+								transform: `translate(${mouseParallaxX * 0.5}px, ${mouseParallaxY * 0.5 + scrollProgress * 30}px) scale(${1 - scrollProgress * 0.1}) translateZ(0)`,
+								opacity: 1 - scrollProgress * 0.4,
+							}}
+						>
+							<div className="absolute inset-0 w-full h-full">
 								<Spline
 									scene="https://prod.spline.design/ETshMG9lS-5Ab7VN/scene.splinecode"
-									style={{
-										transform: `translate(${mouseParallaxX * 0.5}px, ${
-											mouseParallaxY * 0.5
-										}px) scale(${1 + mouseParallaxX * 0.0002})`,
-									}}
 								/>
 							</div>
 						</div>
@@ -324,8 +382,14 @@ export default function ServicesHeroSection() {
 				</div>
 			</div>
 
-			{/* Floating Cards - Desktop Only */}
-			<div className="hidden xl:block absolute inset-0 pointer-events-none z-50">
+			{/* Floating Cards - Desktop Only with Scroll Effects */}
+			<div 
+				className="hidden xl:block absolute inset-0 pointer-events-none z-50 transition-all duration-500 ease-out"
+				style={{
+					transform: `translateY(${scrollProgress * 100}px) translateZ(0)`,
+					opacity: 1 - scrollProgress * 1.2,
+				}}
+			>
 				{floatingCards.map((card) => (
 					<div
 						key={card.id}
@@ -339,10 +403,10 @@ export default function ServicesHeroSection() {
 							zIndex: 20,
 							animationDelay: `${card.delay}ms`,
 							transform: `translate(${mouseParallaxX * 0.2}px, ${
-								mouseParallaxY * 0.2
+								mouseParallaxY * 0.2 + scrollProgress * 50
 							}px) ${
 								visibleCards.includes(card.id) ? "scale(1)" : "scale(0.95)"
-							}`,
+							} translateZ(0)`,
 							boxShadow: `
 								0 25px 50px -12px rgba(0, 0, 0, 0.15),
 								0 10px 25px -5px rgba(0, 0, 0, 0.1),
