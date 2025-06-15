@@ -1,11 +1,9 @@
 import type { NextRequest } from "next/server";
 import { parseBody } from "next-sanity/webhook";
-import { Resend } from "resend";
 
 import { NewVideo } from "@/app/(admin)/api/email/new-video";
 import { NewPostEnhanced } from "@/app/(admin)/api/email/new-post-enhanced";
-
-const resend = new Resend(process.env.RESEND_API_KEY);
+import { sendContentNotification } from "@/lib/services/broadcast";
 
 type SanityWebhookBody = {
 	_type: string;
@@ -146,52 +144,16 @@ export async function POST(request: NextRequest) {
 			});
 		}
 
-		let emailSuccess = false;
-		let emailsSent = 0;
-		let emailsFailed = 0;
+		// Send broadcast using the modular service
+		const broadcastResult = await sendContentNotification({
+			contentType: body._type === "video" ? "Video" : "Post",
+			heading,
+			emailTemplate: emailContent as React.ReactElement,
+		});
 
-		try {
-			const audienceId = process.env.RESEND_AUDIENCE_ID;
-
-			if (!audienceId) {
-				// No audience: send to test email
-				await resend.emails.send({
-					from: "Reality Designers <hey@reality-designers.com>",
-					to: "wearerealitydesigners@gmail.com",
-					subject: `New ${contentType}: ${heading}`,
-					react: emailContent as React.ReactElement,
-					headers: {
-						"X-Entity-Ref-ID": "RD-Notification",
-					},
-				});
-				emailSuccess = true;
-				emailsSent = 1;
-			} else {
-				// Create and send broadcast to audience
-				const broadcast = await resend.broadcasts.create({
-					audienceId: audienceId,
-					from: "Reality Designers <hey@reality-designers.com>",
-					subject: `New ${contentType}: ${heading}`,
-					react: emailContent as React.ReactElement,
-				});
-
-				if (broadcast.data?.id) {
-					// Send the broadcast immediately
-					const sendResult = await resend.broadcasts.send(broadcast.data.id);
-					
-					if (sendResult.data?.id) {
-						emailSuccess = true;
-						emailsSent = 1;
-					} else {
-						emailSuccess = false;
-					}
-				} else {
-					emailSuccess = false;
-				}
-			}
-		} catch (emailError) {
-			emailSuccess = false;
-		}
+		const emailSuccess = broadcastResult.success;
+		const emailsSent = broadcastResult.emailsSent;
+		const emailsFailed = emailSuccess ? 0 : 1;
 
 		// Return comprehensive response
 		const response = {
