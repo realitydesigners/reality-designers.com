@@ -4,27 +4,14 @@ import Spline from "@splinetool/react-spline";
 import Button from "@/components/ui/Button";
 import { floatingCards } from "@/constants";
 
-// Advanced particle system
-const generateParticles = (count: number) => {
-	return Array.from({ length: count }, (_, i) => ({
-		id: i,
-		x: Math.random() * 100,
-		y: Math.random() * 100,
-		size: Math.random() * 4 + 1,
-		opacity: Math.random() * 0.6 + 0.2,
-		speed: Math.random() * 2 + 0.5,
-		color: ["blue", "purple", "pink", "emerald", "amber"][
-			Math.floor(Math.random() * 5)
-		],
-	}));
-};
+// Advanced particle system with stable initial state for SSR
+
 
 export default function ServicesHeroSection() {
 	const [scrollY, setScrollY] = useState(0);
 	const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
 	const [visibleCards, setVisibleCards] = useState<number[]>([]);
 	const [isLoaded, setIsLoaded] = useState(false);
-	const [particles, setParticles] = useState(() => generateParticles(25));
 	const [scrollProgress, setScrollProgress] = useState(0);
 	const containerRef = useRef<HTMLDivElement>(null);
 	const heroRef = useRef<HTMLDivElement>(null);
@@ -82,38 +69,33 @@ export default function ServicesHeroSection() {
 
 	// Dynamic floating cards with advanced timing
 	useEffect(() => {
+		// Use deterministic pattern for card visibility to prevent hydration mismatch
+		let visibilityIndex = 0;
+		const visibilityPatterns = [
+			[0, 2, 4], // Show cards 0, 2, 4
+			[1, 3, 5], // Show cards 1, 3, 5
+			[0, 1, 3], // Show cards 0, 1, 3
+			[2, 4, 5], // Show cards 2, 4, 5
+			[1, 2, 4], // Show cards 1, 2, 4
+		];
+
 		const interval = setInterval(() => {
+			const pattern = visibilityPatterns[visibilityIndex % visibilityPatterns.length];
 			const newVisibleCards = floatingCards
-				.filter(() => Math.random() > 0.55)
+				.filter((card, index) => pattern.includes(index))
 				.map((card) => card.id);
 
 			setVisibleCards(newVisibleCards);
+			visibilityIndex++;
 		}, 4000);
 
 		// Staggered initial appearance
-		floatingCards.forEach((card) => {
+		floatingCards.forEach((card, index) => {
 			setTimeout(() => {
 				setVisibleCards((prev) => [...prev, card.id]);
 			}, card.delay);
 		});
 
-		return () => clearInterval(interval);
-	}, []);
-
-	// Advanced particle animation
-	useEffect(() => {
-		const animateParticles = () => {
-			setParticles((prev) =>
-				prev.map((particle) => ({
-					...particle,
-					y: (particle.y + particle.speed * 0.1) % 100,
-					x: particle.x + Math.sin(Date.now() * 0.001 + particle.id) * 0.05,
-					opacity: 0.2 + Math.sin(Date.now() * 0.002 + particle.id) * 0.1,
-				})),
-			);
-		};
-
-		const interval = setInterval(animateParticles, 50);
 		return () => clearInterval(interval);
 	}, []);
 
@@ -212,22 +194,7 @@ export default function ServicesHeroSection() {
 					}}
 				/>
 
-				{/* Floating particles with scroll interaction */}
-				<div className="absolute inset-0">
-					{particles.map((particle) => (
-						<div
-							key={particle.id}
-							className={`absolute w-1 h-1 rounded-full bg-${particle.color}-400 transition-all duration-300`}
-							style={{
-								left: `${particle.x}%`,
-								top: `${particle.y}%`,
-								opacity: particle.opacity * (1 - scrollProgress * 0.8),
-								transform: `scale(${1 - scrollProgress * 0.5}) translateZ(0)`,
-								filter: `blur(${scrollProgress}px)`,
-							}}
-						/>
-					))}
-				</div>
+		
 			</div>
 
 			{/* Scroll-triggered overlay for smooth blending */}

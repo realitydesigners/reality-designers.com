@@ -36,17 +36,38 @@ export default function JoinCommunitySection() {
 				<div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/40 to-black/60"></div>
 			</div>
 
-			{/* Floating Particles */}
+			{/* Floating Particles - Fixed positions for SSR */}
 			<div className="absolute inset-0 pointer-events-none">
-				{[...Array(20)].map((_, i) => (
+				{[
+					{ left: 15, top: 25, duration: 4.2, delay: 0.5 },
+					{ left: 85, top: 60, duration: 3.8, delay: 1.2 },
+					{ left: 45, top: 80, duration: 5.1, delay: 0.8 },
+					{ left: 70, top: 20, duration: 4.5, delay: 1.5 },
+					{ left: 25, top: 65, duration: 3.5, delay: 0.3 },
+					{ left: 90, top: 40, duration: 4.8, delay: 1.8 },
+					{ left: 10, top: 85, duration: 3.9, delay: 0.9 },
+					{ left: 55, top: 15, duration: 4.3, delay: 1.1 },
+					{ left: 80, top: 75, duration: 5.2, delay: 0.4 },
+					{ left: 35, top: 50, duration: 3.7, delay: 1.6 },
+					{ left: 65, top: 30, duration: 4.1, delay: 0.7 },
+					{ left: 20, top: 90, duration: 4.7, delay: 1.3 },
+					{ left: 95, top: 10, duration: 3.6, delay: 0.6 },
+					{ left: 40, top: 70, duration: 4.9, delay: 1.9 },
+					{ left: 75, top: 45, duration: 3.4, delay: 0.2 },
+					{ left: 5, top: 55, duration: 4.4, delay: 1.4 },
+					{ left: 60, top: 85, duration: 5.0, delay: 1.0 },
+					{ left: 30, top: 5, duration: 3.8, delay: 1.7 },
+					{ left: 85, top: 35, duration: 4.6, delay: 0.1 },
+					{ left: 50, top: 95, duration: 4.0, delay: 1.21 }
+				].map((particle, i) => (
 					<div
 						key={i}
 						className="absolute w-1 h-1 bg-purple-400 rounded-full opacity-60"
 						style={{
-							left: `${Math.random() * 100}%`,
-							top: `${Math.random() * 100}%`,
-							animation: `float ${3 + Math.random() * 4}s ease-in-out infinite`,
-							animationDelay: `${Math.random() * 2}s`,
+							left: `${particle.left}%`,
+							top: `${particle.top}%`,
+							animation: `float ${particle.duration}s ease-in-out infinite`,
+							animationDelay: `${particle.delay}s`,
 						}}
 					></div>
 				))}
