@@ -10,7 +10,7 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 type SanityWebhookBody = {
 	_type: string;
 	_id: string;
-	slug?: { current: string };
+	slug?: string; // Now a string directly since Sanity projects it as "slug": slug.current
 	title?: string;
 	block?: Array<{
 		_type?: string;
@@ -61,7 +61,7 @@ export async function POST(request: NextRequest) {
 			return new Response("Bad Request", { status: 400 });
 		}
 
-		console.log("📨 Received Sanity webhook:", JSON.stringify(body, null, 2));
+
 
 		// Only process posts and video types
 		if (!["posts", "video"].includes(body._type)) {
@@ -71,14 +71,22 @@ export async function POST(request: NextRequest) {
 
 		// Extract data for notifications
 		const heading = body.block?.[0]?.heading || body.title || "New Content";
-		const slug = body.slug?.current || "no-slug";
+		
+		// Extract slug (now comes as string directly from Sanity projection)
+		let slug = "no-slug";
+		if (body.slug && typeof body.slug === 'string') {
+			slug = body.slug;
+		} else if (body._id) {
+			// Use document ID as fallback
+			slug = body._id.replace(/[^a-zA-Z0-9-]/g, '-').toLowerCase();
+		}
+
 		const excerpt = body.excerpt || body.block?.[0]?.subheading || "No description available";
 		const imageUrl = body.imageUrl || "";
 		const videoUrl = body.videoUrl || "";
 		const contentType = body._type === "video" ? "Video" : "Post";
 
 		// 🎯 SEND TO DISCORD
-		console.log("📤 Sending to Discord...");
 		
 		let discordMessage = "";
 		if (body._type === "posts") {
@@ -98,14 +106,8 @@ export async function POST(request: NextRequest) {
 		});
 
 		const discordSuccess = discordResponse.ok;
-		if (discordSuccess) {
-			console.log("✅ Discord notification sent!");
-		} else {
-			console.error("❌ Discord failed:", discordResponse.status, discordResponse.statusText);
-		}
 
 		// 📧 SEND EMAIL
-		console.log("📧 Sending email notification...");
 		
 		// Prepare enhanced data for email templates
 		const emailTeam = body.team?.name ? {
@@ -210,7 +212,6 @@ export async function POST(request: NextRequest) {
 				emailSuccess = emailsSent > 0;
 			}
 		} catch (emailError) {
-			console.error("❌ Email failed:", emailError);
 			emailSuccess = false;
 		}
 
