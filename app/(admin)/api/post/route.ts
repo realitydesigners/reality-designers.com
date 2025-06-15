@@ -52,12 +52,10 @@ export async function POST(request: NextRequest) {
 		);
 
 		if (!isValidSignature) {
-			console.log("❌ Invalid webhook signature");
 			return new Response("Invalid Signature", { status: 401 });
 		}
 
 		if (!body?._type) {
-			console.log("❌ Missing _type in webhook body");
 			return new Response("Bad Request", { status: 400 });
 		}
 
@@ -65,7 +63,6 @@ export async function POST(request: NextRequest) {
 
 		// Only process posts and video types
 		if (!["posts", "video"].includes(body._type)) {
-			console.log(`ℹ️ Ignoring webhook for type: ${body._type}`);
 			return new Response("OK - Ignored", { status: 200 });
 		}
 
@@ -238,15 +235,12 @@ export async function POST(request: NextRequest) {
 			}
 		};
 
-		console.log("🎉 Final result:", response);
-
 		return new Response(JSON.stringify(response), {
 			status: 200,
 			headers: { "Content-Type": "application/json" },
 		});
 
 	} catch (error) {
-		console.error("❌ Error in post API:", error);
 		return new Response(JSON.stringify({ 
 			error: "Internal server error",
 			message: error instanceof Error ? error.message : "Unknown error"
