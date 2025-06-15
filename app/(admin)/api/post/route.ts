@@ -105,7 +105,7 @@ export async function POST(request: NextRequest) {
 		}
 
 		// 📧 SEND EMAIL
-		console.log("📧 Sending email notifications...");
+		console.log("📧 Sending email notification...");
 		
 		// Prepare enhanced data for email templates
 		const emailTeam = body.team?.name ? {
@@ -152,105 +152,65 @@ export async function POST(request: NextRequest) {
 		let emailsFailed = 0;
 
 		try {
-			// Check if we're in test mode or production mode
-			const isTestMode = process.env.NODE_ENV !== "production" || process.env.EMAIL_TEST_MODE === "true";
 			const audienceId = process.env.RESEND_AUDIENCE_ID;
 
-			if (isTestMode || !audienceId) {
-				// Test mode: send only to test email
-				console.log("📧 Running in test mode - sending to test email only");
+			if (!audienceId) {
+				// No audience: send to test email
 				await resend.emails.send({
 					from: "Reality Designers <hey@reality-designers.com>",
 					to: "wearerealitydesigners@gmail.com",
-					subject: `[TEST] New ${contentType}: ${heading}`,
+					subject: `New ${contentType}: ${heading}`,
 					react: emailContent as React.ReactElement,
 					headers: {
-						"X-Entity-Ref-ID": "RD-Notification-Test",
+						"X-Entity-Ref-ID": "RD-Notification",
 					},
 				});
 				emailSuccess = true;
 				emailsSent = 1;
-				console.log("✅ Test email notification sent!");
 			} else {
-				// Production mode: send to all audience members
-				console.log("📧 Production mode - sending to audience:", audienceId);
-				
-				// Get all contacts from the audience
+				// Send to all audience members
 				const contactsResponse = await resend.contacts.list({ audienceId });
 				const contacts = Array.isArray(contactsResponse.data) ? contactsResponse.data : [];
-				
-				console.log(`📧 Found ${contacts.length} contacts in audience`);
 
-				if (contacts.length === 0) {
-					console.log("⚠️ No contacts found in audience - sending test email instead");
-					await resend.emails.send({
-						from: "Reality Designers <hey@reality-designers.com>",
-						to: "wearerealitydesigners@gmail.com",
-						subject: `[NO AUDIENCE] New ${contentType}: ${heading}`,
-						react: emailContent as React.ReactElement,
-						headers: {
-							"X-Entity-Ref-ID": "RD-Notification-NoAudience",
-						},
-					});
-					emailSuccess = true;
-					emailsSent = 1;
-				} else {
-					// Send emails in batches to avoid rate limits
-					const batchSize = 10;
-					const batches = [];
+				// Send emails in batches
+				const batchSize = 10;
+				for (let i = 0; i < contacts.length; i += batchSize) {
+					const batch = contacts.slice(i, i + batchSize);
 					
-					for (let i = 0; i < contacts.length; i += batchSize) {
-						batches.push(contacts.slice(i, i + batchSize));
+					const emailPromises = batch
+						.filter(contact => !contact.unsubscribed)
+						.map(async (contact) => {
+							try {
+								await resend.emails.send({
+									from: "Reality Designers <hey@reality-designers.com>",
+									to: contact.email,
+									subject: `New ${contentType}: ${heading}`,
+									react: emailContent as React.ReactElement,
+									headers: {
+										"X-Entity-Ref-ID": "RD-Notification",
+										"List-Unsubscribe": `<https://www.reality-designers.com/unsubscribe?email=${encodeURIComponent(contact.email)}>`,
+									},
+								});
+								return { success: true };
+							} catch (error) {
+								return { success: false };
+							}
+						});
+
+					const batchResults = await Promise.all(emailPromises);
+					emailsSent += batchResults.filter(r => r.success).length;
+					emailsFailed += batchResults.filter(r => !r.success).length;
+
+					// Brief delay between batches
+					if (i + batchSize < contacts.length) {
+						await new Promise(resolve => setTimeout(resolve, 1000));
 					}
-
-					console.log(`📧 Sending emails in ${batches.length} batches of ${batchSize}`);
-
-					for (let batchIndex = 0; batchIndex < batches.length; batchIndex++) {
-						const batch = batches[batchIndex];
-						console.log(`📧 Processing batch ${batchIndex + 1}/${batches.length} (${batch.length} emails)`);
-
-						const emailPromises = batch
-							.filter(contact => !contact.unsubscribed) // Only send to subscribed contacts
-							.map(async (contact) => {
-								try {
-									await resend.emails.send({
-										from: "Reality Designers <hey@reality-designers.com>",
-										to: contact.email,
-										subject: `New ${contentType}: ${heading}`,
-										react: emailContent as React.ReactElement,
-										headers: {
-											"X-Entity-Ref-ID": "RD-Notification",
-											"List-Unsubscribe": `<https://www.reality-designers.com/unsubscribe?email=${encodeURIComponent(contact.email)}>`,
-										},
-									});
-									return { success: true, email: contact.email };
-								} catch (error) {
-									console.error(`❌ Failed to send to ${contact.email}:`, error);
-									return { success: false, email: contact.email, error };
-								}
-							});
-
-						const batchResults = await Promise.all(emailPromises);
-						const batchSuccesses = batchResults.filter(r => r.success).length;
-						const batchFailures = batchResults.filter(r => !r.success).length;
-						
-						emailsSent += batchSuccesses;
-						emailsFailed += batchFailures;
-
-						console.log(`✅ Batch ${batchIndex + 1} complete: ${batchSuccesses} sent, ${batchFailures} failed`);
-
-						// Add delay between batches to respect rate limits
-						if (batchIndex < batches.length - 1) {
-							await new Promise(resolve => setTimeout(resolve, 1000)); // 1 second delay
-						}
-					}
-
-					emailSuccess = emailsSent > 0;
-					console.log(`📧 Email campaign complete: ${emailsSent} sent, ${emailsFailed} failed`);
 				}
+
+				emailSuccess = emailsSent > 0;
 			}
 		} catch (emailError) {
-			console.error("❌ Email sending failed:", emailError);
+			console.error("❌ Email failed:", emailError);
 			emailSuccess = false;
 		}
 
