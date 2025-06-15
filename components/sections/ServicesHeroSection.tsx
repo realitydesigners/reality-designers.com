@@ -152,7 +152,8 @@ export default function ServicesHeroSection() {
 		<>
 		<section
 			ref={containerRef}
-			className="relative min-h-screen overflow-hidden bg-black" data-theme="dark"
+			className="relative min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50/30 overflow-hidden"
+			 data-theme="light"
 		>
 			{/* Revolutionary Dynamic Background */}
 			<div className="absolute inset-0 pointer-events-none">
@@ -389,7 +390,7 @@ export default function ServicesHeroSection() {
 			</div>
 		</section>
 
-		<section className="xl:hidden relative h-[70vh] xl:min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50/30 overflow-hidden" data-theme="light">
+		<section className="xl:hidden relative h-[70vh] xl:min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50/30 overflow-hidden">
 			{/* Mobile Spline Scene */}
 			<div className="relative w-full h-full">
 				<Spline

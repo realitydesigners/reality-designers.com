@@ -31,6 +31,16 @@ export default function HomePage() {
 					/>
 				</div>
 			</section>
+			<section className="w-full py-16 lg:py-24 bg-black min-h-screen" data-theme="dark">	
+				<div className="container mx-auto px-4">
+					<h2 className="text-4xl font-bold text-white">
+						Our Services
+					</h2>
+					<p className="text-white">
+						Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quos.
+					</p>
+				</div>
+			</section>
 			
 			{/* Uncomment these sections as needed */}
 			{/* <ServicesRealmsSection /> */}

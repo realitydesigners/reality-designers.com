@@ -8,22 +8,52 @@ import { useSmartNavbar } from "@/hooks/useSmartNavbar";
 import Logo from "@/components/ui/Logo";
 import Button from "@/components/ui/Button";
 import DropdownPanel from "@/components/navigation/DropdownPanel";
+import { Links } from "@/constants";
 
 export default function SiteNavbar() {
 	const [isNavOpen, setIsNavOpen] = useState(false);
 	const [scrollY, setScrollY] = useState(0);
+	const [lastScrollY, setLastScrollY] = useState(0);
+	const [isScrollingDown, setIsScrollingDown] = useState(false);
 	const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
 	const [hoverTimeout, setHoverTimeout] = useState<NodeJS.Timeout | null>(null);
 	const [isAnyDropdownActive, setIsAnyDropdownActive] = useState(false);
 	const [isNavbarHovered, setIsNavbarHovered] = useState(false);
-	const navbarTheme = useSmartNavbar();
+	const { theme: navbarTheme, isReady } = useSmartNavbar();
+	const [showNavbar, setShowNavbar] = useState(false);
 
-	// Track scroll for subtle effects
+	// Track scroll direction
 	useEffect(() => {
-		const handleScroll = () => setScrollY(window.scrollY);
-		window.addEventListener("scroll", handleScroll);
+		const handleScroll = () => {
+			const currentScrollY = window.scrollY;
+			
+			// Determine scroll direction
+			if (currentScrollY > lastScrollY && currentScrollY > 50) {
+				// Scrolling down and past threshold
+				setIsScrollingDown(true);
+			} else if (currentScrollY < lastScrollY) {
+				// Scrolling up
+				setIsScrollingDown(false);
+			}
+			
+			setScrollY(currentScrollY);
+			setLastScrollY(currentScrollY);
+		};
+
+		window.addEventListener("scroll", handleScroll, { passive: true });
 		return () => window.removeEventListener("scroll", handleScroll);
-	}, []);
+	}, [lastScrollY]);
+
+	// Show navbar with fade-in once theme is determined
+	useEffect(() => {
+		if (isReady && navbarTheme) {
+			// Small delay for smooth fade-in animation
+			const timer = setTimeout(() => {
+				setShowNavbar(true);
+			}, 100);
+			return () => clearTimeout(timer);
+		}
+	}, [isReady, navbarTheme]);
 
 	// Handle navbar area hover - keeps dropdowns open while in navbar zone
 	const handleNavbarEnter = () => {
@@ -83,216 +113,28 @@ export default function SiteNavbar() {
 		closeNav();
 	};
 
-	const Links = [
-		{
-			href: "/story",
-			label: "Story",
-			icon: "story",
-			dropdown: {
-				title: "Our Journey",
-				description:
-					"Discover how Reality Designers is shaping the future of immersive experiences.",
-				spline: "https://prod.spline.design/WV4nziwJaLKBH2tE/scene.splinecode",
-				links: [
-					{
-						href: "/story",
-						label: "About Us",
-						description: "Learn about our mission and vision",
-					},
-					{
-						href: "/story/team",
-						label: "Meet the Team",
-						description: "The minds behind Reality Designers",
-					},
-					{
-						href: "/story/history",
-						label: "Our History",
-						description: "From concept to reality",
-					},
-					{
-						href: "/story/culture",
-						label: "Company Culture",
-						description: "What drives us forward",
-					},
-				],
-			},
-		},
-		{
-			href: "/services",
-			label: "Services",
-			icon: "video",
-			dropdown: {
-				title: "Design Reality",
-				description:
-					"Transform your ideas into immersive digital experiences that captivate and inspire.",
-				spline: "https://prod.spline.design/WV4nziwJaLKBH2tE/scene.splinecode",
-				links: [
-					{
-						href: "/services/immersive",
-						label: "Immersive Design",
-						description: "VR, AR & Mixed Reality experiences",
-					},
-					{
-						href: "/services/branding",
-						label: "Brand Identity",
-						description: "Complete visual identity systems",
-					},
-					{
-						href: "/services/web",
-						label: "Web Development",
-						description: "Next-gen websites and applications",
-					},
-					{
-						href: "/services/motion",
-						label: "Motion Graphics",
-						description: "Dynamic animations and videos",
-					},
-					{
-						href: "/services/mobile",
-						label: "Mobile Apps",
-						description: "iOS and Android applications",
-					},
-					{
-						href: "/services/strategy",
-						label: "Digital Strategy",
-						description: "Comprehensive digital transformation",
-					},
-				],
-			},
-		},
-		{
-			href: "https://www.youtube.com/@realitydesigners",
-			label: "Videos",
-			icon: "video",
-			dropdown: {
-				title: "Visual Stories",
-				description:
-					"Explore our latest projects, tutorials, and behind-the-scenes content.",
-				spline: "https://prod.spline.design/WV4nziwJaLKBH2tE/scene.splinecode",
-				links: [
-					{
-						href: "/videos/showcase",
-						label: "Project Showcase",
-						description: "Our best work in action",
-					},
-					{
-						href: "/videos/tutorials",
-						label: "Tutorials",
-						description: "Learn design techniques",
-					},
-					{
-						href: "/videos/behind-scenes",
-						label: "Behind the Scenes",
-						description: "Our creative process",
-					},
-					{
-						href: "https://www.youtube.com/@realitydesigners",
-						label: "YouTube Channel",
-						description: "Subscribe for more content",
-					},
-				],
-			},
-		},
-		{
-			href: "#",
-			label: "Library",
-			icon: "lock",
-			dropdown: {
-				title: "Knowledge Base",
-				description:
-					"Access our collection of resources, templates, and design assets.",
-				spline: "https://prod.spline.design/WV4nziwJaLKBH2tE/scene.splinecode",
-				links: [
-					{
-						href: "/library/resources",
-						label: "Design Resources",
-						description: "Free templates and assets",
-					},
-					{
-						href: "/library/documentation",
-						label: "Documentation",
-						description: "Guides and best practices",
-					},
-					{
-						href: "/library/case-studies",
-						label: "Case Studies",
-						description: "In-depth project analysis",
-					},
-					{
-						href: "/library/blog",
-						label: "Blog",
-						description: "Latest insights and trends",
-					},
-				],
-			},
-		},
-		{
-			href: "/lab",
-			label: "Lab",
-			icon: "video",
-			dropdown: {
-				title: "Innovation Lab",
-				description:
-					"Experimental projects and cutting-edge technology explorations.",
-				spline: "https://prod.spline.design/WV4nziwJaLKBH2tE/scene.splinecode",
-				links: [
-					{
-						href: "/lab/experiments",
-						label: "Experiments",
-						description: "Latest tech explorations",
-					},
-					{
-						href: "/lab/prototypes",
-						label: "Prototypes",
-						description: "Work-in-progress projects",
-					},
-					{
-						href: "/lab/research",
-						label: "Research",
-						description: "Industry insights and studies",
-					},
-					{
-						href: "/lab/open-source",
-						label: "Open Source",
-						description: "Community contributions",
-					},
-				],
-			},
-		},
-		{
-			href: "#",
-			label: "Contact",
-			icon: "lock",
-			dropdown: {
-				title: "Get in Touch",
-				description:
-					"Ready to bring your vision to life? Let's start a conversation.",
-				spline: "https://prod.spline.design/WV4nziwJaLKBH2tE/scene.splinecode",
-				links: [
-					{
-						href: "/contact",
-						label: "Start a Project",
-						description: "Begin your journey with us",
-					},
-					{
-						href: "/contact/support",
-						label: "Support",
-						description: "Get help with existing projects",
-					},
-					{
-						href: "/contact/careers",
-						label: "Careers",
-						description: "Join our team",
-					},
-					{
-						href: "/contact/partnerships",
-						label: "Partnerships",
-						description: "Collaborate with us",
-					},
-				],
-			},
-		},
-	];
+	// Clean navbar styling logic
+	const getNavbarStyles = () => {
+		const baseClasses = "relative transition-all duration-300 pointer-events-auto";
+		
+		if (isFlat) {
+			// Flat (scrolled) version - gradient from top to bottom transparent, no blur, no shadow
+			const flatClasses = "mx-0 mt-0 rounded-none";
+			const flatBackground = navbarTheme === "dark" 
+				? "bg-gradient-to-b from-black/90 via-black/50 to-black/10 border border-transparent"
+				: "bg-gradient-to-b from-white/90 via-white/50 to-white/10 border border-transparent";
+			
+			return `${baseClasses} ${flatClasses} ${flatBackground}`;
+		} else {
+			// Rounded (top) version - solid with blur
+			const roundedClasses = "mx-3 mt-3 lg:mx-6 lg:mt-4 rounded-2xl";
+			const roundedBackground = navbarTheme === "dark"
+				? "bg-black/50 border border-white/10 shadow-lg shadow-black/10 backdrop-blur-2xl"
+				: "bg-white/50 border border-gray-900/10 shadow-lg shadow-black/10 backdrop-blur-2xl";
+			
+			return `${baseClasses} ${roundedClasses} ${roundedBackground}`;
+		}
+	};
 
 	const getIcon = (name) => {
 		const iconColor = navbarTheme === "dark" ? "#fff" : "#000000";
@@ -322,7 +164,8 @@ export default function SiteNavbar() {
 		return icons[name] || null;
 	};
 
-	const isScrolled = scrollY > 50;
+	// Use scroll direction for navbar styling
+	const isFlat = isScrollingDown;
 
 	return (
 		<>
@@ -335,23 +178,20 @@ export default function SiteNavbar() {
 			)}
 
 			{/* Interdimensional Navbar Container */}
-			<div className="fixed top-0 left-0 right-0 z-50 pointer-events-none">
+			<div 
+				className={`fixed top-0 left-0 right-0 z-[9999] pointer-events-none transition-opacity duration-500 ease-out ${
+					showNavbar ? 'opacity-100' : 'opacity-0'
+				}`}
+			>
 				{/* Morphing navbar */}
 				<nav
 					id="navbar"
-					className={`relative transition-all duration-700 pointer-events-auto ${
-						isScrolled
-							? "mx-0 mt-0 rounded-none"
-							: "mx-3 mt-3 lg:mx-6 lg:mt-4 rounded-2xl"
-					} ${
-						isScrolled
-							? navbarTheme === "dark"
-								? "bg-black/90  shadow-lg backdrop-blur-sm"
-								: "bg-gradient-to-b from-white/90 via-white/50 to-white/0"
-							: navbarTheme === "dark"
-							  ? "bg-black/15 border border-white/10  shadow-lg shadow-black/10 backdrop-blur-2xl"
-							  : "bg-white/15 border border-gray-900/10  shadow-lg shadow-black/10 backdrop-blur-2xl"
-					}`}
+					className={getNavbarStyles()}
+					style={{
+						// CSS custom properties for smoother theme transitions
+						'--text-color': navbarTheme === "dark" ? '#ffffff' : '#000000',
+						'--text-color-secondary': navbarTheme === "dark" ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.8)',
+					} as React.CSSProperties}
 				>
 					{/* Main navbar content */}
 					<div className="relative z-10 flex h-14 w-full items-center justify-between px-4 lg:px-">
