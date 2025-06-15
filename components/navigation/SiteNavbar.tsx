@@ -121,16 +121,16 @@ export default function SiteNavbar() {
 			// Flat (scrolled) version - gradient from top to bottom transparent, no blur, no shadow
 			const flatClasses = "mx-0 mt-0 rounded-none";
 			const flatBackground = navbarTheme === "dark" 
-				? "bg-gradient-to-b from-black/90 via-black/50 to-black/10 border border-transparent"
-				: "bg-gradient-to-b from-white/90 via-white/50 to-white/10 border border-transparent";
+				? "bg-gradient-to-b from-black/90 via-black/50 to-black/0 border border-transparent"
+				: "bg-gradient-to-b from-white/90 via-white/50 to-white/0 border border-transparent";
 			
 			return `${baseClasses} ${flatClasses} ${flatBackground}`;
 		} else {
 			// Rounded (top) version - solid with blur
 			const roundedClasses = "mx-3 mt-3 lg:mx-6 lg:mt-4 rounded-2xl";
 			const roundedBackground = navbarTheme === "dark"
-				? "bg-black/50 border border-white/10 shadow-lg shadow-black/10 backdrop-blur-2xl"
-				: "bg-white/50 border border-gray-900/10 shadow-lg shadow-black/10 backdrop-blur-2xl";
+				? "bg-black/60 border border-white/10 shadow-lg shadow-black/10 backdrop-blur-2xl"
+				: "bg-white/60 border border-gray-900/10 shadow-lg shadow-black/10 backdrop-blur-2xl";
 			
 			return `${baseClasses} ${roundedClasses} ${roundedBackground}`;
 		}

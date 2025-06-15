@@ -152,7 +152,7 @@ export default function ServicesHeroSection() {
 		<>
 		<section
 			ref={containerRef}
-			className="relative min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50/30 overflow-hidden"
+			className="relative h-auto pt-24 xl:pt-0 xl:h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50/30 overflow-hidden"
 			 data-theme="light"
 		>
 			{/* Revolutionary Dynamic Background */}
@@ -190,7 +190,7 @@ export default function ServicesHeroSection() {
 			</div>
 
 			{/* Main Content Container */}
-			<div ref={heroRef} className="relative z-10 h-screen xl:h-screen flex items-center">
+			<div ref={heroRef} className="relative z-10 h-auto xl:h-screen flex items-center">
 				<div className="w-full px-4 lg:px-32 pt-20">
 					<div className="flex items-center h-full">
 						{/* Left Column - Revolutionary Content */}

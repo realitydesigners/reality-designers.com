@@ -19,7 +19,7 @@ export default function Logo({
 	return (
 		<div className={`relative group cursor-pointer ${className}`}>
 			{/* Logo with rotation animation */}
-			<div className="relative transition-all duration-500 ease-out group-hover:rotate-[360deg] group-hover:scale-110 transform-gpu">
+			<div className="relative transition-all duration-500 ease-out group-hover:rotate-[360deg] group-hover:scale-105">
 				<svg
 					width={size}
 					height={size}
@@ -36,28 +36,11 @@ export default function Logo({
 					/>
 				</svg>
 
-				{/* Subtle glow effect */}
-				<div
-					className="absolute inset-0 rounded-full opacity-0 group-hover:opacity-20 transition-all duration-500 group-hover:scale-125 blur-sm"
-					style={{ backgroundColor: iconColor }}
-				></div>
 			</div>
 
 			{/* Futuristic scan frame */}
 			<div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-all duration-500 pointer-events-none">
-				{/* Top and bottom lines */}
-				<div
-					className="absolute top-0 left-0 right-0 h-px transition-all duration-500"
-					style={{
-						background: `linear-gradient(to right, transparent, ${scanColor}40, transparent)`,
-					}}
-				></div>
-				<div
-					className="absolute bottom-0 left-0 right-0 h-px transition-all duration-500"
-					style={{
-						background: `linear-gradient(to right, transparent, ${scanColor}30, transparent)`,
-					}}
-				></div>
+			
 
 				{/* Corner brackets */}
 				<div
