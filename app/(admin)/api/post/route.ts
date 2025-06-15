@@ -167,46 +167,27 @@ export async function POST(request: NextRequest) {
 				emailSuccess = true;
 				emailsSent = 1;
 			} else {
-				// Send to all audience members
-				const contactsResponse = await resend.contacts.list({ audienceId });
-				const contacts = Array.isArray(contactsResponse.data) ? contactsResponse.data : [];
+				// Create and send broadcast to audience
+				const broadcast = await resend.broadcasts.create({
+					audienceId: audienceId,
+					from: "Reality Designers <hey@reality-designers.com>",
+					subject: `New ${contentType}: ${heading}`,
+					react: emailContent as React.ReactElement,
+				});
 
-				// Send emails in batches
-				const batchSize = 10;
-				for (let i = 0; i < contacts.length; i += batchSize) {
-					const batch = contacts.slice(i, i + batchSize);
+				if (broadcast.data?.id) {
+					// Send the broadcast immediately
+					const sendResult = await resend.broadcasts.send(broadcast.data.id);
 					
-					const emailPromises = batch
-						.filter(contact => !contact.unsubscribed)
-						.map(async (contact) => {
-							try {
-								await resend.emails.send({
-									from: "Reality Designers <hey@reality-designers.com>",
-									to: contact.email,
-									subject: `New ${contentType}: ${heading}`,
-									react: emailContent as React.ReactElement,
-									headers: {
-										"X-Entity-Ref-ID": "RD-Notification",
-										"List-Unsubscribe": `<https://www.reality-designers.com/unsubscribe?email=${encodeURIComponent(contact.email)}>`,
-									},
-								});
-								return { success: true };
-							} catch (error) {
-								return { success: false };
-							}
-						});
-
-					const batchResults = await Promise.all(emailPromises);
-					emailsSent += batchResults.filter(r => r.success).length;
-					emailsFailed += batchResults.filter(r => !r.success).length;
-
-					// Brief delay between batches
-					if (i + batchSize < contacts.length) {
-						await new Promise(resolve => setTimeout(resolve, 1000));
+					if (sendResult.data?.id) {
+						emailSuccess = true;
+						emailsSent = 1;
+					} else {
+						emailSuccess = false;
 					}
+				} else {
+					emailSuccess = false;
 				}
-
-				emailSuccess = emailsSent > 0;
 			}
 		} catch (emailError) {
 			emailSuccess = false;
