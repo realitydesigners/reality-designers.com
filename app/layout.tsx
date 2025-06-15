@@ -5,6 +5,7 @@ import SiteNavbar from "@/components/navigation/SiteNavbar";
 import { NavigationProvider } from "@/components/providers/NavigationProvider";
 import Footer from "@/components/navigation/Footer";
 import "./global.css";
+import { preconnect } from "react-dom";
 
 export const metadata: Metadata = {
 	title: "Reality Designers",
@@ -17,6 +18,8 @@ export default async function RootLayout({
 }: {
 	children: React.ReactNode;
 }) {
+	preconnect("cdn.sanity.io");
+	preconnect("prod.spline.design");
 	return (
 		<html
 			lang="en"

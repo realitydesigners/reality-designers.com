@@ -2,57 +2,7 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import Spline from "@splinetool/react-spline";
 import Button from "@/components/ui/Button";
-
-const floatingCards = [
-	{
-		id: 1,
-		status: "ACTIVE",
-		message: "Web Development",
-		color: "emerald",
-		position: { top: "20%", right: "35%" },
-		delay: 0,
-	},
-	{
-		id: 2,
-		status: "LIVE",
-		message: "3D Design",
-		color: "purple",
-		position: { top: "70%", right: "40%" },
-		delay: 200,
-	},
-	{
-		id: 3,
-		status: "BUILDING",
-		message: "Brand Identity",
-		color: "blue",
-		position: { top: "60%", right: "10%" },
-		delay: 400,
-	},
-	{
-		id: 4,
-		status: "CREATING",
-		message: "UI/UX Design",
-		color: "pink",
-		position: { top: "85%", right: "5%" },
-		delay: 600,
-	},
-	{
-		id: 5,
-		status: "SHIPPING",
-		message: "Prototyping",
-		color: "amber",
-		position: { top: "30%", right: "2%" },
-		delay: 800,
-	},
-	{
-		id: 6,
-		status: "DESIGNING",
-		message: "Motion Graphics",
-		color: "violet",
-		position: { top: "75%", right: "8%" },
-		delay: 1000,
-	},
-];
+import { floatingCards } from "@/constants";
 
 // Advanced particle system
 const generateParticles = (count: number) => {
@@ -199,9 +149,10 @@ export default function ServicesHeroSection() {
 	const mouseParallaxY = (mousePosition.y - 50) * 0.02;
 
 	return (
+		<>
 		<section
 			ref={containerRef}
-			className="relative min-h-screen  bg-gradient-to-br from-slate-50 via-white to-blue-50/30 overflow-hidden"
+			className="relative min-h-screen overflow-hidden bg-black" data-theme="dark"
 		>
 			{/* Revolutionary Dynamic Background */}
 			<div className="absolute inset-0 pointer-events-none">
@@ -238,71 +189,36 @@ export default function ServicesHeroSection() {
 			</div>
 
 			{/* Main Content Container */}
-			<div ref={heroRef} className="relative z-10 h-screen flex items-center">
+			<div ref={heroRef} className="relative z-10 h-screen xl:h-screen flex items-center">
 				<div className="w-full px-4 lg:px-32 pt-20">
 					<div className="flex items-center h-full">
 						{/* Left Column - Revolutionary Content */}
-						<div
-							className={`w-1/2 space-y-12 transition-all duration-2000 ease-out ${
-								isLoaded
-									? "opacity-100 translate-y-0"
-									: "opacity-0 translate-y-12"
-							}`}
-						>
+						<div className="w-full xl:w-1/2 space-y-8 xl:space-y-12 text-center xl:text-left">
 							{/* Future Agency Badge - Enhanced */}
 							<div
-								className={`inline-flex items-center gap-4 px-4 py-4 rounded-2xl backdrop-blur-xl bg-white/70 border border-white/30 shadow-2xl transition-all duration-1000 hover:shadow-blue-500/20 hover:scale-105 hover:bg-white/80 group ${
-									isLoaded ? "animate-slideInUp" : ""
+								className={`inline-flex items-center gap-4 px-4 py-4 rounded-2xl backdrop-blur-xl bg-white/70 border border-white/30 shadow-2xl transition-all duration-300 hover:shadow-blue-500/20 hover:scale-105 hover:bg-white/80 group opacity-0 ${
+									isLoaded ? "animate-quickFadeIn" : ""
 								}`}
-								style={{ animationDelay: "200ms" }}
+								style={{ animationDelay: "0.1s" }}
 							>
-								<div className="relative">
-									<div className="w-3 h-3 bg-gradient-to-r from-blue-500 to-cyan-400 rounded-full animate-pulse"></div>
-									<div className="absolute inset-0 w-3 h-3 bg-blue-500 rounded-full blur-md opacity-50 animate-ping"></div>
-								</div>
+							
 								<span className="font-russo text-black text-xs tracking-[0.3em] uppercase font-bold group-hover:text-gray-900 transition-colors">
 									DESIGN AGENCY FROM THE FUTURE
 								</span>
-								<div className="relative">
-									<div
-										className="w-3 h-3 bg-gradient-to-r from-purple-500 to-pink-400 rounded-full animate-pulse"
-										style={{ animationDelay: "1s" }}
-									></div>
-									<div
-										className="absolute inset-0 w-3 h-3 bg-purple-500 rounded-full blur-md opacity-50 animate-ping"
-										style={{ animationDelay: "1s" }}
-									></div>
-								</div>
+								
 							</div>
 
 							{/* Revolutionary Headline */}
-							<div
-								className={`mb-4 ${isLoaded ? "animate-slideInUp" : ""}`}
-								style={{ animationDelay: "400ms" }}
-							>
+							<div className="mb-4">
 								<h1 className="font-russo font-black leading-[0.9] tracking-tight">
 									<div className="overflow-hidden">
 										<span
-											className={`block text-7xl lg:text-8xl text-black transition-all duration-1200 ease-out ${
-												isLoaded
-													? "translate-y-0 opacity-100"
-													: "translate-y-full opacity-0"
+											className={`block text-6xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl text-black opacity-0 ${
+												isLoaded ? "animate-digitalReveal" : ""
 											}`}
-											style={{ animationDelay: "600ms" }}
+											style={{ animationDelay: "0.15s" }}
 										>
-											WE BUILD
-										</span>
-									</div>
-									<div className="overflow-hidden">
-										<span
-											className={`block text-7xl lg:text-8xl text-black transition-all duration-1200 ease-out ${
-												isLoaded
-													? "translate-y-0 opacity-100"
-													: "translate-y-full opacity-0"
-											}`}
-											style={{ animationDelay: "800ms" }}
-										>
-											WORLDS FROM YOUR IDEAS
+											WE BUILD<br></br> WORLDS FROM<br className="sm:hidden" /> YOUR IDEAS
 										</span>
 									</div>
 								</h1>
@@ -310,37 +226,37 @@ export default function ServicesHeroSection() {
 
 							{/* Mission Statement */}
 							<div
-								className={`max-w-lg mb-10 ${
-									isLoaded ? "animate-slideInUp" : ""
+								className={`max-w-lg mx-auto xl:mx-0 mb-10 opacity-0 ${
+									isLoaded ? "animate-quickFadeIn" : ""
 								}`}
-								style={{ animationDelay: "1000ms" }}
+								style={{ animationDelay: "0.4s" }}
 							>
-								<p className="text-2xl text-black leading-tight font-outfit font-medium">
+								<p className="text-lg sm:text-xl xl:text-2xl text-black leading-tight font-outfit font-medium">
 									Code breakers crafting experiences beyond the ordinary.
 								</p>
 							</div>
 
 							{/* Stats */}
 							<div
-								className={`flex gap-16 pt-6 border-t border-gray-200 ${
-									isLoaded ? "animate-slideInUp" : ""
+								className={`flex gap-8 sm:gap-12 xl:gap-16 pt-6 border-t border-gray-200 justify-center xl:justify-start opacity-0 ${
+									isLoaded ? "animate-scanlineReveal" : ""
 								}`}
-								style={{ animationDelay: "1200ms" }}
+								style={{ animationDelay: "0.6s" }}
 							>
-								<div>
-									<div className="text-4xl font-russo font-black text-black mb-1">∞</div>
+								<div className="text-center xl:text-left">
+									<div className="text-3xl sm:text-4xl font-russo font-black text-black mb-1">∞</div>
 									<div className="text-xs text-gray-500 uppercase tracking-[0.2em] font-russo font-bold">
 										REALITIES
 									</div>
 								</div>
-								<div>
-									<div className="text-4xl font-russo font-black text-black mb-1">2025</div>
+								<div className="text-center xl:text-left">
+									<div className="text-3xl sm:text-4xl font-russo font-black text-black mb-1">2025</div>
 									<div className="text-xs text-gray-500 uppercase tracking-[0.2em] font-russo font-bold">
 										AWAKENING
 									</div>
 								</div>
-								<div>
-									<div className="text-4xl font-russo font-black text-black mb-1">01</div>
+								<div className="text-center xl:text-left">
+									<div className="text-3xl sm:text-4xl font-russo font-black text-black mb-1">01</div>
 									<div className="text-xs text-gray-500 uppercase tracking-[0.2em] font-russo font-bold">
 										COLLECTIVE
 									</div>
@@ -349,10 +265,10 @@ export default function ServicesHeroSection() {
 
 							{/* Call to Action */}
 							<div
-								className={`space-y-6 pt-6 ${
-									isLoaded ? "animate-slideInUp" : ""
+								className={`space-y-6 pt-6 opacity-0 ${
+									isLoaded ? "animate-quickFadeIn" : ""
 								}`}
-								style={{ animationDelay: "1400ms" }}
+								style={{ animationDelay: "0.8s" }}
 							>
 								<div className="flex flex-col sm:flex-row gap-4">
 									<Button
@@ -390,8 +306,9 @@ export default function ServicesHeroSection() {
 							</div>
 						</div>
 
-						<div className="absolute top-0 right-0 w-1/2 h-screen z-0">
-							<div className="absolute inset-0 w-full h-full">
+						{/* Spline 3D Scene - Desktop Only */}
+						<div className="hidden xl:block absolute top-0 right-0 w-2/3 h-screen z-10">
+							<div className="absolute insWet-0 w-full h-full">
 								<Spline
 									scene="https://prod.spline.design/ETshMG9lS-5Ab7VN/scene.splinecode"
 									style={{
@@ -406,8 +323,8 @@ export default function ServicesHeroSection() {
 				</div>
 			</div>
 
-			{/* Floating Cards - Positioned relative to full screen */}
-			<div className="absolute inset-0 pointer-events-none z-50">
+			{/* Floating Cards - Desktop Only */}
+			<div className="hidden xl:block absolute inset-0 pointer-events-none z-50">
 				{floatingCards.map((card) => (
 					<div
 						key={card.id}
@@ -417,7 +334,7 @@ export default function ServicesHeroSection() {
 								: "opacity-0 scale-95 translate-y-4"
 						}`}
 						style={{
-							...card.position,
+							...card.desktopPosition,
 							zIndex: 20,
 							animationDelay: `${card.delay}ms`,
 							transform: `translate(${mouseParallaxX * 0.2}px, ${
@@ -471,5 +388,81 @@ export default function ServicesHeroSection() {
 				))}
 			</div>
 		</section>
+
+		<section className="xl:hidden relative h-[70vh] xl:min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50/30 overflow-hidden" data-theme="light">
+			{/* Mobile Spline Scene */}
+			<div className="relative w-full h-full">
+				<Spline
+					scene="https://prod.spline.design/ETshMG9lS-5Ab7VN/scene.splinecode"
+					
+				/>
+			</div>
+
+			{/* Mobile Floating Cards */}
+			<div className="absolute inset-0 pointer-events-none z-50">
+				{floatingCards.map((card) => (
+					<div
+						key={`mobile-${card.id}`}
+						className={`absolute backdrop-blur-xl bg-white/95 rounded-2xl max-w-xs transition-all duration-1000 transform hover:scale-110 group cursor-pointer pointer-events-auto hover:rotate-1 ${
+							visibleCards.includes(card.id)
+								? "opacity-100 scale-100 translate-y-0"
+								: "opacity-0 scale-95 translate-y-4"
+						}`}
+						style={{
+							...card.mobilePosition,
+							zIndex: 20,
+							animationDelay: `${card.delay}ms`,
+							transform: `translate(${mouseParallaxX * 0.1}px, ${
+								mouseParallaxY * 0.1
+							}px) ${
+								visibleCards.includes(card.id) ? "scale(1)" : "scale(0.95)"
+							}`,
+							boxShadow: `
+								0 25px 50px -12px rgba(0, 0, 0, 0.15),
+								0 10px 25px -5px rgba(0, 0, 0, 0.1),
+								0 0 0 1px rgba(255, 255, 255, 0.2),
+								inset 0 1px 0 0 rgba(255, 255, 255, 0.3)
+							`,
+						}}
+					>
+						{/* Enhanced card content */}
+						<div className="p-6 relative">
+							{/* Top section with status */}
+							<div className="flex items-center justify-between mb-2">
+								<div className="flex items-center gap-3">
+									<div className="relative">
+										<div className={`w-3 h-3 ${getColorClasses(card.color).bg} rounded-full shadow-lg`}></div>
+										<div className={`absolute inset-0 w-3 h-3 ${getColorClasses(card.color).bg} rounded-full blur-sm opacity-60 animate-pulse`}></div>
+									</div>
+									<span className="font-russo text-[10px] text-gray-400 uppercase tracking-[0.15em] font-bold">
+										{card.status}
+									</span>
+								</div>
+								
+								{/* Floating indicator */}
+								<div className="w-2 h-2 bg-gradient-to-r from-blue-400 to-purple-400 rounded-full opacity-60"></div>
+							</div>
+							
+							{/* Main content */}
+							<div className="space-y-2">
+								<h3 className="text-base text-gray-900 font-outfit font-semibold leading-tight group-hover:text-black transition-colors">
+									{card.message}
+								</h3>
+								<p className="text-xs text-gray-500 font-outfit">
+									Premium service
+								</p>
+							</div>
+
+						
+							
+							{/* Subtle corner decoration */}
+							<div className="absolute top-3 right-3 w-1 h-1 bg-gray-300 rounded-full opacity-40"></div>
+							<div className="absolute top-5 right-3 w-0.5 h-0.5 bg-gray-300 rounded-full opacity-30"></div>
+						</div>
+					</div>
+				))}
+			</div>
+		</section>
+		</>
 	);
 }

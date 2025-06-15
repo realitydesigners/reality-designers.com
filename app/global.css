@@ -194,17 +194,93 @@
   50% { background-position: 100% 50%; }
 }
 
-@keyframes slideInUp {
-  from {
+/* Clean futuristic text animations */
+@keyframes digitalReveal {
+  0% {
     opacity: 0;
-    transform: translateY(60px);
+    transform: translateY(30px) scale(0.98);
+    letter-spacing: 0.1em;
   }
-  to {
+  40% {
+    opacity: 0.7;
+    transform: translateY(10px) scale(0.99);
+    letter-spacing: 0.05em;
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    letter-spacing: normal;
+  }
+}
+
+@keyframes typewriterReveal {
+  0% {
+    opacity: 0;
+    transform: translateY(100%);
+    clip-path: inset(0 100% 0 0);
+  }
+  30% {
+    opacity: 1;
+    transform: translateY(50%);
+    clip-path: inset(0 70% 0 0);
+  }
+  70% {
+    opacity: 1;
+    transform: translateY(10%);
+    clip-path: inset(0 20% 0 0);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+    clip-path: inset(0 0% 0 0);
+  }
+}
+
+@keyframes quickFadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  100% {
     opacity: 1;
     transform: translateY(0);
   }
 }
 
+@keyframes scanlineReveal {
+  0% {
+    opacity: 0;
+    transform: translateY(30px);
+    background-position: 0% 0%;
+  }
+  50% {
+    opacity: 0.8;
+    transform: translateY(0);
+    background-position: 100% 100%;
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+    background-position: 0% 0%;
+  }
+}
+
+@keyframes scanline {
+  0% {
+    opacity: 0;
+    transform: translateX(-100%) skewX(-12deg);
+  }
+  50% {
+    opacity: 1;
+    transform: translateX(0%) skewX(-12deg);
+  }
+  100% {
+    opacity: 0;
+    transform: translateX(100%) skewX(-12deg);
+  }
+}
+
+/* Floating animations for cards */
 @keyframes floatAdvanced {
   0%, 100% { 
     transform: translateY(0px) translateX(0px) rotate(0deg) scale(1);
@@ -235,6 +311,19 @@
   }
 }
 
-.animate-slideInUp {
-  animation: slideInUp 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+/* Clean futuristic animation classes */
+.animate-digitalReveal {
+  animation: digitalReveal 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+
+.animate-typewriterReveal {
+  animation: typewriterReveal 1s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+
+.animate-quickFadeIn {
+  animation: quickFadeIn 0.4s ease-out forwards;
+}
+
+.animate-scanlineReveal {
+  animation: scanlineReveal 0.6s ease-out forwards;
 }
