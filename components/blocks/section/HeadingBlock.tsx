@@ -3,17 +3,7 @@ import { SanityImage } from "@/components/global/Images";
 import Image from "next/image";
 import Link from "next/link";
 import { useParams } from "next/navigation";
-import React from "react";
-
-const RenderCategory = ({ category }) => {
-	if (!category) return null;
-
-	return (
-		<div className="my-1 flex text-[10px] font-semibold uppercase tracking-widest text-black flex items-center rounded-full justify-center bg-gray-400 p-1 pl-2 pr-2">
-			{category.title}
-		</div>
-	);
-};
+import React, { useEffect, useState, useRef } from "react";
 
 const Heading = ({ heading, className }) => {
 	if (!heading) return null;
@@ -44,172 +34,354 @@ const FormattedDate: React.FC<FormattedDateProps> = ({ date, className }) => {
 	return <span className={className}>{formattedDate}</span>;
 };
 
-const TeamSection = ({ team, theme }) => {
-	if (!team) return null;
-
-	return (
-		<div className="w-full items-center py-4">
-			<Link href={`/team/${team.slug.current}`} className={` `}>
-				<div className=" flex h-auto w-full justify-center p-1">
-					{team.image && (
-						<div className="flex w-full flex-row flex-wrap  items-center  ">
-							<SanityImage
-								image={team.image}
-								alt={`Team member image for ${team.name}`}
-								width={50}
-								height={50}
-								priority={true}
-								classesWrapper=" max-w-[2em] max-h-[2em] object-cover cover rounded-full"
-								theme={theme}
-							/>
-							<span className="ml-2 text-white font-kodemono text-sm font-bold uppercase leading-none tracking-wide  ">
-								{team.name}
-							</span>
-						</div>
-					)}
-				</div>
-			</Link>
-		</div>
-	);
-};
-
 const HeadingBlock = ({ block }) => {
 	const { className, publicationDate } = block;
 	const params = useParams();
 	const slug = params?.slug as string;
+	const [scrollProgress, setScrollProgress] = useState(0);
+	const heroRef = useRef<HTMLDivElement>(null);
 
 	const theme = block.className;
 	const imageUrl = block.imageRef?.imageUrl;
 	const imageAlt = block.imageRef?.imageAlt;
 
+	// Scroll tracking for parallax effect
+	useEffect(() => {
+		const handleScroll = () => {
+			if (!heroRef.current) return;
+
+			const rect = heroRef.current.getBoundingClientRect();
+			const windowHeight = window.innerHeight;
+
+			// Calculate scroll progress (0 to 1)
+			// When rect.top = 0 (hero at top), progress should be 0
+			// When rect.top = -windowHeight (hero scrolled past), progress should be 1
+			const progress = Math.max(0, Math.min(1, -rect.top / windowHeight));
+
+			setScrollProgress(progress);
+		};
+
+		window.addEventListener("scroll", handleScroll, { passive: true });
+		handleScroll(); // Initial call
+		return () => window.removeEventListener("scroll", handleScroll);
+	}, []);
+
 	switch (theme) {
 		case "dark":
 			return (
-				<div className="h-auto w-full pt-20 lg:py-24">
-					<div className="flex w-full flex-wrap justify-center">
-						<div
-							className={
-								"flex-cols flex w-full flex-wrap   items-center justify-between px-2 lg:hidden"
-							}
-						>
-							{block.category && <RenderCategory category={block.category} />}
-
-							<FormattedDate
-								date={publicationDate}
-								className={` my-1 w-auto text-gray-200/50 font-kodemono text-xs uppercase tracking-widest  `}
-							/>
-						</div>
-
-						<div className="flex w-full flex-wrap p-2 lg:w-1/2 px-32">
-							<div className="h-full w-full object-contain object-cover">
-								<div className="relative overflow-hidden shadow-lg">
-									<Image
-										src={imageUrl}
-										alt={imageAlt || "Post image"}
-										width={1000}
-										height={1000}
-										className="w-full h-full object-cover"
-										style={{
-											viewTransitionName: `post-image-${slug}`,
-										}}
-									/>
-								</div>
-								<p className="flex py-2 text-[8px] uppercase tracking-wide text-gray-200/50">
-									{imageAlt}
-								</p>
+				<>
+					{/* Full-Screen Hero Section with Padding */}
+					<div
+						ref={heroRef}
+						className="relative w-full h-screen pt-16 pb-4 px-4 md:pt-20 md:pb-6 md:px-6 lg:pt-24 lg:pb-8 lg:px-8"
+					>
+						<div className="relative w-full h-full overflow-hidden rounded-2xl shadow-2xl">
+							{/* Background Image with Parallax */}
+							<div
+								className="absolute inset-0 w-full h-full"
+								style={{
+									transform: `translateY(${scrollProgress * 50}px)`,
+									opacity: 1 - scrollProgress * 0.8,
+								}}
+							>
+								<Image
+									src={imageUrl}
+									alt={imageAlt || "Post image"}
+									fill
+									className="object-cover"
+									style={{
+										viewTransitionName: `post-image-${slug}`,
+									}}
+									priority
+								/>
+								{/* Dark overlay for text readability */}
+								<div className="absolute inset-0 bg-black/40" />
 							</div>
-						</div>
-						<div className="flex-cols flex w-full justify-center p-2 pr-4 pt-2 lg:w-1/2 lg:pr-20 lg:pt-4 ">
-							<div className="w-full ">
-								<div className="mb-6 hidden w-full items-center justify-between lg:flex">
+
+							{/* Floating UI Elements */}
+							<div className="absolute inset-0 pointer-events-none z-10">
+								{/* Top Bar - Category and Date */}
+								<div className="absolute top-8 left-8 right-8 flex items-center justify-between">
 									{block.category && (
-										<RenderCategory category={block.category} />
+										<div
+											className="transition-all duration-500"
+											style={{
+												opacity: 1 - scrollProgress * 2,
+												transform: `translateY(${scrollProgress * 20}px)`,
+											}}
+										>
+											<span className="inline-block px-3 py-1 rounded-full text-xs font-russo uppercase tracking-wide font-bold bg-white/90 text-black border border-white/50 backdrop-blur-xl shadow-sm">
+												{block.category.title.toUpperCase()}
+											</span>
+										</div>
 									)}
 
-									<FormattedDate
-										date={publicationDate}
-										className={` w-auto  text-gray-200/50 font-kodemono   text-xs uppercase tracking-widest`}
-									/>
+									<div
+										className="transition-all duration-500"
+										style={{
+											opacity: 1 - scrollProgress * 2,
+											transform: `translateY(${scrollProgress * 20}px)`,
+										}}
+									>
+										<FormattedDate
+											date={publicationDate}
+											className="text-white/80 font-kodemono text-xs uppercase tracking-widest bg-black/50 backdrop-blur-xl px-3 py-1 rounded-full"
+										/>
+									</div>
 								</div>
-								<Heading
-									heading={block.heading}
-									className={` font-russo text-white p-1 text-[10vw] font-bold uppercase leading-none  lg:text-[4vw]`}
-								/>
-								<SubHeading
-									heading={block.subheading}
-									className={`text-gray-200/50 font-outfit p-1 text-xl leading-tight`}
-								/>
-								<div className="w-full ">
-									<TeamSection team={block.team} theme={className} />
+
+								{/* Center Content - Title and Subtitle */}
+								<div className="absolute inset-0 flex items-center justify-center">
+									<div className="text-center max-w-4xl px-8">
+										{/* Main Title */}
+										<div
+											className="transition-all duration-700 ease-out"
+											style={{
+												opacity: 1 - scrollProgress * 1.5,
+												transform: `translateY(${
+													scrollProgress * -30
+												}px) scale(${1 - scrollProgress * 0.1})`,
+											}}
+										>
+											<Heading
+												heading={block.heading}
+												className="font-russo text-white text-4xl md:text-6xl lg:text-7xl font-bold uppercase leading-none mb-6 drop-shadow-2xl"
+											/>
+										</div>
+
+										{/* Subtitle */}
+										<div
+											className="transition-all duration-700 ease-out delay-100"
+											style={{
+												opacity: 1 - scrollProgress * 1.2,
+												transform: `translateY(${scrollProgress * -20}px)`,
+											}}
+										>
+											<SubHeading
+												heading={block.subheading}
+												className="text-white/90 font-outfit text-lg md:text-xl lg:text-2xl leading-relaxed drop-shadow-lg max-w-2xl mx-auto"
+											/>
+										</div>
+
+										{/* Author Info */}
+										{block.team && (
+											<div
+												className="mt-8 transition-all duration-700 ease-out delay-200"
+												style={{
+													opacity: 1 - scrollProgress * 1.8,
+													transform: `translateY(${scrollProgress * -10}px)`,
+												}}
+											>
+												<div className="flex items-center justify-center gap-4">
+													{block.team.image ? (
+														<SanityImage
+															image={block.team.image}
+															alt={block.team.name || "Author"}
+															width={120}
+															height={120}
+															classesWrapper="max-w-12 max-h-12 rounded-full border-2 border-white/50 shadow-lg"
+															priority={false}
+														/>
+													) : (
+														<div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full flex items-center justify-center shadow-lg border-2 border-white/50">
+															<span className="text-white font-russo font-bold text-sm">
+																{block.team.name?.charAt(0) || "?"}
+															</span>
+														</div>
+													)}
+													<div className="text-left">
+														<p className="font-outfit text-white font-semibold text-base drop-shadow-md">
+															{block.team.name}
+														</p>
+														<p className="font-outfit text-white/80 text-sm drop-shadow-md">
+															Reality Designer
+														</p>
+													</div>
+												</div>
+											</div>
+										)}
+									</div>
 								</div>
 							</div>
 						</div>
 					</div>
-				</div>
+
+					{/* Content Section - Appears as image fades */}
+					<div
+						className="relative bg-black min-h-screen pt-16"
+						style={{
+							opacity: scrollProgress * 1.5,
+							transform: `translateY(${(1 - scrollProgress) * 50}px)`,
+						}}
+					>
+						<div className="max-w-4xl mx-auto px-8">
+							{/* Image Caption */}
+							{imageAlt && (
+								<p className="text-gray-400 font-kodemono text-xs uppercase tracking-wide mb-8 text-center">
+									{imageAlt}
+								</p>
+							)}
+
+							{/* Content placeholder - this is where the rest of your content blocks would go */}
+							<div className="text-white/80 font-outfit text-lg leading-relaxed space-y-6">
+								<p>Content continues here as the hero image fades away...</p>
+								<p>
+									This is where your article content, additional blocks, and
+									other components would be rendered.
+								</p>
+							</div>
+						</div>
+					</div>
+				</>
 			);
 		case "light":
 			return (
-				<div className="h-auto w-full pt-20 lg:py-24">
-					<div className="flex w-full flex-wrap justify-center">
-						<div
-							className={
-								"flex-cols flex w-full flex-wrap   items-center justify-between px-2 lg:hidden"
-							}
-						>
-							{block.category && <RenderCategory category={block.category} />}
-
-							<FormattedDate
-								date={publicationDate}
-								className={` my-1 w-auto text-gray-200/50 font-kodemono text-xs uppercase tracking-widest  `}
-							/>
-						</div>
-
-						<div className="flex w-full flex-wrap p-2 lg:w-1/2">
-							<div className="h-full w-full object-contain object-cover">
-								<div className="relative overflow-hidden shadow-lg">
-									<Image
-										src={imageUrl}
-										alt={imageAlt || "Post image"}
-										width={1000}
-										height={1000}
-										className="w-full h-full object-cover"
-										style={{
-											viewTransitionName: `post-image-${slug}`,
-										}}
-									/>
-								</div>
-								<p className="flex py-2 text-[8px] uppercase tracking-wide text-gray-200/50">
-									{imageAlt}
-								</p>
+				<>
+					{/* Full-Screen Hero Section with Padding */}
+					<div
+						ref={heroRef}
+						className="relative w-full h-screen pt-16 pb-4 px-4 md:pt-20 md:pb-6 md:px-6 lg:pt-24 lg:pb-8 lg:px-8"
+					>
+						<div className="relative w-full h-full overflow-hidden rounded-xl">
+							{/* Background Image with Parallax */}
+							<div
+								className="absolute inset-0 w-full h-full"
+								style={{
+									transform: `translateY(${scrollProgress * 50}px)`,
+									opacity: 1 - scrollProgress * 0.8,
+								}}
+							>
+								<Image
+									src={imageUrl}
+									alt={imageAlt || "Post image"}
+									fill
+									quality={100}
+									className="object-cover"
+									style={{
+										viewTransitionName: `post-image-${slug}`,
+									}}
+									priority
+								/>
+								{/* Light overlay for text readability */}
+								<div className="absolute inset-0 bg-white/20" />
 							</div>
-						</div>
-						<div className="flex-cols flex w-full justify-center p-2 pr-4 pt-2 lg:w-1/2 lg:pr-20 lg:pt-4 ">
-							<div className="w-full ">
-								<div className="mb-6 hidden w-full items-center justify-between lg:flex">
+
+							{/* Floating UI Elements */}
+							<div className="absolute inset-0 pointer-events-none z-10">
+								{/* Top Bar - Category and Date */}
+								<div className="absolute top-8 left-8 right-8 flex items-center justify-between">
 									{block.category && (
-										<RenderCategory category={block.category} />
+										<div
+											className="transition-all duration-500"
+											style={{
+												opacity: 1 - scrollProgress * 2,
+												transform: `translateY(${scrollProgress * 20}px)`,
+											}}
+										>
+											<span className="inline-block px-3 py-1 rounded-full text-xs font-russo uppercase tracking-wide font-bold bg-black/90 text-white border border-black/50 backdrop-blur-xl shadow-sm">
+												{block.category.title.toUpperCase()}
+											</span>
+										</div>
 									)}
 
-									<FormattedDate
-										date={publicationDate}
-										className={` w-auto  text-gray-200/50 font-kodemono   text-xs uppercase tracking-widest`}
-									/>
+									<div
+										className="transition-all duration-500"
+										style={{
+											opacity: 1 - scrollProgress * 2,
+											transform: `translateY(${scrollProgress * 20}px)`,
+										}}
+									>
+										<FormattedDate
+											date={publicationDate}
+											className="text-black/80 font-kodemono text-xs uppercase tracking-widest bg-white/90 backdrop-blur-xl px-3 py-1 rounded-full border border-white/50"
+										/>
+									</div>
 								</div>
-								<Heading
-									heading={block.heading}
-									className={` font-russo text-black p-1 text-[10vw] font-bold uppercase leading-none  lg:text-[4vw]`}
-								/>
-								<SubHeading
-									heading={block.subheading}
-									className={`text-black/80 font-outfit p-1 text-xl leading-tight`}
-								/>
-								<div className="w-full ">
-									<TeamSection team={block.team} theme={className} />
+
+								{/* Center Content - Title and Subtitle */}
+								<div className="absolute inset-0 flex items-center justify-center z-90">
+									<div className="text-center max-w-4xl px-8">
+										{/* Main Title */}
+										<div
+											className="transition-all duration-700 ease-out"
+											style={{
+												opacity: 1 - scrollProgress * 1.5,
+												transform: `translateY(${
+													scrollProgress * -30
+												}px) scale(${1 - scrollProgress * 0.1})`,
+											}}
+										>
+											<Heading
+												heading={block.heading}
+												className="font-russo text-black text-4xl md:text-6xl lg:text-7xl font-bold uppercase leading-none mb-6 drop-shadow-2xl"
+											/>
+										</div>
+
+										{/* Subtitle */}
+										<div
+											className="transition-all duration-700 ease-out delay-100"
+											style={{
+												opacity: 1 - scrollProgress * 1.2,
+												transform: `translateY(${scrollProgress * -20}px)`,
+											}}
+										>
+											<SubHeading
+												heading={block.subheading}
+												className="text-black/90 font-outfit text-lg md:text-xl lg:text-2xl leading-relaxed drop-shadow-lg max-w-2xl mx-auto"
+											/>
+										</div>
+
+										{/* Author Info */}
+										{block.team && (
+											<div
+												className="mt-8 transition-all duration-700 ease-out delay-200"
+												style={{
+													opacity: 1 - scrollProgress * 1.8,
+													transform: `translateY(${scrollProgress * -10}px)`,
+												}}
+											>
+												<div className="flex items-center justify-center gap-4">
+													{block.team.image ? (
+														<SanityImage
+															image={block.team.image}
+															alt={block.team.name || "Author"}
+															width={120}
+															height={120}
+															classesWrapper="max-w-12 max-h-12 rounded-full border-2 border-black/30 shadow-lg"
+															priority={false}
+														/>
+													) : (
+														<div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full flex items-center justify-center shadow-lg border-2 border-black/30">
+															<span className="text-white font-russo font-bold text-sm">
+																{block.team.name?.charAt(0) || "?"}
+															</span>
+														</div>
+													)}
+													<div className="text-left">
+														<p className="font-outfit text-black font-semibold text-base drop-shadow-md">
+															{block.team.name}
+														</p>
+														<p className="font-outfit text-black/80 text-sm drop-shadow-md">
+															Reality Designer
+														</p>
+													</div>
+												</div>
+											</div>
+										)}
+									</div>
 								</div>
 							</div>
+
+							{/* Fade to Content Overlay */}
+							<div
+								className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-white to-transparent pointer-events-none z-20"
+								style={{
+									opacity: scrollProgress * 2,
+								}}
+							/>
 						</div>
 					</div>
-				</div>
+				</>
 			);
 
 		default:

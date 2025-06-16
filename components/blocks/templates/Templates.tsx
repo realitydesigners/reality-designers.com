@@ -90,17 +90,7 @@ const DarkTemplate = {
 		},
 	},
 	types: {
-		postsRef: ({ value }) => {
-			const { postsHeading, postsSlug, postsImage } = value.postsRef;
-
-			return (
-				<PostsRefBlock
-					slug={postsSlug}
-					heading={postsHeading}
-					image={postsImage}
-				/>
-			);
-		},
+		postsRef: ({ value }) => <PostsRefBlock postsRef={value.postsRef} />,
 		videoRef: ({ value }) => {
 			const { videoTitle, videoUrl, className } = value.videoRef;
 			return (
@@ -163,16 +153,7 @@ const LightTemplate = {
 		},
 	},
 	types: {
-		postsRef: ({ value }) => {
-			const { postsHeading, postsSlug, postsImage } = value.postsRef;
-			return (
-				<PostsRefBlock
-					slug={postsSlug}
-					heading={postsHeading}
-					image={postsImage}
-				/>
-			);
-		},
+		postsRef: ({ value }) => <PostsRefBlock postsRef={value.postsRef} />,
 		videoRef: ({ value }) => {
 			const { videoTitle, videoUrl, className } = value.videoRef;
 
@@ -190,74 +171,6 @@ const LightTemplate = {
 		},
 		imageRef: ({ value }) => {
 			const { image, className } = value;
-			return <ImageRefBlock image={image} className={className} />;
-		},
-		audioRef: ({ value }) => {
-			return <AudioRefBlock {...(value.audioRefData || {})} />;
-		},
-		quoteRef: ({ value }) => {
-			const { quoteTitle, quoteImage, className } = value.quoteRef || {};
-
-			return (
-				<QuoteRefBlock
-					quote={quoteTitle}
-					image={quoteImage}
-					className={className}
-				/>
-			);
-		},
-	},
-};
-const TransparentTemplate = {
-	block: {
-		normal: (props) => <NormalText {...props} theme="transparent" />,
-		h1: (props) => <Heading level={1} {...props} theme="transparent" />,
-		h2: (props) => <Heading level={2} {...props} theme="transparent" />,
-		h3: (props) => <Heading level={3} {...props} theme="transparent" />,
-	},
-	list: {
-		bullet: (props) => <List type="bullet" {...props} theme="transparent" />,
-		number: (props) => <List type="number" {...props} theme="transparent" />,
-	},
-	marks: {
-		internalLink: ({ value, children }) => {
-			const { slug = {}, theme } = value;
-			return (
-				<InternalLink slug={slug?.current} theme={theme}>
-					{children}
-				</InternalLink>
-			);
-		},
-	},
-	types: {
-		postsRef: ({ value }) => {
-			const { postsHeading, postsSlug, postsImage } = value.postsRef;
-			return (
-				<PostsRefBlock
-					slug={postsSlug}
-					heading={postsHeading}
-					image={postsImage}
-				/>
-			);
-		},
-		videoRef: ({ value }) => {
-			const { videoTitle, videoUrl, className } = value.videoRef;
-
-			return (
-				<VideoRefBlock
-					videoTitle={videoTitle}
-					videoUrl={videoUrl}
-					className={className}
-				/>
-			);
-		},
-		spline: ({ value }) => {
-			const { url } = value;
-			return <SplineRefBlock url={url} />;
-		},
-		imageRef: ({ value }) => {
-			const { image, className } = value;
-
 			return <ImageRefBlock image={image} className={className} />;
 		},
 		audioRef: ({ value }) => {
@@ -303,10 +216,4 @@ const TeamTemplate = {
 	},
 };
 
-export {
-	DarkTemplate,
-	LightTemplate,
-	TransparentTemplate,
-	TeamTemplate,
-	VideoTemplate,
-};
+export { DarkTemplate, LightTemplate, TeamTemplate, VideoTemplate };

@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import { Link } from "next-view-transitions";
-import NextImage from "next/image";
+import Image from "next/image";
 import { PostsPayload } from "@/types";
 import Button from "@/components/ui/Button";
 import { SanityImage } from "@/components/global/Images";
@@ -166,18 +166,15 @@ export default function BlogPostsSection({ posts }: BlogPostsSectionProps) {
 											className={`${layout.cols} flex`}
 										>
 											<Link
+												prefetch={true}
 												href={`/posts/${post.slug?.current}`}
 												className="group relative block w-full h-full"
 											>
 												{/* Futuristic Overlay Card */}
-												<div
-													className="relative overflow-hidden transition-all duration-300 shadow-lg hover:shadow-xl w-full h-full flex flex-col"
-												>
+												<div className="relative overflow-hidden transition-all duration-300 shadow-lg hover:shadow-xl w-full h-full flex flex-col">
 													{/* Full Image Background */}
-													<div
-														className="relative flex-1 overflow-hidden"
-													>
-														<NextImage
+													<div className="relative flex-1 overflow-hidden">
+														<Image
 															src={block.imageRef.imageUrl}
 															alt={block.imageRef.imageAlt || block.heading}
 															className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
@@ -207,12 +204,10 @@ export default function BlogPostsSection({ posts }: BlogPostsSectionProps) {
 														<div className="absolute bottom-0 left-0 right-0 p-6 transition-all duration-300">
 															{/* Enhanced gradient overlay on hover */}
 															<div className="absolute inset-0 bg-gradient-to-t from-black via-black to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10" />
-															
+
 															{/* Title */}
 															<h3
-																className={`font-russo ${
-																	layout.titleSize
-																} font-bold text-white leading-tight mb-2 transition-all duration-300 drop-shadow-lg`}
+																className={`font-russo ${layout.titleSize} font-bold text-white leading-tight mb-2 transition-all duration-300 drop-shadow-lg`}
 															>
 																{block.heading}
 															</h3>
@@ -222,7 +217,8 @@ export default function BlogPostsSection({ posts }: BlogPostsSectionProps) {
 																{block.subheading && (
 																	<p className="font-outfit text-white/90 text-sm leading-relaxed mb-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300 delay-100 drop-shadow-md">
 																		{block.subheading.length > 80
-																			? block.subheading.substring(0, 80) + "..."
+																			? block.subheading.substring(0, 80) +
+																			  "..."
 																			: block.subheading}
 																	</p>
 																)}
@@ -260,15 +256,17 @@ export default function BlogPostsSection({ posts }: BlogPostsSectionProps) {
 																			<p className="font-outfit text-white font-semibold text-sm drop-shadow-md">
 																				{block.team.name}
 																			</p>
-																		
 																		</div>
 																	</div>
 
 																	{/* Read Time */}
 																	<div className="text-right">
 																		<span className="text-white/80 font-outfit text-xs drop-shadow-md">
-																			{calculateReadTime(block.heading, block.subheading)} min
-																			read
+																			{calculateReadTime(
+																				block.heading,
+																				block.subheading,
+																			)}{" "}
+																			min read
 																		</span>
 																	</div>
 																</div>
@@ -323,7 +321,7 @@ export default function BlogPostsSection({ posts }: BlogPostsSectionProps) {
 														: "opacity-0 scale-105"
 												}`}
 											>
-												<NextImage
+												<Image
 													src={block.imageRef.imageUrl}
 													alt={block.imageRef.imageAlt || block.heading}
 													className="w-full h-full object-cover"
@@ -519,6 +517,7 @@ export default function BlogPostsSection({ posts }: BlogPostsSectionProps) {
 									>
 										<Link
 											href={`/posts/${activePost?.slug?.current}`}
+											prefetch={true}
 											className="group inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-black text-white hover:bg-gray-900 transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-xl text-sm"
 										>
 											<span className="font-russo uppercase tracking-wide font-bold">

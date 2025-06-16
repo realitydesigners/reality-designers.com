@@ -1,5 +1,114 @@
 import { groq } from "next-sanity";
 
+// Common fragments
+const blockFragment = groq`
+  ...,
+  heading,
+  subheading,
+  image,
+  tags,
+  layout,
+  title,
+  publicationDate,
+  team->{
+    ...,
+    name,
+    role,
+    image,
+    shortBio,
+  },
+  category->{
+    ...,
+    title,
+    slug,
+  },
+`;
+
+const imageRefFragment = groq`
+  "imageRef": {
+    ...,
+    "imageUrl": imageRef->image.asset->url,
+    "imageAlt": imageRef->alt,
+  },
+`;
+
+const teamFragment = groq`
+  team->{
+    ...,
+    name,
+    role,
+    image,
+    shortBio,
+  },
+`;
+
+const categoryFragment = groq`
+  category->{
+    ...,
+    title,
+    slug,
+  },
+`;
+
+const subcategoriesFragment = groq`
+  subcategories[]->{
+    ...,
+    name,
+    title,
+  },
+`;
+
+const contentFragment = groq`
+  content[] {
+    ...,
+    ${blockFragment}
+    image-> {
+      ...,
+      className->{name},
+      team->,
+    },
+    
+
+    markDefs[] {
+      ...,
+      _type == "internalLink" => {
+        "slug": @.reference->slug
+      }
+    },
+
+    "videoRef": {
+      ...,
+      "videoTitle": video->title,
+      "videoFileUrl": video->video.asset->url,
+      "videoImage": video->image.asset->url,
+      "videoUrl": video->url,
+      "videoTeam": video->team,
+    },
+    
+    "audioRefData": {
+      "audioTitle": audio->title,
+      "audioFileUrl": audio->audioFile.asset->url
+    },
+    
+    "quoteRef": {
+      "quoteTitle": quote->quote,
+      "quoteAuthor": quote->author,
+      "quoteImage": quote->mediaRef.image->image,
+      "quoteLayout": quote->mediaRef.layout,
+    },
+
+         "postsRef": {
+       "postsHeading": posts->block[0].heading,
+       "postsSubheading": posts->block[0].subheading,
+       "postsSlug": posts->slug.current,
+       "postsImage": posts->block[0].imageRef->image.asset->url,
+       "postsCategory": posts->block[0].category->title,
+       "postsAuthor": posts->block[0].team->name,
+       "postsAuthorImage": posts->block[0].team->image,
+     },
+  },
+`;
+
 export const settingsQuery = groq`
   *[_type == "settings"][0]{
     footer,
@@ -21,149 +130,44 @@ export const feedQuery = groq`
   tags,
   slug,
   image,
-  subcategories[]->{
-    ...,
-    name,
-    title,
-  },
+  ${subcategoriesFragment}
   publicationDate,
   title,
   slug,
   excerpt,
   image,
   block[]{
-    ...,
-    heading,
-    subheading,
-    image,
-    tags,
-    layout,
-    title,
-    publicationDate,
-    team->{
-      ...,
-      name,
-      role,
-      image,
-      shortBio,
-    },
+    ${blockFragment}
   },
 }
-
 `;
 
 export const postsQuery = groq`
  *[_type == "posts"] | order(_createdAt desc)[0...40] {
     slug,
      block[]{
-       ...,
-       heading,
-       subheading,
-       layout,
-       title,
-       publicationDate,
-        "imageRef": {
-              ...,
-            "imageUrl": imageRef->image.asset->url,
-            "imageAlt": imageRef->alt,
-        },
-      
-      team->{
-       ...,
-       name,
-       role,
-       image,
-       shortBio,
-     },
-     
-     category->{
-       ...,
-       title,
-       slug,
-     },
+       ${blockFragment}
+       ${imageRefFragment}
     },
-     
-   
  }`;
 
 export const postsBySlugQuery = groq`
-
 *[_type == "posts" && slug.current == $slug][0] {
     slug,
     block[] {
-        ...,
-        heading,
-        subheading,
-        tags,
-        category->,
-        layout,
-        publicationDate,
-        team->,
+        ${blockFragment}
         _type == "imageCanvasBlock" => {
             layout,
             image->,
-            team->, 
+            ${teamFragment}
             alt,
-            
         },
-              "imageRef": {
-              ...,
-            "imageUrl": imageRef->image.asset->url,
-            "imageAlt": imageRef->alt,
-        },
-      
+        ${imageRefFragment}
 
-       
-
-        content[] {
-            ...,
-            image-> {
-                ...,
-                className->{name},
-                team->,
-            },
-            
-            
-
-            markDefs[] {
-                ...,
-                _type == "internalLink" => {
-                    "slug": @.reference->slug
-                }
-            },
-
-            "videoRef": {
-              ...,
-                "videoTitle": video->title,
-                "videoFileUrl": video->video.asset->url,
-                "videoImage": video->image.asset->url,
-                "videoUrl": video->url,
-                "videoTeam": video->team,
-            },
-            
-            "audioRefData": {
-                "audioTitle": audio->title,
-                "audioFileUrl": audio->audioFile.asset->url
-            },
-            
-            "quoteRef": {
-                "quoteTitle": quote->quote,
-                "quoteAuthor": quote->author,
-                "quoteImage": quote->mediaRef.image->image,
-                "quoteLayout": quote->mediaRef.layout,
-
-            },
-
-            "postsRef": {
-                "postsHeading": posts->block[0].heading,
-                "postsSlug": posts->slug.current,
-                "postsImage": posts->block[0].imageRef->image.asset->url,
-            },
-        },
+        ${contentFragment}
     },
 }
-
- `;
+`;
 
 export const categoryQuery = groq`
 *[_type == "category"] {
@@ -203,24 +207,9 @@ export const categoryBySlugQuery = groq`
        _id,
        title,
        slug,
-     
        block[]{
-        ...,
-        heading,
-        subheading,
-        image,
-        tags,
-        layout,
-        title,
-        publicationDate,
-         team->{
-        ...,
-        name,
-        role,
-        image,
-        shortBio,
-      },
-    },
+        ${blockFragment}
+       },
      }
    },
   }
@@ -233,12 +222,7 @@ export const getVideosQuery = groq`
  url,
  image,
  video,
- subcategories[]->{
-   ...,
-   name,
-   title,
- },
- 
+ ${subcategoriesFragment}
  }`;
 
 export const getVideoBySlugQuery = groq`
@@ -248,35 +232,12 @@ export const getVideoBySlugQuery = groq`
    url,
    image,
    video,
-   subcategories[]->{
-     ...,
-     name,
-     title,
-   },
+   ${subcategoriesFragment}
    block[]{
-    ...,
-    heading,
-    subHeading,
-    url,
-    image,
-    tags,
-    layout,
-    title,
-    publicationDate,
-     team->{
-    ...,
-    name,
-    role,
-    image,
-    shortBio,
-  },
-  
-      content[]{
-    ...,
-      },
-    },
-   
-   }`;
+    ${blockFragment}
+    ${contentFragment}
+   },
+}`;
 
 export const teamQuery = groq`
  *[_type == "team"] |  order(_createdAt asc) {
@@ -303,26 +264,9 @@ export const teamBySlugQuery = groq`
  scene,
  shortBio,
  block[]{
-  ...,
-  heading,
-  subHeading,
-  image,
-  tags,
-  layout,
-  title,
-  publicationDate,
-   team->{
-  ...,
-  name,
-  role,
-  image,
-  shortBio,
-},
-
-    content[]{
-  ...,
-    },
-  },
+  ${blockFragment}
+  ${contentFragment}
+ },
  slug,
  title,    
  instagram,
@@ -362,11 +306,8 @@ export const glossaryBySlugQuery = groq`
   tags,
   layout,
   title,
- 
-    content[]{
-  ...,
-    },
-  },
+  ${contentFragment}
+ },
  slug,
  title,    
  instagram,

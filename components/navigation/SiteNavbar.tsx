@@ -289,7 +289,6 @@ export default function SiteNavbar() {
 										<div className="absolute inset-0 rounded-xl bg-gradient-to-r from-blue-500/5 via-purple-500/5 to-pink-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
 									</Link>
 
-					
 									{/* {activeDropdown === label && (
 										<DropdownPanel
 											dropdown={dropdown}

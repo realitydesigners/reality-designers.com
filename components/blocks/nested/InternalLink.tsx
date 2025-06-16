@@ -5,33 +5,6 @@ import Link from "next/link";
 import Image from "next/image";
 import React, { useState } from "react";
 
-import { TemplateTheme, ThemeProps } from "@/components/blocks/Blocks";
-
-const themeClasses: Record<TemplateTheme, ThemeProps> = {
-	light: {
-		textColor: "text-black",
-		backgroundColor: "bg-gray-300",
-		topBackgroundColor: "bg-gray-200/50",
-		buttonTextColor: "text-gray-200",
-		buttonBackgroundColor: "bg-black hover:bg-black/80",
-	},
-	dark: {
-		textColor:
-			"bg-gradient-to-r from-blue-100/100 to-blue-100/90 text-transparent bg-clip-text transition-color",
-		backgroundColor: "bg-gradient-to-r from-blue-200/10 to-blue-200/5 ",
-		topBackgroundColor: "bg-blue-200/5 ",
-		buttonTextColor: "text-blue-100",
-		buttonBackgroundColor: "bg-blue-200/10 hover:bg-blue-200/20",
-	},
-	transparent: {
-		textColor: "text-gray-200",
-		backgroundColor: "bg-[#111]",
-		topBackgroundColor: "bg-[#222]",
-		buttonTextColor: "text-black",
-		buttonBackgroundColor: "bg-gray-200 hover:bg-gray-200/80",
-	},
-};
-
 const formatDate = (dateString) => {
 	return dateString
 		? new Date(dateString).toLocaleDateString("en-US", {
@@ -42,98 +15,122 @@ const formatDate = (dateString) => {
 		: "Date not available";
 };
 
-const TeamLink = ({ team, theme }) => {
-	if (!team) return null;
-	const style = themeClasses[theme];
-
-	return (
-		<Link href={`/team/${team.slug.current}`}>
-			<div className={`flex w-auto items-center p-2 ${style.textColor}`}>
-				{team.image && (
-					<SanityImage
-						image={team.image}
-						width={100}
-						height={100}
-						priority={true}
-						alt="Team Image"
-						classesWrapper="h-[30px] max-w-[30px] object-cover rounded-[1em]"
-						theme={theme} // Pass theme here
-					/>
-				)}
-				<span className="ml-2 text-sm uppercase   tracking-wide">
-					{team.name || "no title"}
-				</span>
-			</div>
-		</Link>
-	);
-};
-
 const PostPreviewDialog = ({
 	isOpen,
 	onClose,
 	postData,
-	theme,
 }: {
 	isOpen: boolean;
 	onClose: () => void;
-	// biome-ignore lint/suspicious/noExplicitAny: <explanation>
 	postData: any;
-	theme: TemplateTheme;
 }) => {
 	if (!isOpen || !postData) return null;
+
 	const { block = [] } = postData;
 	const [content] = block;
-	const imageUrl = block[0].imageRef?.imageUrl;
-
-	const style = themeClasses[theme];
+	const imageUrl = block[0]?.imageRef?.imageUrl;
 
 	return (
-		<div id="popup" className="my-5 w-full items-center justify-center">
-			<div
-				className={`grid w-full grid-cols-1 justify-center rounded-[.7em] p-2 shadow-lg  ${style.backgroundColor}`}
-			>
+		<div className="mt-6 w-full">
+			<div className="relative overflow-hidden transition-all duration-300 shadow-lg hover:shadow-xl rounded-xl bg-gray-50 border border-gray-200/50">
 				{content && (
 					<>
-						<div
-							className={`flex h-auto w-full justify-between  rounded-[.6em] p-2  ${style.topBackgroundColor} `}
-						>
-							<Image
-								src={imageUrl}
-								alt={"this"}
-								width={100}
-								height={100}
-								className="h-[50px] max-w-[50px] rounded-[.5em] object-cover"
-							/>
+						{/* Top section with image and basic info */}
+						<div className="flex items-center justify-between p-4 bg-gray-50/50 border-b border-gray-200/50">
+							<div className="flex items-center gap-4">
+								<div className="relative w-12 h-12 overflow-hidden rounded-lg flex-shrink-0">
+									<Image
+										src={imageUrl}
+										alt={content.heading || "Post image"}
+										fill
+										className="object-cover"
+										style={{
+											viewTransitionName: `post-image-${postData.slug?.current}`,
+										}}
+									/>
+								</div>
 
-							<div className="flex w-full justify-between">
-								<Link
-									href={`/posts/${postData.slug.current}`}
-									className={`${style.textColor} lg:text-md flex w-1/2 items-center pl-4 text-sm font-bold leading-[1.3em]`}
-								>
-									{content.heading || "no title"}
-								</Link>
-								<span
-									className={`${style.textColor} mb-2 flex h-auto w-auto items-center pr-2 pt-1 text-[.6em] uppercase leading-[1em] tracking-widest`}
-								>
-									{formatDate(content.publicationDate)}
+								<div className="flex-1">
+									<Link
+										href={`/posts/${postData.slug?.current}`}
+										className="font-russo text-black hover:text-gray-700 text-sm lg:text-base font-bold leading-tight transition-colors"
+									>
+										{content.heading || "No title"}
+									</Link>
+								</div>
+							</div>
+
+							{/* Date badge */}
+							<div className="flex-shrink-0">
+								<span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/90 backdrop-blur-xl border border-gray-200/50 shadow-sm">
+									<div className="w-1 h-1 bg-purple-500 rounded-full" />
+									<span className="font-russo text-gray-600 text-xs uppercase tracking-wide font-bold">
+										{formatDate(content.publicationDate)}
+									</span>
 								</span>
 							</div>
-							{/* <DialogButton onClose={onClose} /> */}
 						</div>
 
-						<div className="relative flex h-auto w-full flex-col">
-							<h4 className={`${style.textColor} p-4 text-2xl leading-[1.3em]`}>
-								{content.subheading || "no title"}
-							</h4>
+						{/* Content section */}
+						<div className="p-6">
+							{/* Subheading */}
+							<p className="font-outfit text-gray-600 text-base leading-relaxed mb-4">
+								{content.subheading || "No description"}
+							</p>
 
-							<div className="relative flex items-center justify-between">
-								<TeamLink team={content?.team} theme={theme} />
+							{/* Bottom section with author and CTA */}
+							<div className="flex items-center justify-between">
+								{/* Author info */}
+								{content.team && (
+									<div className="flex items-center gap-3">
+										{content.team.image ? (
+											<SanityImage
+												image={content.team.image}
+												alt={content.team.name || "Author"}
+												width={80}
+												height={80}
+												classesWrapper="max-w-8 max-h-8 rounded-full border-2 border-gray-200/50 shadow-sm"
+												priority={false}
+											/>
+										) : (
+											<div className="w-8 h-8 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full flex items-center justify-center shadow-sm border-2 border-gray-200/50">
+												<span className="text-white font-russo font-bold text-xs">
+													{content.team.name?.charAt(0) || "?"}
+												</span>
+											</div>
+										)}
+										<div>
+											<p className="font-kodemono uppercase text-black font-semibold text-sm">
+												{content.team.name || "No author"}
+											</p>
+										</div>
+									</div>
+								)}
+
+								{/* Read More Button */}
 								<Link
-									href={`/posts/${postData.slug.current}`}
-									className={`${style.buttonTextColor} ${style.buttonBackgroundColor} absolute bottom-1 right-2 flex items-center justify-center rounded-[.7em] px-4 py-2 text-sm font-bold uppercase hover:transition-colors`}
+									href={`/posts/${postData.slug?.current}`}
 									prefetch={true}
+									className="group inline-flex items-center gap-2 px-4 py-2 rounded-full bg-black text-white hover:bg-gray-900 transition-all duration-300 hover:scale-105 shadow-md hover:shadow-lg text-sm"
 								>
-									Read More
+									<span className="font-russo uppercase tracking-wide font-bold">
+										Read More
+									</span>
+									<div className="w-3 h-3 border border-white/30 rounded-full flex items-center justify-center group-hover:border-white transition-colors">
+										<svg
+											className="w-1.5 h-1.5 transform group-hover:translate-x-0.5 transition-transform"
+											fill="none"
+											stroke="currentColor"
+											viewBox="0 0 24 24"
+										>
+											<path
+												strokeLinecap="round"
+												strokeLinejoin="round"
+												strokeWidth={2}
+												d="M17 8l4 4m0 0l-4 4m4-4H3"
+											/>
+										</svg>
+									</div>
 								</Link>
 							</div>
 						</div>
@@ -146,17 +143,30 @@ const PostPreviewDialog = ({
 
 const InternalLink: React.FC<{
 	slug: string;
-	theme: TemplateTheme;
 	children: React.ReactNode;
-}> = ({ slug, children, theme }) => {
+}> = ({ slug, children }) => {
 	const [isDialogOpen, setDialogOpen] = useState(false);
 	const [previewPostData, setPreviewPostData] = useState(null);
 	const [isLoading, setIsLoading] = useState(false);
 
-	const openDialog = async (
+	const toggleDialog = async (
 		e: React.MouseEvent<HTMLAnchorElement, MouseEvent>,
 	) => {
 		e.preventDefault();
+
+		// If already open, just close it
+		if (isDialogOpen) {
+			setDialogOpen(false);
+			return;
+		}
+
+		// If we already have data, just open without loading
+		if (previewPostData) {
+			setDialogOpen(true);
+			return;
+		}
+
+		// If no data yet, load and open
 		setIsLoading(true);
 		setDialogOpen(true);
 
@@ -168,7 +178,6 @@ const InternalLink: React.FC<{
 
 		try {
 			const data = await getPostData(slug);
-			// biome-ignore lint/suspicious/noExplicitAny: <explanation>
 			setPreviewPostData(data as any);
 		} catch (error) {
 			console.error("Failed to fetch post data:", error);
@@ -179,22 +188,22 @@ const InternalLink: React.FC<{
 
 	return (
 		<>
-			<Link href="#popup" onClick={openDialog}>
-				<span className="text-xl font-bold capitalize underline">
+			<Link href="#popup" onClick={toggleDialog}>
+				<span className="font-outfit font-bold text-black hover:text-gray-700 transition-colors">
 					{children}
 				</span>
-				<span
-					className={`  ml-2 rounded-full bg-[#c4b5fd] pb-[5px] pl-2 pr-2 pt-[5px] text-[16px] text-black`}
-				>
+				<span className="inline-flex items-center gap-1 ml-2 px-2 py-0.5 rounded-full bg-purple-100 text-purple-700 text-xs font-russo uppercase tracking-wide font-bold hover:bg-purple-200 transition-colors">
+					<div className="w-1 h-1 bg-purple-500 rounded-full" />
 					POST
 				</span>
 			</Link>
+
 			<PostPreviewDialog
 				isOpen={isDialogOpen}
 				onClose={() => setDialogOpen(false)}
 				postData={previewPostData}
-				theme={theme}
 			/>
+
 			{isDialogOpen && isLoading && <LoadingIndicator />}
 		</>
 	);
@@ -203,35 +212,14 @@ const InternalLink: React.FC<{
 export default React.memo(InternalLink);
 
 const LoadingIndicator = () => (
-	<div className="my-4 flex items-center justify-center">
-		<div className="flex h-auto w-full animate-pulse items-center justify-center rounded-lg bg-gradient-to-r from-blue-200/10  to-blue-200/5   p-4 shadow-lg">
-			{/* biome-ignore lint/a11y/noSvgWithoutTitle: <explanation> */}
-			<svg
-				width="100"
-				height="100"
-				viewBox="0 0 50 50"
-				xmlns="http://www.w3.org/2000/svg"
-			>
-				<circle
-					cx="25"
-					cy="25"
-					r="20"
-					stroke="#333"
-					strokeWidth="5"
-					fill="none"
-					strokeDasharray="31.415, 31.415"
-					strokeDashoffset="0"
-				>
-					<animateTransform
-						attributeName="transform"
-						type="rotate"
-						from="0 25 25"
-						to="360 25 25"
-						dur="1s"
-						repeatCount="indefinite"
-					/>
-				</circle>
-			</svg>
+	<div className="my-6 w-full">
+		<div className="bg-white/90 backdrop-blur-xl rounded-xl p-6 shadow-lg border border-gray-200/50">
+			<div className="flex items-center gap-3 justify-center">
+				<div className="w-5 h-5 border-2 border-purple-500 border-t-transparent rounded-full animate-spin" />
+				<span className="font-outfit text-gray-700 text-sm">
+					Loading preview...
+				</span>
+			</div>
 		</div>
 	</div>
 );

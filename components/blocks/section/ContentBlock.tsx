@@ -3,7 +3,6 @@ import {
 	DarkTemplate,
 	LightTemplate,
 	TeamTemplate,
-	TransparentTemplate,
 	VideoTemplate,
 } from "@/components/blocks/templates/Templates";
 import {
@@ -29,7 +28,6 @@ const containerStyles: Record<TemplateTheme, string> = {
 const templateComponents: Record<LayoutTheme, PortableTextComponents> = {
 	dark: DarkTemplate as PortableTextComponents,
 	light: LightTemplate as PortableTextComponents,
-	transparent: TransparentTemplate as PortableTextComponents,
 	team: TeamTemplate as PortableTextComponents,
 	video: VideoTemplate as PortableTextComponents,
 };

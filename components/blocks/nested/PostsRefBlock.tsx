@@ -1,50 +1,116 @@
 "use client";
 import { SanityImage } from "@/components/global/Images";
-import Link from "next/link";
+import { Link } from "next-view-transitions";
 import React from "react";
 
-interface PostsCardLightProps {
-	slug: string;
-	heading: string;
-	image: string;
+interface PostsRefData {
+	postsSlug: string;
+	postsHeading: string;
+	postsSubheading?: string;
+	postsImage: any;
+	postsCategory?: string;
+	postsAuthor?: string;
+	postsAuthorImage?: any;
 }
 
-const PostsCardLight: React.FC<PostsCardLightProps> = ({
-	slug,
-	heading,
-	image,
-}) => {
-	return (
-		<div className="flex w-full items-center justify-center py-4 px-4">
-			<div className="bg-gradient-to-r from-blue-200/10 to-blue-100/5 w-full rounded-lg md:w-1/3 group flex h-auto flex-row p-3 shadow-lg transition-shadow duration-300 hover:shadow-xl lg:w-1/3">
-				<img
-					src={image}
-					alt={heading}
-					className="h-[80px] max-w-[80px] rounded-[.5em] object-cover"
-				/>
-				<div className="relative flex w-3/4 flex-col pl-4">
-					<p className="pt-2 mb-2 font-bold font-kodemono text-xs uppercase leading-none tracking-wide text-gray-200/500 ">
-						Related Post
-					</p>
+interface PostsRefBlockProps {
+	postsRef: PostsRefData;
+}
 
-					<Link
-						className="duration-3 font-russo font-bold leading-[1.2em] text-xl lg:text-2xl text-black transition-colors group-hover:underline"
-						href={`/posts/${slug}`}
-					>
-						{heading}
-					</Link>
+const PostsRefBlock: React.FC<PostsRefBlockProps> = ({ postsRef }) => {
+	const {
+		postsSlug,
+		postsHeading,
+		postsSubheading,
+		postsImage,
+		postsCategory,
+		postsAuthor,
+		postsAuthorImage,
+	} = postsRef;
+
+	// Calculate read time (simple estimation)
+	const readTime = Math.max(
+		2,
+		Math.ceil((postsHeading.length + (postsSubheading?.length || 0)) / 200),
+	);
+
+	return (
+		<div className="w-full py-6">
+			<div className="max-w-3xl mx-auto px-4 lg:px-20">
+				{/* Smaller header */}
+				<div className="text-left mb-4">
+					<div className="inline-block px-2 py-0.5 rounded-full text-xs font-russo uppercase bg-black text-white border border-white/50 backdrop-blur-xl shadow-sm">
+						RELATED POST
+					</div>
 				</div>
+
+				<Link
+					href={`/posts/${postsSlug}`}
+					prefetch={true}
+					className="group block"
+				>
+					{/* Compact horizontal card */}
+					<div className="relative overflow-hidden transition-all duration-300 hover:shadow-md rounded-lg bg-gray-50 border border-gray-100 hover:border-gray-200">
+						<div className="flex items- p-4 gap-4">
+							{/* Smaller image */}
+							<div className="relative w-24 h-24 overflow-hidden rounded-md flex-shrink-0">
+								{typeof postsImage === "string" ? (
+									<img
+										src={postsImage}
+										alt={postsHeading}
+										className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+										style={{
+											viewTransitionName: `post-image-${postsSlug}`,
+										}}
+									/>
+								) : (
+									<div
+										style={{
+											viewTransitionName: `post-image-${postsSlug}`,
+										}}
+										className="w-full h-full"
+									>
+										<SanityImage
+											image={postsImage}
+											alt={postsHeading}
+											width={120}
+											height={120}
+											classesWrapper="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+											priority={false}
+										/>
+									</div>
+								)}
+							</div>
+
+							{/* Content */}
+							<div className="flex-1 min-w-0">
+								{/* Title and category */}
+								<div className="flex items-start justify-between gap-3 mb-2">
+									<h3 className="font-russo text-base font-bold text-black leading-tight group-hover:text-gray-700 transition-colors">
+										{postsHeading}
+									</h3>
+									{postsCategory && (
+										<span className="inline-block px-2 py-0.5 rounded text-xs font-russo uppercase tracking-wide font-bold bg-gray-100 text-gray-600 flex-shrink-0">
+											{postsCategory}
+										</span>
+									)}
+								</div>
+
+								{/* Subheading - smaller */}
+								{postsSubheading && (
+									<p className="font-outfit text-gray-500 text-sm leading-relaxed mb-3 line-clamp-3">
+										{postsSubheading.length > 60
+											? postsSubheading.substring(0, 200) + "..."
+											: postsSubheading}
+									</p>
+								)}
+							</div>
+						</div>
+					</div>
+				</Link>
 			</div>
 		</div>
 	);
-};
-
-const PostsRefBlock: React.FC<PostsCardLightProps> = ({
-	slug,
-	heading,
-	image,
-}) => {
-	return <PostsCardLight slug={slug} heading={heading} image={image} />;
 };
 
 export default PostsRefBlock;
