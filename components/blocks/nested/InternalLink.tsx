@@ -1,6 +1,7 @@
 "use client";
 import { getPostData } from "@/app/(admin)/api/actions/fetchInternalLink";
 import { SanityImage } from "@/components/global/Images";
+import Button from "@/components/ui/Button";
 import Link from "next/link";
 import Image from "next/image";
 import React, { useState } from "react";
@@ -108,30 +109,28 @@ const PostPreviewDialog = ({
 								)}
 
 								{/* Read More Button */}
-								<Link
+								<Button
 									href={`/posts/${postData.slug?.current}`}
-									prefetch={true}
-									className="group inline-flex items-center gap-2 px-4 py-2 rounded-full bg-black text-white hover:bg-gray-900 transition-all duration-300 hover:scale-105 shadow-md hover:shadow-lg text-sm"
+									variant="primary"
+									size="sm"
+									theme="light"
+									className="text-sm rounded-full"
 								>
-									<span className="font-russo uppercase tracking-wide font-bold">
-										Read More
-									</span>
-									<div className="w-3 h-3 border border-white/30 rounded-full flex items-center justify-center group-hover:border-white transition-colors">
-										<svg
-											className="w-1.5 h-1.5 transform group-hover:translate-x-0.5 transition-transform"
-											fill="none"
-											stroke="currentColor"
-											viewBox="0 0 24 24"
-										>
-											<path
-												strokeLinecap="round"
-												strokeLinejoin="round"
-												strokeWidth={2}
-												d="M17 8l4 4m0 0l-4 4m4-4H3"
-											/>
-										</svg>
-									</div>
-								</Link>
+									Read More
+									<svg
+										className="w-3 h-3 ml-1 transform group-hover:translate-x-0.5 transition-transform"
+										fill="none"
+										stroke="currentColor"
+										viewBox="0 0 24 24"
+									>
+										<path
+											strokeLinecap="round"
+											strokeLinejoin="round"
+											strokeWidth={2}
+											d="M17 8l4 4m0 0l-4 4m4-4H3"
+										/>
+									</svg>
+								</Button>
 							</div>
 						</div>
 					</>
@@ -142,9 +141,10 @@ const PostPreviewDialog = ({
 };
 
 const InternalLink: React.FC<{
-	slug: string;
+	internalLink: { slug?: { current?: string } };
 	children: React.ReactNode;
-}> = ({ slug, children }) => {
+}> = ({ internalLink, children }) => {
+	const slug = internalLink?.slug?.current;
 	const [isDialogOpen, setDialogOpen] = useState(false);
 	const [previewPostData, setPreviewPostData] = useState(null);
 	const [isLoading, setIsLoading] = useState(false);

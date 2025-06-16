@@ -348,53 +348,56 @@ export default function SiteNavbar() {
 			</div>
 
 			{/* Mobile Navigation Menu */}
-			<div
-				className={`fixed inset-0 z-50 transform transition-all duration-500 lg:hidden ${
-					isNavOpen
-						? "translate-x-0 opacity-100"
-						: "translate-x-full opacity-0 pointer-events-none"
-				}`}
-			>
-				{/* Background with interdimensional effects */}
-				<div className="absolute inset-0 bg-black/95 backdrop-blur-2xl">
-					{/* Animated grid pattern */}
+			{isNavOpen && isReady && navbarTheme && (
+				<div className="fixed inset-0 z-50 lg:hidden animate-in slide-in-from-right duration-300">
+					{/* Background with theme-aware styling */}
+					<div className={`absolute inset-0 backdrop-blur-2xl ${
+						navbarTheme === "dark" 
+							? "bg-black/95" 
+							: "bg-white/95"
+					}`}>
+					{/* Subtle grid pattern */}
 					<div
-						className="absolute inset-0 opacity-20"
+						className="absolute inset-0 opacity-10"
 						style={{
 							backgroundImage: `
-								linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px),
-								linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)
+								linear-gradient(${navbarTheme === "dark" ? "rgba(255,255,255,0.05)" : "rgba(0,0,0,0.05)"} 1px, transparent 1px),
+								linear-gradient(90deg, ${navbarTheme === "dark" ? "rgba(255,255,255,0.05)" : "rgba(0,0,0,0.05)"} 1px, transparent 1px)
 							`,
 							backgroundSize: "40px 40px",
-							animation: "gridFloat 20s ease-in-out infinite",
 						}}
 					></div>
 
-					{/* Floating geometric shapes */}
+					{/* Minimal floating elements */}
 					<div className="absolute inset-0 overflow-hidden">
-						<div className="absolute top-1/4 left-1/4 w-32 h-32 border border-white/10 rounded-full animate-pulse"></div>
-						<div
-							className="absolute top-3/4 right-1/4 w-24 h-24 border border-white/5 rotate-45 animate-spin"
-							style={{ animationDuration: "30s" }}
-						></div>
-						<div className="absolute top-1/2 left-1/2 w-16 h-16 border border-white/10 transform -translate-x-1/2 -translate-y-1/2 animate-pulse delay-1000"></div>
+						<div className={`absolute top-1/4 left-1/4 w-32 h-32 border rounded-full animate-pulse opacity-20 ${
+							navbarTheme === "dark" ? "border-white/10" : "border-black/10"
+						}`}></div>
+						<div className={`absolute top-3/4 right-1/4 w-24 h-24 border rotate-45 opacity-10 ${
+							navbarTheme === "dark" ? "border-white/5" : "border-black/5"
+						}`} style={{ animationDuration: "30s" }}></div>
 					</div>
-
-					{/* Gradient overlay */}
-					<div className="absolute inset-0 bg-gradient-to-br from-blue-900/10 via-transparent to-purple-900/10"></div>
 				</div>
 
 				{/* Mobile menu content */}
 				<div className="relative z-10 flex h-full flex-col">
 					{/* Header */}
-					<div className="flex items-center justify-between p-6 border-b border-white/10">
+					<div className={`flex items-center justify-between p-6 border-b ${
+						navbarTheme === "dark" ? "border-white/10" : "border-black/10"
+					}`}>
 						<Link
 							href="/"
-							className="flex items-center gap-3 text-white"
+							className={`flex items-center gap-3 transition-colors duration-300 ${
+								navbarTheme === "dark" ? "text-white" : "text-black"
+							}`}
 							onClick={closeNav}
 						>
-							<div className="p-2 rounded-xl bg-white/10 border border-white/20">
-								<Logo size={24} iconColor="#fff" />
+							<div className={`p-2 rounded-xl border ${
+								navbarTheme === "dark" 
+									? "bg-white/10 border-white/20" 
+									: "bg-black/10 border-black/20"
+							}`}>
+								<Logo size={24} iconColor={navbarTheme === "dark" ? "#fff" : "#1f2937"} />
 							</div>
 							<div className="flex flex-col">
 								<span className="font-russo text-lg font-bold leading-none tracking-wide">
@@ -408,7 +411,11 @@ export default function SiteNavbar() {
 						<button
 							type="button"
 							onClick={toggleNav}
-							className="p-2 rounded-xl hover:bg-white/10 text-white border border-white/10"
+							className={`p-2 rounded-xl border transition-all duration-300 ${
+								navbarTheme === "dark"
+									? "hover:bg-white/10 text-white border-white/10"
+									: "hover:bg-black/10 text-black border-black/10"
+							}`}
 						>
 							{getIcon("menu")}
 						</button>
@@ -416,19 +423,23 @@ export default function SiteNavbar() {
 
 					{/* Navigation links */}
 					<div className="flex-1 px-6 py-8">
-						<div className="space-y-4">
+						<div className="space-y-3">
 							{Links.map(({ href, label, icon }, index) => (
 								<Link
 									key={label}
 									href={href}
 									onClick={closeNav}
-									className="group flex items-center gap-4 p-4 rounded-xl hover:bg-white/5 text-white/80 hover:text-white border border-white/10 hover:border-white/20 transition-all duration-300 transform hover:scale-105"
+									className={`group flex items-center gap-4 p-4 rounded-xl border transition-all duration-300 transform hover:scale-105 ${
+										navbarTheme === "dark"
+											? "hover:bg-white/5 text-white/80 hover:text-white border-white/10 hover:border-white/20"
+											: "hover:bg-black/5 text-black/80 hover:text-black border-black/10 hover:border-black/20"
+									}`}
 									style={{ animationDelay: `${index * 50}ms` }}
 								>
 									<div className="w-6 h-6 flex items-center justify-center">
 										{getIcon(icon)}
 									</div>
-									<span className="font-russo text-lg font-bold uppercase tracking-wide">
+									<span className="font-russo text-base font-bold uppercase tracking-wide">
 										{label}
 									</span>
 								</Link>
@@ -436,11 +447,14 @@ export default function SiteNavbar() {
 						</div>
 
 						{/* Mobile action buttons */}
-						<div className="mt-8 pt-8 border-t border-white/10 space-y-4">
+						<div className={`mt-8 pt-8 border-t space-y-3 ${
+							navbarTheme === "dark" ? "border-white/10" : "border-black/10"
+						}`}>
 							<Button
-								variant="secondary"
+								variant="navbar"
 								size="md"
 								href="/login"
+								theme={navbarTheme}
 								className="w-full"
 								onClick={closeNav}
 							>
@@ -450,6 +464,7 @@ export default function SiteNavbar() {
 								variant="primary"
 								size="md"
 								href="/contact"
+								theme={navbarTheme}
 								className="w-full"
 								onClick={closeNav}
 							>
@@ -459,6 +474,7 @@ export default function SiteNavbar() {
 					</div>
 				</div>
 			</div>
+			)}
 		</>
 	);
 }

@@ -80,14 +80,9 @@ const DarkTemplate = {
 		number: (props) => <List type="number" {...props} theme="dark" />,
 	},
 	marks: {
-		internalLink: ({ value, children }) => {
-			const { slug = {}, theme } = value;
-			return (
-				<InternalLink slug={slug?.current} theme={theme}>
-					{children}
-				</InternalLink>
-			);
-		},
+		internalLink: ({ value, children }) => (
+			<InternalLink internalLink={value} children={children} />
+		),
 	},
 	types: {
 		postsRef: ({ value }) => <PostsRefBlock postsRef={value.postsRef} />,
@@ -143,14 +138,9 @@ const LightTemplate = {
 		number: (props) => <List type="number" {...props} theme="light" />,
 	},
 	marks: {
-		internalLink: ({ value, children }) => {
-			const { slug = {}, theme } = value;
-			return (
-				<InternalLink slug={slug?.current} theme={theme}>
-					{children}
-				</InternalLink>
-			);
-		},
+		internalLink: ({ value, children }) => (
+			<InternalLink internalLink={value} children={children} />
+		),
 	},
 	types: {
 		postsRef: ({ value }) => <PostsRefBlock postsRef={value.postsRef} />,

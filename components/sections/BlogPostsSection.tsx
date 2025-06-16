@@ -95,7 +95,7 @@ export default function BlogPostsSection({ posts }: BlogPostsSectionProps) {
 	return (
 		<section
 			ref={sectionRef}
-			className="relative w-full py-16 bg-gradient-to-br from-gray-50 via-white to-gray-100"
+			className="relative w-full py-16 0"
 			data-theme="light"
 		>
 			{/* Header */}
@@ -515,30 +515,28 @@ export default function BlogPostsSection({ posts }: BlogPostsSectionProps) {
 												: "opacity-100 transform translate-y-0"
 										}`}
 									>
-										<Link
+										<Button
 											href={`/posts/${activePost?.slug?.current}`}
-											prefetch={true}
-											className="group inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-black text-white hover:bg-gray-900 transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-xl text-sm"
+											variant="primary"
+											size="sm"
+											theme="light"
+											className="text-sm rounded-full"
 										>
-											<span className="font-russo uppercase tracking-wide font-bold">
-												Read More
-											</span>
-											<div className="w-4 h-4 border border-white/30 rounded-full flex items-center justify-center group-hover:border-white transition-colors">
-												<svg
-													className="w-2 h-2 transform group-hover:translate-x-0.5 transition-transform"
-													fill="none"
-													stroke="currentColor"
-													viewBox="0 0 24 24"
-												>
-													<path
-														strokeLinecap="round"
-														strokeLinejoin="round"
-														strokeWidth={2}
-														d="M17 8l4 4m0 0l-4 4m4-4H3"
-													/>
-												</svg>
-											</div>
-										</Link>
+											Read More
+											<svg
+												className="w-3 h-3 ml-1 transform group-hover:translate-x-0.5 transition-transform"
+												fill="none"
+												stroke="currentColor"
+												viewBox="0 0 24 24"
+											>
+												<path
+													strokeLinecap="round"
+													strokeLinejoin="round"
+													strokeWidth={2}
+													d="M17 8l4 4m0 0l-4 4m4-4H3"
+												/>
+											</svg>
+										</Button>
 									</div>
 								</div>
 							</div>

@@ -2,14 +2,9 @@ import React from "react";
 import type { PortableTextBlock } from "@portabletext/types";
 import HeadingBlock from "@/components/blocks/section/HeadingBlock";
 import HeadingSplineBlock from "@/components/blocks/section/HeadingSplineBlock";
-import TeamBlock from "@/components/blocks/section/TeamBlock";
 import ContentBlock from "@/components/blocks/section/ContentBlock";
 
-export type BlockType =
-	| "headingBlock"
-	| "headingSplineBlock"
-	| "contentBlock"
-	| "teamBlock";
+export type BlockType = "headingBlock" | "headingSplineBlock" | "contentBlock";
 
 export interface BlockProps {
 	_type: BlockType;
@@ -48,7 +43,6 @@ const blockTypeComponents: Record<BlockType, React.ElementType> = {
 	headingBlock: HeadingBlock,
 	headingSplineBlock: HeadingSplineBlock,
 	contentBlock: ContentBlock,
-	teamBlock: TeamBlock,
 };
 
 const Blocks: React.FC<{ block: BlockProps }> = ({ block }) => {

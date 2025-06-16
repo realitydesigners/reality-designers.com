@@ -1,6 +1,7 @@
 "use client";
 import { SanityImage } from "@/components/global/Images";
 import { Link } from "next-view-transitions";
+import Button from "@/components/ui/Button";
 import React from "react";
 
 interface PostsRefData {
@@ -104,6 +105,37 @@ const PostsRefBlock: React.FC<PostsRefBlockProps> = ({ postsRef }) => {
 											: postsSubheading}
 									</p>
 								)}
+
+								{/* Small CTA Button */}
+								<div className="flex items-center justify-between mt-4">
+									<Button
+										href={`/posts/${postsSlug}`}
+										variant="outline"
+										size="sm"
+										theme="light"
+										className="text-xs border-gray-300 text-gray-600 hover:border-gray-700 hover:text-gray-900"
+									>
+										Read More
+										<svg
+											className="w-3 h-3 ml-1"
+											fill="none"
+											stroke="currentColor"
+											viewBox="0 0 24 24"
+										>
+											<path
+												strokeLinecap="round"
+												strokeLinejoin="round"
+												strokeWidth={2}
+												d="M17 8l4 4m0 0l-4 4m4-4H3"
+											/>
+										</svg>
+									</Button>
+									
+									{/* Read time indicator */}
+									<span className="text-xs text-gray-400 font-outfit">
+										{readTime} min read
+									</span>
+								</div>
 							</div>
 						</div>
 					</div>

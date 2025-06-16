@@ -132,7 +132,7 @@ const HeadingBlock = ({ block }) => {
 
 								{/* Center Content - Title and Subtitle */}
 								<div className="absolute inset-0 flex items-center justify-center">
-									<div className="text-center max-w-4xl px-8">
+									<div className="text-center max-w-6xl px-8">
 										{/* Main Title */}
 										<div
 											className="transition-all duration-700 ease-out"
@@ -159,7 +159,7 @@ const HeadingBlock = ({ block }) => {
 										>
 											<SubHeading
 												heading={block.subheading}
-												className="text-white/90 font-outfit text-lg md:text-xl lg:text-2xl leading-relaxed drop-shadow-lg max-w-2xl mx-auto"
+												className="text-white/90 font-outfit text-lg md:text-xl lg:text-2xl leading-relaxed drop-shadow-lg max-w-3xl mx-auto"
 											/>
 										</div>
 
@@ -202,33 +202,6 @@ const HeadingBlock = ({ block }) => {
 										)}
 									</div>
 								</div>
-							</div>
-						</div>
-					</div>
-
-					{/* Content Section - Appears as image fades */}
-					<div
-						className="relative bg-black min-h-screen pt-16"
-						style={{
-							opacity: scrollProgress * 1.5,
-							transform: `translateY(${(1 - scrollProgress) * 50}px)`,
-						}}
-					>
-						<div className="max-w-4xl mx-auto px-8">
-							{/* Image Caption */}
-							{imageAlt && (
-								<p className="text-gray-400 font-kodemono text-xs uppercase tracking-wide mb-8 text-center">
-									{imageAlt}
-								</p>
-							)}
-
-							{/* Content placeholder - this is where the rest of your content blocks would go */}
-							<div className="text-white/80 font-outfit text-lg leading-relaxed space-y-6">
-								<p>Content continues here as the hero image fades away...</p>
-								<p>
-									This is where your article content, additional blocks, and
-									other components would be rendered.
-								</p>
 							</div>
 						</div>
 					</div>
