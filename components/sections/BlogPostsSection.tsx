@@ -1,7 +1,8 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import Link from "next/link";
+import { Link } from "next-view-transitions";
+import NextImage from "next/image";
 import { PostsPayload } from "@/types";
 import Button from "@/components/ui/Button";
 import { SanityImage } from "@/components/global/Images";
@@ -69,6 +70,14 @@ export default function BlogPostsSection({ posts }: BlogPostsSectionProps) {
 			.toUpperCase();
 	};
 
+	// Calculate read time based on content length (deterministic)
+	const calculateReadTime = (heading: string, subheading?: string) => {
+		const totalLength = (heading?.length || 0) + (subheading?.length || 0);
+		// Rough estimate: 200 words per minute, ~5 chars per word
+		const estimatedMinutes = Math.max(2, Math.ceil(totalLength / 1000));
+		return Math.min(estimatedMinutes, 8); // Cap at 8 minutes
+	};
+
 	const validPosts = posts.filter((post) => {
 		const block = post.block?.[0];
 		return block?.heading && block?.imageRef;
@@ -123,28 +132,28 @@ export default function BlogPostsSection({ posts }: BlogPostsSectionProps) {
 										{
 											cols: "col-span-12 lg:col-span-7",
 											imageAspect: "aspect-[16/11]",
-											titleSize: "text-lg lg:text-xl",
+											titleSize: "text-xl lg:text-2xl",
 											descLines: 2,
 										},
 										// Tall vertical card (top-right)
 										{
 											cols: "col-span-12 lg:col-span-5",
 											imageAspect: "aspect-[4/5]",
-											titleSize: "text-base lg:text-lg",
+											titleSize: "text-lg lg:text-xl",
 											descLines: 2,
 										},
 										// Wide horizontal card (bottom-left)
 										{
 											cols: "col-span-12 lg:col-span-8",
 											imageAspect: "aspect-[21/10]",
-											titleSize: "text-base lg:text-lg",
+											titleSize: "text-lg lg:text-xl",
 											descLines: 2,
 										},
 										// Square accent card (bottom-right)
 										{
 											cols: "col-span-12 lg:col-span-4",
 											imageAspect: "aspect-square",
-											titleSize: "text-base lg:text-lg",
+											titleSize: "text-lg lg:text-xl",
 											descLines: 2,
 										},
 									];
@@ -162,85 +171,28 @@ export default function BlogPostsSection({ posts }: BlogPostsSectionProps) {
 											>
 												{/* Futuristic Overlay Card */}
 												<div
-													className="relative overflow-hidden rounded-2xl group-hover:scale-[1.02] transition-all duration-500 shadow-lg hover:shadow-2xl w-full h-full flex flex-col"
-													style={{
-														borderRadius:
-															index % 2 === 0
-																? "24px 8px 24px 8px"
-																: "8px 24px 8px 24px",
-													}}
+													className="relative overflow-hidden transition-all duration-300 shadow-lg hover:shadow-xl w-full h-full flex flex-col"
 												>
 													{/* Full Image Background */}
 													<div
 														className="relative flex-1 overflow-hidden"
 													>
-														<img
+														<NextImage
 															src={block.imageRef.imageUrl}
 															alt={block.imageRef.imageAlt || block.heading}
-															className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+															className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+															style={{
+																viewTransitionName: `post-image-${post.slug?.current}`,
+															}}
+															width={500}
+															height={333}
 														/>
 
-														{/* Futuristic Gradient Overlays */}
-														<div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
-														<div
-															className={`absolute inset-0 ${
-																index % 3 === 0
-																	? "bg-gradient-to-br from-purple-600/30 via-transparent to-pink-600/20"
-																	: index % 3 === 1
-																	  ? "bg-gradient-to-tl from-cyan-600/30 via-transparent to-blue-600/20"
-																	  : "bg-gradient-to-tr from-pink-600/30 via-transparent to-purple-600/20"
-															}`}
-														/>
-
-														{/* Hover Excerpt Overlay */}
-														{block.subheading && (
-															<div className="absolute inset-0 bg-black/90 backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-all duration-500 flex items-center justify-center p-6">
-																<div className="text-center">
-																	<p className="text-white font-outfit text-sm leading-relaxed mb-4">
-																		{block.subheading}
-																	</p>
-																	<div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/20 backdrop-blur-xl border border-white/30">
-																		<span className="text-white font-russo text-xs uppercase tracking-wide">
-																			Read More
-																		</span>
-																		<svg
-																			className="w-3 h-3 text-white"
-																			fill="none"
-																			stroke="currentColor"
-																			viewBox="0 0 24 24"
-																		>
-																			<path
-																				strokeLinecap="round"
-																				strokeLinejoin="round"
-																				strokeWidth={2}
-																				d="M17 8l4 4m0 0l-4 4m4-4H3"
-																			/>
-																		</svg>
-																	</div>
-																</div>
-															</div>
-														)}
+														{/* Simplified Gradient Overlays */}
+														<div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
 
 														{/* Floating UI Elements */}
 														<div className="absolute inset-0 pointer-events-none">
-															{/* Date Badge */}
-															<div className="absolute top-4 left-4">
-																<span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-black/60 backdrop-blur-xl border border-white/20 shadow-lg">
-																	<div
-																		className={`w-1.5 h-1.5 rounded-full ${
-																			index % 3 === 0
-																				? "bg-purple-400"
-																				: index % 3 === 1
-																				  ? "bg-cyan-400"
-																				  : "bg-pink-400"
-																		}`}
-																	/>
-																	<span className="font-russo text-white text-xs uppercase tracking-wide font-bold">
-																		{formatDate(block.publicationDate || "")}
-																	</span>
-																</span>
-															</div>
-
 															{/* Category Tag */}
 															{block.category?.title && (
 																<div className="absolute top-4 right-4">
@@ -249,28 +201,32 @@ export default function BlogPostsSection({ posts }: BlogPostsSectionProps) {
 																	</span>
 																</div>
 															)}
-
-															{/* Futuristic Corner Elements */}
-															<div className="absolute top-0 left-0 w-8 h-8 border-l-2 border-t-2 border-white/30 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-															<div className="absolute bottom-0 right-0 w-8 h-8 border-r-2 border-b-2 border-white/30 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 														</div>
 
 														{/* Content Overlay - Bottom */}
-														<div className="absolute bottom-0 left-0 right-0 p-6">
+														<div className="absolute bottom-0 left-0 right-0 p-6 transition-all duration-300">
+															{/* Enhanced gradient overlay on hover */}
+															<div className="absolute inset-0 bg-gradient-to-t from-black via-black to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10" />
+															
 															{/* Title */}
 															<h3
 																className={`font-russo ${
 																	layout.titleSize
-																} font-bold text-white leading-tight mb-2 group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r ${
-																	index % 3 === 0
-																		? "group-hover:from-purple-400 group-hover:to-pink-400"
-																		: index % 3 === 1
-																		  ? "group-hover:from-cyan-400 group-hover:to-blue-400"
-																		  : "group-hover:from-pink-400 group-hover:to-purple-400"
-																} transition-all duration-300 drop-shadow-lg`}
+																} font-bold text-white leading-tight mb-2 transition-all duration-300 drop-shadow-lg`}
 															>
 																{block.heading}
 															</h3>
+
+															{/* Subheading - appears on hover and pushes content up */}
+															<div className="max-h-0 group-hover:max-h-20 overflow-hidden transition-all duration-300 ease-out">
+																{block.subheading && (
+																	<p className="font-outfit text-white/90 text-sm leading-relaxed mb-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300 delay-100 drop-shadow-md">
+																		{block.subheading.length > 80
+																			? block.subheading.substring(0, 80) + "..."
+																			: block.subheading}
+																	</p>
+																)}
+															</div>
 
 															{/* Author Info */}
 															{block.team && (
@@ -304,16 +260,14 @@ export default function BlogPostsSection({ posts }: BlogPostsSectionProps) {
 																			<p className="font-outfit text-white font-semibold text-sm drop-shadow-md">
 																				{block.team.name}
 																			</p>
-																			<p className="font-outfit text-white/80 text-xs drop-shadow-md">
-																				Reality Designer
-																			</p>
+																		
 																		</div>
 																	</div>
 
 																	{/* Read Time */}
 																	<div className="text-right">
 																		<span className="text-white/80 font-outfit text-xs drop-shadow-md">
-																			{Math.ceil(Math.random() * 5 + 2)} min
+																			{calculateReadTime(block.heading, block.subheading)} min
 																			read
 																		</span>
 																	</div>
@@ -353,7 +307,7 @@ export default function BlogPostsSection({ posts }: BlogPostsSectionProps) {
 							{/* Left Side - Large Image */}
 							<div className="lg:col-span-3 relative">
 								{/* Image Container - 16:9 Aspect Ratio */}
-								<div className="relative w-full aspect-video rounded-2xl overflow-hidden shadow-xl">
+								<div className="relative w-full aspect-video overflow-hidden shadow-xl">
 									{featuredPosts.map((post, index) => {
 										const block = post.block?.[0];
 										if (!block?.imageRef) return null;
@@ -369,10 +323,15 @@ export default function BlogPostsSection({ posts }: BlogPostsSectionProps) {
 														: "opacity-0 scale-105"
 												}`}
 											>
-												<img
+												<NextImage
 													src={block.imageRef.imageUrl}
 													alt={block.imageRef.imageAlt || block.heading}
 													className="w-full h-full object-cover"
+													style={{
+														viewTransitionName: `post-image-${post.slug?.current}`,
+													}}
+													width={1000}
+													height={1000}
 												/>
 												{/* Gradient overlay for text readability */}
 												<div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />

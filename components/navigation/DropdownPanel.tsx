@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import Link from "next/link";
-import Spline from "@splinetool/react-spline";
+// import Spline from "@splinetool/react-spline";
 import Button from "@/components/ui/Button";
 import { StoryPanel } from "./panels/StoryPanel";
 
@@ -170,7 +170,7 @@ const DefaultPanel = ({
 		</div>
 
 		{/* Right side - Spline */}
-		<div className="w-64 relative overflow-hidden">
+		{/* <div className="w-64 relative overflow-hidden">
 			<div className="absolute inset-0 opacity-60">
 				<Spline scene={dropdown.spline} />
 			</div>
@@ -181,7 +181,7 @@ const DefaultPanel = ({
 						: "from-transparent to-white/20"
 				}`}
 			></div>
-		</div>
+		</div> */}
 	</div>
 );
 

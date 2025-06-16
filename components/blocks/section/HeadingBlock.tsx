@@ -2,6 +2,7 @@
 import { SanityImage } from "@/components/global/Images";
 import Image from "next/image";
 import Link from "next/link";
+import { useParams } from "next/navigation";
 import React from "react";
 
 const RenderCategory = ({ category }) => {
@@ -74,6 +75,8 @@ const TeamSection = ({ team, theme }) => {
 
 const HeadingBlock = ({ block }) => {
 	const { className, publicationDate } = block;
+	const params = useParams();
+	const slug = params?.slug as string;
 
 	const theme = block.className;
 	const imageUrl = block.imageRef?.imageUrl;
@@ -99,14 +102,19 @@ const HeadingBlock = ({ block }) => {
 
 						<div className="flex w-full flex-wrap p-2 lg:w-1/2 px-32">
 							<div className="h-full w-full object-contain object-cover">
-								<Image
-									src={imageUrl}
-									alt={"this"}
-									width={1000}
-									height={1000}
-									className="w-full h-full object-cover"
-								/>
-								<p className=" flex  py-2 text-[8px] uppercase tracking-wide text-gray-200/50">
+								<div className="relative overflow-hidden shadow-lg">
+									<Image
+										src={imageUrl}
+										alt={imageAlt || "Post image"}
+										width={1000}
+										height={1000}
+										className="w-full h-full object-cover"
+										style={{
+											viewTransitionName: `post-image-${slug}`,
+										}}
+									/>
+								</div>
+								<p className="flex py-2 text-[8px] uppercase tracking-wide text-gray-200/50">
 									{imageAlt}
 								</p>
 							</div>
@@ -158,14 +166,19 @@ const HeadingBlock = ({ block }) => {
 
 						<div className="flex w-full flex-wrap p-2 lg:w-1/2">
 							<div className="h-full w-full object-contain object-cover">
-								<Image
-									src={imageUrl}
-									alt={"this"}
-									width={1000}
-									height={1000}
-									className="w-full h-full object-cover"
-								/>
-								<p className=" flex  py-2 text-[8px] uppercase tracking-wide text-gray-200/50">
+								<div className="relative overflow-hidden shadow-lg">
+									<Image
+										src={imageUrl}
+										alt={imageAlt || "Post image"}
+										width={1000}
+										height={1000}
+										className="w-full h-full object-cover"
+										style={{
+											viewTransitionName: `post-image-${slug}`,
+										}}
+									/>
+								</div>
+								<p className="flex py-2 text-[8px] uppercase tracking-wide text-gray-200/50">
 									{imageAlt}
 								</p>
 							</div>

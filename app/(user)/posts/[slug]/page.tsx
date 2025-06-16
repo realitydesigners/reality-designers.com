@@ -77,13 +77,13 @@ export default async function PostSlugRoute(props: Props) {
 							<Blocks key={block._key} block={block as BlockProps} />
 						))}
 					</main>
-					<Suspense fallback={<div>Loading...</div>}>
+					{/* <Suspense fallback={<div>Loading...</div>}>
 						{otherPosts && (
 							<div className="w-full py-16 px-4 lg:px-8">
 								<PostsList post={otherPosts} />
 							</div>
 						)}
-					</Suspense>
+					</Suspense> */}
 				</>
 			)}
 		</>

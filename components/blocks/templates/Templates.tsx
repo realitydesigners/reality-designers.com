@@ -17,15 +17,15 @@ const headingStyles: Record<TemplateTheme, string> = {
 };
 
 const listStyles: Record<TemplateTheme, string> = {
-	dark: ` font-outfit  w-full  text-gray-200 leading-8 md:w-3/4 lg:w-1/2 text-xl list-decimal list-inside space-y-6 mb-6`,
-	light: ` font-outfit  w-11/12 text-black leading-7 md:w-3/4 text-xl lg:w-1/2  list-decimal list-inside space-y-6 mb-6`,
+	dark: ` font-outfit  w-full  text-gray-200 leading-8 md:w-3/4 lg:w-2/3 text-xl list-decimal list-inside space-y-6 mb-6`,
+	light: ` font-outfit  w-11/12 text-black leading-7 md:w-3/4 text-xl lg:w-2/3  list-decimal list-inside space-y-6 mb-6`,
 	transparent: ` font-outfit  w-11/12 text-gray-400 leading-7 md:w-3/4 text-xl lg:w-1/2  list-decimal list-inside space-y-6 mb-6`,
 };
 
 const normalTextStyles: Record<TemplateTheme, string> = {
-	dark: ` font-outfit  w-full  text-gray-200  leading-[1.4em] tracking-wide text-xl md:w-3/4 lg:w-1/2 lg:text-xl`,
-	light: ` font-outfit  text-white leading-[1.5em] tracking-wide text-xl md:w-3/4 lg:w-1/2 lg:text-xl`,
-	transparent: ` font-outfit  text-gray-400 leading-[1.5em] tracking-wide text-xl md:w-3/4 lg:w-1/2 lg:text-xl`,
+	dark: ` font-outfit  w-full  text-gray-200  leading-[1.4em] tracking-wide text-xl md:w-3/4 lg:w-2/3 lg:text-xl`,
+	light: ` font-outfit  text-black leading-[1.5em] tracking-wide text-xl md:w-3/4 lg:w-2/3 lg:text-xl`,
+	transparent: ` font-outfit  text-gray-400 leading-[1.5em] tracking-wide text-xl md:w-3/4 lg:w-2/3 lg:text-xl`,
 };
 
 const Heading: React.FC<{

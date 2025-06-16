@@ -327,3 +327,58 @@
 .animate-scanlineReveal {
   animation: scanlineReveal 0.6s ease-out forwards;
 }
+
+/* View Transitions */
+@view-transition {
+  navigation: auto;
+}
+
+/* Maintain rounded corners during view transitions for post images */
+::view-transition-old(*),
+::view-transition-new(*) {
+  border-radius: 1rem;
+  overflow: hidden;
+}
+
+/* Specific styling for post image transitions */
+[style*="post-image-"]::view-transition-old(*),
+[style*="post-image-"]::view-transition-new(*) {
+  border-radius: 1rem;
+  overflow: hidden;
+  animation-duration: 0.6s;
+  animation-timing-function: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+/* Custom view transition animations */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 0.5s;
+  animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Smooth fade for content */
+::view-transition-old(root) {
+  animation-name: fade-out;
+}
+
+::view-transition-new(root) {
+  animation-name: fade-in;
+}
+
+@keyframes fade-out {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}

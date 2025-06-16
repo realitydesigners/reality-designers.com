@@ -7,7 +7,7 @@ import { IoBookOutline } from "react-icons/io5";
 import { useSmartNavbar } from "@/hooks/useSmartNavbar";
 import Logo from "@/components/ui/Logo";
 import Button from "@/components/ui/Button";
-import DropdownPanel from "@/components/navigation/DropdownPanel";
+// import DropdownPanel from "@/components/navigation/DropdownPanel";
 import { Links } from "@/constants";
 
 export default function SiteNavbar() {
@@ -289,8 +289,8 @@ export default function SiteNavbar() {
 										<div className="absolute inset-0 rounded-xl bg-gradient-to-r from-blue-500/5 via-purple-500/5 to-pink-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
 									</Link>
 
-									{/* Individual dropdown content - only render for active item */}
-									{activeDropdown === label && (
+					
+									{/* {activeDropdown === label && (
 										<DropdownPanel
 											dropdown={dropdown}
 											isActive={true}
@@ -300,7 +300,7 @@ export default function SiteNavbar() {
 											onLinkClick={() => setActiveDropdown(null)}
 											type={label.toLowerCase()}
 										/>
-									)}
+									)} */}
 								</div>
 							))}
 						</div>

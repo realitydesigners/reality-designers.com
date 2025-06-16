@@ -28,7 +28,7 @@ const PostsCardLight: React.FC<PostsCardLightProps> = ({
 					</p>
 
 					<Link
-						className="duration-3 font-russo font-bold leading-[1.2em] text-xl lg:text-2xl text-white transition-colors group-hover:text-gray-100 group-hover:underline"
+						className="duration-3 font-russo font-bold leading-[1.2em] text-xl lg:text-2xl text-black transition-colors group-hover:underline"
 						href={`/posts/${slug}`}
 					>
 						{heading}

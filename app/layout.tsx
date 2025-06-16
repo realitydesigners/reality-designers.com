@@ -4,6 +4,7 @@ import { russo, oxanium, outfit, kodemono } from "./fonts";
 import SiteNavbar from "@/components/navigation/SiteNavbar";
 import { NavigationProvider } from "@/components/providers/NavigationProvider";
 import Footer from "@/components/navigation/Footer";
+import { ViewTransitions } from "next-view-transitions";
 import "./global.css";
 import { preconnect } from "react-dom";
 
@@ -21,21 +22,23 @@ export default async function RootLayout({
 	preconnect("cdn.sanity.io");
 	preconnect("prod.spline.design");
 	return (
-		<html
-			lang="en"
-			className={`${kodemono.variable}  ${outfit.variable}  ${russo.variable}  ${oxanium.variable}  `}
-		>
-			<head>
-				<link rel="icon" href="/favicon.ico" sizes="any" />
-			</head>
-			<body className="bg-white">
-				<NavigationProvider>
-					<SiteNavbar />
-					{children}
-					<Footer />
-				</NavigationProvider>
-				<Analytics />
-			</body>
-		</html>
+		<ViewTransitions>
+			<html
+				lang="en"
+				className={`${kodemono.variable}  ${outfit.variable}  ${russo.variable}  ${oxanium.variable}  `}
+			>
+				<head>
+					<link rel="icon" href="/favicon.ico" sizes="any" />
+				</head>
+				<body className="bg-white">
+					<NavigationProvider>
+						<SiteNavbar />
+						{children}
+						<Footer />
+					</NavigationProvider>
+					<Analytics />
+				</body>
+			</html>
+		</ViewTransitions>
 	);
 }
