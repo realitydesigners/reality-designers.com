@@ -145,6 +145,12 @@ export interface GlossaryPayload extends BaseItem {
 }
 
 export interface PortfolioPayload extends BaseItem {
+  block?: Array<BlockItem | PortfolioSplineBlockItem>;
+}
+
+export interface PortfolioSplineBlockItem extends BaseItem {
+  _type: "portfolioSplineBlock";
+  _key: string;
   subtitle?: string;
   description?: string;
   category: string;
@@ -155,20 +161,14 @@ export interface PortfolioPayload extends BaseItem {
     };
     alt?: string;
   };
-  gallery?: Array<{
-    asset: {
-      url: string;
-    };
-    alt?: string;
-    caption?: string;
-  }>;
   technologies?: string[];
   client?: string;
   year?: number;
   liveUrl?: string;
   githubUrl?: string;
   splineScene?: string;
-  block?: Array<BlockItem>;
+  layout?: string;
+  theme?: string;
   team?: Array<TeamMember>;
   publishedAt: string;
 }

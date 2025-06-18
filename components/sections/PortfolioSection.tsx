@@ -6,53 +6,73 @@ import Image from "next/image";
 import { PortfolioPayload } from "@/types";
 import Button from "@/components/ui/Button";
 import Spline from "@splinetool/react-spline";
+import {
+  getPortfolioData,
+  getPortfolioCategory,
+  getPortfolioImage,
+} from "@/utils/portfolio-utils";
 
 interface PortfolioSectionProps {
-  portfolioItems: PortfolioPayload[];
+  portfolioItems: any[];
 }
 
 export default function PortfolioSection({
   portfolioItems,
 }: PortfolioSectionProps) {
+  // Filter out any null or invalid items
+  const validPortfolioItems = portfolioItems.filter(
+    (item) => item && item.block
+  );
+
   const [activeFilter, setActiveFilter] = useState<string>("all");
   const [filteredItems, setFilteredItems] =
-    useState<PortfolioPayload[]>(portfolioItems);
+    useState<PortfolioPayload[]>(validPortfolioItems);
   const [scrollProgress, setScrollProgress] = useState(0);
   const sectionRef = useRef<HTMLElement>(null);
 
   const categories = [
-    { value: "all", label: "All Work", count: portfolioItems.length },
+    { value: "all", label: "All Work", count: validPortfolioItems.length },
     {
       value: "spline",
       label: "Spline",
-      count: portfolioItems.filter((item) => item.category === "spline").length,
+      count: validPortfolioItems.filter(
+        (item) => getPortfolioCategory(item) === "spline"
+      ).length,
     },
     {
       value: "threejs",
       label: "Three.js",
-      count: portfolioItems.filter((item) => item.category === "threejs")
-        .length,
+      count: validPortfolioItems.filter(
+        (item) => getPortfolioCategory(item) === "threejs"
+      ).length,
     },
     {
       value: "brand",
       label: "Brand Identity",
-      count: portfolioItems.filter((item) => item.category === "brand").length,
+      count: validPortfolioItems.filter(
+        (item) => getPortfolioCategory(item) === "brand"
+      ).length,
     },
     {
       value: "motion",
       label: "Motion Graphics",
-      count: portfolioItems.filter((item) => item.category === "motion").length,
+      count: validPortfolioItems.filter(
+        (item) => getPortfolioCategory(item) === "motion"
+      ).length,
     },
     {
       value: "web",
       label: "Web Experience",
-      count: portfolioItems.filter((item) => item.category === "web").length,
+      count: validPortfolioItems.filter(
+        (item) => getPortfolioCategory(item) === "web"
+      ).length,
     },
     {
       value: "interactive",
       label: "Interactive",
-      count: portfolioItems.filter((item) => item.category === "interactive")
-        .length,
+      count: validPortfolioItems.filter(
+        (item) => getPortfolioCategory(item) === "interactive"
+      ).length,
     },
   ].filter((cat) => cat.count > 0);
 
@@ -80,16 +100,24 @@ export default function PortfolioSection({
   // Filter items
   useEffect(() => {
     if (activeFilter === "all") {
-      setFilteredItems(portfolioItems);
+      setFilteredItems(validPortfolioItems);
     } else {
       setFilteredItems(
-        portfolioItems.filter((item) => item.category === activeFilter)
+        validPortfolioItems.filter(
+          (item) => getPortfolioCategory(item) === activeFilter
+        )
       );
     }
-  }, [activeFilter, portfolioItems]);
+  }, [activeFilter, validPortfolioItems]);
 
-  const featuredItems = filteredItems.filter((item) => item.featured);
-  const regularItems = filteredItems.filter((item) => !item.featured);
+  const featuredItems = filteredItems.filter((item) => {
+    const portfolioData = getPortfolioData(item);
+    return portfolioData?.featured;
+  });
+  const regularItems = filteredItems.filter((item) => {
+    const portfolioData = getPortfolioData(item);
+    return !portfolioData?.featured;
+  });
 
   const getCategoryColor = (category: string) => {
     const colors = {
@@ -189,82 +217,92 @@ export default function PortfolioSection({
             </div>
 
             <div className="grid lg:grid-cols-2 gap-8">
-              {featuredItems.map((item) => (
-                <Link
-                  key={item._id}
-                  href={`/portfolio/${item.slug?.current}`}
-                  className="group relative block"
-                >
-                  <div className="relative overflow-hidden rounded-3xl bg-white shadow-xl hover:shadow-2xl transition-all duration-500 group-hover:scale-[1.02]">
-                    {/* Image */}
-                    <div className="relative aspect-video overflow-hidden">
-                      <Image
-                        src={item.image.asset.url}
-                        alt={item.image.alt || item.title}
-                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                        width={800}
-                        height={450}
-                      />
+              {featuredItems.map((item) => {
+                const portfolioData = getPortfolioData(item);
+                const portfolioImage = getPortfolioImage(item);
+                const portfolioCategory = getPortfolioCategory(item);
 
-                      {/* Gradient Overlay */}
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+                return (
+                  <Link
+                    key={item._id}
+                    href={`/portfolio/${item.slug?.current}`}
+                    className="group relative block"
+                  >
+                    <div className="relative overflow-hidden rounded-3xl bg-white shadow-xl hover:shadow-2xl transition-all duration-500 group-hover:scale-[1.02]">
+                      {/* Image */}
+                      <div className="relative aspect-video overflow-hidden">
+                        <Image
+                          src={portfolioImage?.asset?.url || ""}
+                          alt={portfolioImage?.alt || item.title}
+                          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                          width={800}
+                          height={450}
+                        />
 
-                      {/* Category Badge */}
-                      <div className="absolute top-4 right-4">
-                        <span
-                          className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-gradient-to-r ${getCategoryColor(item.category)} text-white text-xs font-russo font-bold uppercase tracking-wide shadow-lg`}
-                        >
-                          <span>{getCategoryIcon(item.category)}</span>
-                          {
-                            categories.find(
-                              (cat) => cat.value === item.category
-                            )?.label
-                          }
-                        </span>
-                      </div>
+                        {/* Gradient Overlay */}
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
 
-                      {/* Content Overlay */}
-                      <div className="absolute bottom-0 left-0 right-0 p-6">
-                        <h3 className="font-russo text-2xl lg:text-3xl font-bold text-white mb-2 leading-tight">
-                          {item.title}
-                        </h3>
-                        {item.subtitle && (
-                          <p className="text-white/90 font-outfit text-lg mb-3">
-                            {item.subtitle}
-                          </p>
-                        )}
-                        {item.description && (
-                          <p className="text-white/80 font-outfit text-sm leading-relaxed mb-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300 delay-100">
-                            {item.description}
-                          </p>
-                        )}
+                        {/* Category Badge */}
+                        <div className="absolute top-4 right-4">
+                          <span
+                            className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-gradient-to-r ${getCategoryColor(portfolioCategory)} text-white text-xs font-russo font-bold uppercase tracking-wide shadow-lg`}
+                          >
+                            <span>{getCategoryIcon(portfolioCategory)}</span>
+                            {
+                              categories.find(
+                                (cat) => cat.value === portfolioCategory
+                              )?.label
+                            }
+                          </span>
+                        </div>
 
-                        {/* Tech Stack */}
-                        {item.technologies && (
-                          <div className="flex flex-wrap gap-2 mb-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300 delay-200">
-                            {item.technologies
-                              .slice(0, 3)
-                              .map((tech, index) => (
-                                <span
-                                  key={index}
-                                  className="px-2 py-1 rounded-full bg-white/20 backdrop-blur-sm text-white text-xs font-outfit"
-                                >
-                                  {tech}
-                                </span>
-                              ))}
+                        {/* Content Overlay */}
+                        <div className="absolute bottom-0 left-0 right-0 p-6">
+                          <h3 className="font-russo text-2xl lg:text-3xl font-bold text-white mb-2 leading-tight">
+                            {item.title}
+                          </h3>
+                          {portfolioData?.subtitle && (
+                            <p className="text-white/90 font-outfit text-lg mb-3">
+                              {portfolioData.subtitle}
+                            </p>
+                          )}
+                          {portfolioData?.description && (
+                            <p className="text-white/80 font-outfit text-sm leading-relaxed mb-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300 delay-100">
+                              {portfolioData.description}
+                            </p>
+                          )}
+
+                          {/* Tech Stack */}
+                          {portfolioData?.technologies && (
+                            <div className="flex flex-wrap gap-2 mb-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300 delay-200">
+                              {portfolioData.technologies
+                                .slice(0, 3)
+                                .map((tech, index) => (
+                                  <span
+                                    key={index}
+                                    className="px-2 py-1 rounded-full bg-white/20 backdrop-blur-sm text-white text-xs font-outfit"
+                                  >
+                                    {tech}
+                                  </span>
+                                ))}
+                            </div>
+                          )}
+
+                          {/* Client & Year */}
+                          <div className="flex items-center justify-between text-white/70 text-sm font-outfit">
+                            {portfolioData?.client && (
+                              <span>{portfolioData.client}</span>
+                            )}
+                            {portfolioData?.year && (
+                              <span>{portfolioData.year}</span>
+                            )}
                           </div>
-                        )}
-
-                        {/* Client & Year */}
-                        <div className="flex items-center justify-between text-white/70 text-sm font-outfit">
-                          {item.client && <span>{item.client}</span>}
-                          {item.year && <span>{item.year}</span>}
                         </div>
                       </div>
                     </div>
-                  </div>
-                </Link>
-              ))}
+                  </Link>
+                );
+              })}
             </div>
           </div>
         )}
@@ -284,72 +322,84 @@ export default function PortfolioSection({
             )}
 
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {regularItems.map((item) => (
-                <Link
-                  key={item._id}
-                  href={`/portfolio/${item.slug?.current}`}
-                  className="group relative block"
-                >
-                  <div className="relative overflow-hidden rounded-2xl bg-white shadow-lg hover:shadow-xl transition-all duration-300 group-hover:scale-105">
-                    {/* Image */}
-                    <div className="relative aspect-video overflow-hidden">
-                      <Image
-                        src={item.image.asset.url}
-                        alt={item.image.alt || item.title}
-                        className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
-                        width={400}
-                        height={225}
-                      />
+              {regularItems.map((item) => {
+                const portfolioData = getPortfolioData(item);
+                const portfolioImage = getPortfolioImage(item);
+                const portfolioCategory = getPortfolioCategory(item);
 
-                      {/* Gradient Overlay */}
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                return (
+                  <Link
+                    key={item._id}
+                    href={`/portfolio/${item.slug?.current}`}
+                    className="group relative block"
+                  >
+                    <div className="relative overflow-hidden rounded-2xl bg-white shadow-lg hover:shadow-xl transition-all duration-300 group-hover:scale-105">
+                      {/* Image */}
+                      <div className="relative aspect-video overflow-hidden">
+                        <Image
+                          src={portfolioImage?.asset?.url || ""}
+                          alt={portfolioImage?.alt || item.title}
+                          className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
+                          width={400}
+                          height={225}
+                        />
 
-                      {/* Category Badge */}
-                      <div className="absolute top-3 right-3">
-                        <span
-                          className={`inline-flex items-center gap-1 px-2 py-1 rounded-full bg-gradient-to-r ${getCategoryColor(item.category)} text-white text-xs font-russo font-bold uppercase tracking-wide shadow-md`}
-                        >
-                          <span className="text-xs">
-                            {getCategoryIcon(item.category)}
-                          </span>
-                        </span>
-                      </div>
-                    </div>
+                        {/* Gradient Overlay */}
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
 
-                    {/* Content */}
-                    <div className="p-6">
-                      <h3 className="font-russo text-xl font-bold text-gray-900 mb-2 leading-tight group-hover:text-purple-600 transition-colors duration-300">
-                        {item.title}
-                      </h3>
-                      {item.subtitle && (
-                        <p className="text-gray-600 font-outfit text-sm mb-3">
-                          {item.subtitle}
-                        </p>
-                      )}
-
-                      {/* Tech Stack */}
-                      {item.technologies && (
-                        <div className="flex flex-wrap gap-1 mb-4">
-                          {item.technologies.slice(0, 3).map((tech, index) => (
-                            <span
-                              key={index}
-                              className="px-2 py-1 rounded-full bg-gray-100 text-gray-600 text-xs font-outfit"
-                            >
-                              {tech}
+                        {/* Category Badge */}
+                        <div className="absolute top-3 right-3">
+                          <span
+                            className={`inline-flex items-center gap-1 px-2 py-1 rounded-full bg-gradient-to-r ${getCategoryColor(portfolioCategory)} text-white text-xs font-russo font-bold uppercase tracking-wide shadow-md`}
+                          >
+                            <span className="text-xs">
+                              {getCategoryIcon(portfolioCategory)}
                             </span>
-                          ))}
+                          </span>
                         </div>
-                      )}
+                      </div>
 
-                      {/* Footer */}
-                      <div className="flex items-center justify-between text-gray-500 text-sm font-outfit">
-                        {item.client && <span>{item.client}</span>}
-                        {item.year && <span>{item.year}</span>}
+                      {/* Content */}
+                      <div className="p-6">
+                        <h3 className="font-russo text-xl font-bold text-gray-900 mb-2 leading-tight group-hover:text-purple-600 transition-colors duration-300">
+                          {item.title}
+                        </h3>
+                        {portfolioData?.subtitle && (
+                          <p className="text-gray-600 font-outfit text-sm mb-3">
+                            {portfolioData.subtitle}
+                          </p>
+                        )}
+
+                        {/* Tech Stack */}
+                        {portfolioData?.technologies && (
+                          <div className="flex flex-wrap gap-1 mb-4">
+                            {portfolioData.technologies
+                              .slice(0, 3)
+                              .map((tech, index) => (
+                                <span
+                                  key={index}
+                                  className="px-2 py-1 rounded-full bg-gray-100 text-gray-600 text-xs font-outfit"
+                                >
+                                  {tech}
+                                </span>
+                              ))}
+                          </div>
+                        )}
+
+                        {/* Footer */}
+                        <div className="flex items-center justify-between text-gray-500 text-sm font-outfit">
+                          {portfolioData?.client && (
+                            <span>{portfolioData.client}</span>
+                          )}
+                          {portfolioData?.year && (
+                            <span>{portfolioData.year}</span>
+                          )}
+                        </div>
                       </div>
                     </div>
-                  </div>
-                </Link>
-              ))}
+                  </Link>
+                );
+              })}
             </div>
           </div>
         )}

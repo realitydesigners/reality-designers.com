@@ -8,6 +8,7 @@ import {
   headingBlock,
   headingSplineBlock,
   imageCanvasBlock,
+  portfolioSplineBlock,
   teamBlock,
 } from "@/sanity/blocks/index";
 import { apiVersion, dataset, projectId, studioUrl } from "@/sanity/lib/api";
@@ -55,6 +56,7 @@ export default defineConfig({
       contentBlock,
       teamBlock,
       imageCanvasBlock,
+      portfolioSplineBlock,
     ],
   },
   form: {
