@@ -14,6 +14,18 @@ export default {
           { title: "Dark", value: "dark" },
           { title: "Light", value: "light" },
           { title: "Transparent", value: "transparent" },
+          { title: "Portfolio", value: "portfolio" },
+        ],
+      },
+    }),
+    defineField({
+      name: "theme",
+      title: "Theme",
+      type: "string",
+      options: {
+        list: [
+          { title: "Dark", value: "dark" },
+          { title: "Light", value: "light" },
         ],
       },
     }),

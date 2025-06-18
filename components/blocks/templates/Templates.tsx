@@ -8,202 +8,266 @@ import VideoRefBlock from "../nested/VideoRefBlock";
 
 import React from "react";
 
-export type TemplateTheme = "dark" | "light" | "transparent";
+export type TemplateTheme = "dark" | "light" | "transparent" | "portfolio";
 
 const headingStyles: Record<TemplateTheme, string> = {
-	dark: `font-russo my-3  w-full  text-gray-200 bg-clip-text text-3xl font-bold uppercase leading-none tracking-wide md:w-3/4 lg:w-1/2 lg:text-5xl`,
-	light: `font-russo my-3 w-11/12 text-black text-4xl font-bold uppercase leading-none tracking-wide md:w-3/4 lg:w-1/2 lg:text-5xl`,
-	transparent: ` font-russo my-3 w-11/12 text-gray-200 text-4xl font-bold uppercase leading-none tracking-wide md:w-3/4 lg:w-1/2 lg:text-5xl`,
+  dark: `font-russo my-3  w-full  text-gray-200 bg-clip-text text-3xl font-bold uppercase leading-none tracking-wide md:w-3/4 lg:w-1/2 lg:text-5xl`,
+  light: `font-russo my-3 w-11/12 text-black text-4xl font-bold uppercase leading-none tracking-wide md:w-3/4 lg:w-1/2 lg:text-5xl`,
+  transparent: ` font-russo my-3 w-11/12 text-gray-200 text-4xl font-bold uppercase leading-none tracking-wide md:w-3/4 lg:w-1/2 lg:text-5xl`,
+  portfolio: `font-russo my-4 w-full text-white bg-gradient-to-r from-purple-400 via-pink-400 to-cyan-400 bg-clip-text text-transparent text-3xl font-bold uppercase leading-tight tracking-wide md:w-3/4 lg:w-2/3 lg:text-4xl`,
 };
 
 const listStyles: Record<TemplateTheme, string> = {
-	dark: ` font-outfit  w-full  text-gray-200 leading-8 md:w-3/4 lg:w-2/3 text-xl list-decimal list-inside space-y-6 mb-6`,
-	light: ` font-outfit  w-11/12 text-black leading-7 md:w-3/4 text-xl lg:w-2/3  list-decimal list-inside space-y-6 mb-6`,
-	transparent: ` font-outfit  w-11/12 text-gray-400 leading-7 md:w-3/4 text-xl lg:w-1/2  list-decimal list-inside space-y-6 mb-6`,
+  dark: ` font-outfit  w-full  text-gray-200 leading-8 md:w-3/4 lg:w-2/3 text-xl list-decimal list-inside space-y-6 mb-6`,
+  light: ` font-outfit  w-11/12 text-black leading-7 md:w-3/4 text-xl lg:w-2/3  list-decimal list-inside space-y-6 mb-6`,
+  transparent: ` font-outfit  w-11/12 text-gray-400 leading-7 md:w-3/4 text-xl lg:w-1/2  list-decimal list-inside space-y-6 mb-6`,
+  portfolio: ` font-outfit w-full text-white/90 leading-8 md:w-3/4 lg:w-2/3 text-lg list-decimal list-inside space-y-4 mb-6 marker:text-purple-400`,
 };
 
 const normalTextStyles: Record<TemplateTheme, string> = {
-	dark: ` font-outfit  w-full  text-gray-200  leading-[1.4em] tracking-wide text-xl md:w-3/4 lg:w-2/3 lg:text-xl`,
-	light: ` font-outfit  text-black leading-[1.5em] tracking-wide text-xl md:w-3/4 lg:w-2/3 lg:text-xl`,
-	transparent: ` font-outfit  text-gray-400 leading-[1.5em] tracking-wide text-xl md:w-3/4 lg:w-2/3 lg:text-xl`,
+  dark: ` font-outfit  w-full  text-gray-200  leading-[1.4em] tracking-wide text-xl md:w-3/4 lg:w-2/3 lg:text-xl`,
+  light: ` font-outfit  text-black leading-[1.5em] tracking-wide text-xl md:w-3/4 lg:w-2/3 lg:text-xl`,
+  transparent: ` font-outfit  text-gray-400 leading-[1.5em] tracking-wide text-xl md:w-3/4 lg:w-2/3 lg:text-xl`,
+  portfolio: ` font-outfit w-full text-white/80 leading-[1.6em] tracking-wide text-lg md:w-3/4 lg:w-2/3 lg:text-xl`,
 };
 
 const Heading: React.FC<{
-	level: number;
-	children: React.ReactNode;
-	theme: TemplateTheme;
+  level: number;
+  children: React.ReactNode;
+  theme: TemplateTheme;
 }> = React.memo(({ level, children, theme }) => {
-	const className = headingStyles[theme];
-	const Tag = `h${level}` as keyof JSX.IntrinsicElements;
-	return (
-		<div className="flex w-full justify-center p-3">
-			{React.createElement(Tag, { className }, children)}
-		</div>
-	);
+  const className = headingStyles[theme];
+  const Tag = `h${level}` as keyof JSX.IntrinsicElements;
+  return (
+    <div className="flex w-full justify-center p-3">
+      {React.createElement(Tag, { className }, children)}
+    </div>
+  );
 });
 
 const List: React.FC<{
-	type: "bullet" | "number";
-	children: React.ReactNode;
-	theme: TemplateTheme;
+  type: "bullet" | "number";
+  children: React.ReactNode;
+  theme: TemplateTheme;
 }> = React.memo(({ type, children, theme }) => {
-	const Tag = type === "bullet" ? "ul" : "ol";
-	const className = listStyles[theme];
-	return (
-		<div className="flex w-full justify-center p-3">
-			<Tag className={className}>{children}</Tag>
-		</div>
-	);
+  const Tag = type === "bullet" ? "ul" : "ol";
+  const className = listStyles[theme];
+  return (
+    <div className="flex w-full justify-center p-3">
+      <Tag className={className}>{children}</Tag>
+    </div>
+  );
 });
 
 const NormalText: React.FC<{
-	children: React.ReactNode;
-	theme: TemplateTheme;
+  children: React.ReactNode;
+  theme: TemplateTheme;
 }> = React.memo(({ children, theme }) => {
-	const className = normalTextStyles[theme];
-	return (
-		<div className="flex w-full justify-center p-3">
-			<div className={className}>{children}</div>
-		</div>
-	);
+  const className = normalTextStyles[theme];
+  return (
+    <div className="flex w-full justify-center p-3">
+      <div className={className}>{children}</div>
+    </div>
+  );
 });
 
 const DarkTemplate = {
-	block: {
-		normal: (props) => <NormalText {...props} theme="dark" />,
-		h1: (props) => <Heading level={1} {...props} theme="dark" />,
-		h2: (props) => <Heading level={2} {...props} theme="dark" />,
-		h3: (props) => <Heading level={3} {...props} theme="dark" />,
-	},
-	list: {
-		bullet: (props) => <List type="bullet" {...props} theme="dark" />,
-		number: (props) => <List type="number" {...props} theme="dark" />,
-	},
-	marks: {
-		internalLink: ({ value, children }) => (
-			<InternalLink internalLink={value} children={children} />
-		),
-	},
-	types: {
-		postsRef: ({ value }) => <PostsRefBlock postsRef={value.postsRef} />,
-		videoRef: ({ value }) => {
-			const { videoTitle, videoUrl, className } = value.videoRef;
-			return (
-				<VideoRefBlock
-					videoTitle={videoTitle}
-					videoUrl={videoUrl}
-					className={className}
-				/>
-			);
-		},
-		spline: ({ value }) => {
-			const { url } = value;
-			return <SplineRefBlock url={url} />;
-		},
+  block: {
+    normal: (props) => <NormalText {...props} theme="dark" />,
+    h1: (props) => <Heading level={1} {...props} theme="dark" />,
+    h2: (props) => <Heading level={2} {...props} theme="dark" />,
+    h3: (props) => <Heading level={3} {...props} theme="dark" />,
+  },
+  list: {
+    bullet: (props) => <List type="bullet" {...props} theme="dark" />,
+    number: (props) => <List type="number" {...props} theme="dark" />,
+  },
+  marks: {
+    internalLink: ({ value, children }) => (
+      <InternalLink internalLink={value} children={children} />
+    ),
+  },
+  types: {
+    postsRef: ({ value }) => <PostsRefBlock postsRef={value.postsRef} />,
+    videoRef: ({ value }) => {
+      const { videoTitle, videoUrl, className } = value.videoRef;
+      return (
+        <VideoRefBlock
+          videoTitle={videoTitle}
+          videoUrl={videoUrl}
+          className={className}
+        />
+      );
+    },
+    spline: ({ value }) => {
+      const { url } = value;
+      return <SplineRefBlock url={url} />;
+    },
 
-		imageRef: ({ value }) => {
-			const { image, className } = value;
-			return <ImageRefBlock image={image} className={className} />;
-		},
-		audioRef: ({ value }) => {
-			const { audioTitle, audioFileUrl } = value.audioRefData || {};
+    imageRef: ({ value }) => {
+      const { image, className } = value;
+      return <ImageRefBlock image={image} className={className} />;
+    },
+    audioRef: ({ value }) => {
+      const { audioTitle, audioFileUrl } = value.audioRefData || {};
 
-			return (
-				<AudioRefBlock audioFileUrl={audioFileUrl} audioTitle={audioTitle} />
-			);
-		},
-		quoteRef: ({ value }) => {
-			const { quoteTitle, quoteImage, className } = value.quoteRef || {};
+      return (
+        <AudioRefBlock audioFileUrl={audioFileUrl} audioTitle={audioTitle} />
+      );
+    },
+    quoteRef: ({ value }) => {
+      const { quoteTitle, quoteImage, className } = value.quoteRef || {};
 
-			return (
-				<QuoteRefBlock
-					quote={quoteTitle}
-					image={quoteImage}
-					className={className}
-				/>
-			);
-		},
-	},
+      return (
+        <QuoteRefBlock
+          quote={quoteTitle}
+          image={quoteImage}
+          className={className}
+        />
+      );
+    },
+  },
 };
 
 const LightTemplate = {
-	block: {
-		normal: (props) => <NormalText {...props} theme="light" />,
-		h1: (props) => <Heading level={1} {...props} theme="light" />,
-		h2: (props) => <Heading level={2} {...props} theme="light" />,
-		h3: (props) => <Heading level={3} {...props} theme="light" />,
-	},
-	list: {
-		bullet: (props) => <List type="bullet" {...props} theme="light" />,
-		number: (props) => <List type="number" {...props} theme="light" />,
-	},
-	marks: {
-		internalLink: ({ value, children }) => (
-			<InternalLink internalLink={value} children={children} />
-		),
-	},
-	types: {
-		postsRef: ({ value }) => <PostsRefBlock postsRef={value.postsRef} />,
-		videoRef: ({ value }) => {
-			const { videoTitle, videoUrl, className } = value.videoRef;
+  block: {
+    normal: (props) => <NormalText {...props} theme="light" />,
+    h1: (props) => <Heading level={1} {...props} theme="light" />,
+    h2: (props) => <Heading level={2} {...props} theme="light" />,
+    h3: (props) => <Heading level={3} {...props} theme="light" />,
+  },
+  list: {
+    bullet: (props) => <List type="bullet" {...props} theme="light" />,
+    number: (props) => <List type="number" {...props} theme="light" />,
+  },
+  marks: {
+    internalLink: ({ value, children }) => (
+      <InternalLink internalLink={value} children={children} />
+    ),
+  },
+  types: {
+    postsRef: ({ value }) => <PostsRefBlock postsRef={value.postsRef} />,
+    videoRef: ({ value }) => {
+      const { videoTitle, videoUrl, className } = value.videoRef;
 
-			return (
-				<VideoRefBlock
-					videoTitle={videoTitle}
-					videoUrl={videoUrl}
-					className={className}
-				/>
-			);
-		},
-		spline: ({ value }) => {
-			const { url } = value;
-			return <SplineRefBlock url={url} />;
-		},
-		imageRef: ({ value }) => {
-			const { image, className } = value;
-			return <ImageRefBlock image={image} className={className} />;
-		},
-		audioRef: ({ value }) => {
-			return <AudioRefBlock {...(value.audioRefData || {})} />;
-		},
-		quoteRef: ({ value }) => {
-			const { quoteTitle, quoteImage, className } = value.quoteRef || {};
+      return (
+        <VideoRefBlock
+          videoTitle={videoTitle}
+          videoUrl={videoUrl}
+          className={className}
+        />
+      );
+    },
+    spline: ({ value }) => {
+      const { url } = value;
+      return <SplineRefBlock url={url} />;
+    },
+    imageRef: ({ value }) => {
+      const { image, className } = value;
+      return <ImageRefBlock image={image} className={className} />;
+    },
+    audioRef: ({ value }) => {
+      return <AudioRefBlock {...(value.audioRefData || {})} />;
+    },
+    quoteRef: ({ value }) => {
+      const { quoteTitle, quoteImage, className } = value.quoteRef || {};
 
-			return (
-				<QuoteRefBlock
-					quote={quoteTitle}
-					image={quoteImage}
-					className={className}
-				/>
-			);
-		},
-	},
+      return (
+        <QuoteRefBlock
+          quote={quoteTitle}
+          image={quoteImage}
+          className={className}
+        />
+      );
+    },
+  },
 };
 
 const VideoTemplate = {
-	block: {
-		normal: (props) => <NormalText {...props} theme="light" />,
-		h1: (props) => <Heading level={1} {...props} theme="light" />,
-		h2: (props) => <Heading level={2} {...props} theme="light" />,
-		h3: (props) => <Heading level={3} {...props} theme="light" />,
-	},
-	list: {
-		bullet: (props) => <List type="bullet" {...props} theme="light" />,
-		number: (props) => <List type="number" {...props} theme="light" />,
-	},
+  block: {
+    normal: (props) => <NormalText {...props} theme="light" />,
+    h1: (props) => <Heading level={1} {...props} theme="light" />,
+    h2: (props) => <Heading level={2} {...props} theme="light" />,
+    h3: (props) => <Heading level={3} {...props} theme="light" />,
+  },
+  list: {
+    bullet: (props) => <List type="bullet" {...props} theme="light" />,
+    number: (props) => <List type="number" {...props} theme="light" />,
+  },
 };
 
 const TeamTemplate = {
-	block: {
-		normal: (props) => <NormalText {...props} theme="dark" />,
-		h1: (props) => <Heading level={1} {...props} theme="dark" />,
-		h2: (props) => <Heading level={2} {...props} theme="dark" />,
-		h3: (props) => <Heading level={3} {...props} theme="dark" />,
-	},
-	list: {
-		bullet: (props) => <List type="bullet" {...props} theme="dark" />,
-		number: (props) => <List type="number" {...props} theme="dark" />,
-	},
+  block: {
+    normal: (props) => <NormalText {...props} theme="dark" />,
+    h1: (props) => <Heading level={1} {...props} theme="dark" />,
+    h2: (props) => <Heading level={2} {...props} theme="dark" />,
+    h3: (props) => <Heading level={3} {...props} theme="dark" />,
+  },
+  list: {
+    bullet: (props) => <List type="bullet" {...props} theme="dark" />,
+    number: (props) => <List type="number" {...props} theme="dark" />,
+  },
 };
 
-export { DarkTemplate, LightTemplate, TeamTemplate, VideoTemplate };
+const PortfolioTemplate = {
+  block: {
+    normal: (props) => <NormalText {...props} theme="portfolio" />,
+    h1: (props) => <Heading level={1} {...props} theme="portfolio" />,
+    h2: (props) => <Heading level={2} {...props} theme="portfolio" />,
+    h3: (props) => <Heading level={3} {...props} theme="portfolio" />,
+  },
+  list: {
+    bullet: (props) => <List type="bullet" {...props} theme="portfolio" />,
+    number: (props) => <List type="number" {...props} theme="portfolio" />,
+  },
+  marks: {
+    internalLink: ({ value, children }) => (
+      <InternalLink internalLink={value} children={children} />
+    ),
+  },
+  types: {
+    postsRef: ({ value }) => <PostsRefBlock postsRef={value.postsRef} />,
+    videoRef: ({ value }) => {
+      const { videoTitle, videoUrl, className } = value.videoRef;
+      return (
+        <VideoRefBlock
+          videoTitle={videoTitle}
+          videoUrl={videoUrl}
+          className={className}
+        />
+      );
+    },
+    spline: ({ value }) => {
+      const { url } = value;
+      return <SplineRefBlock url={url} />;
+    },
+    imageRef: ({ value }) => {
+      const { image, className } = value;
+      return <ImageRefBlock image={image} className={className} />;
+    },
+    audioRef: ({ value }) => {
+      const { audioTitle, audioFileUrl } = value.audioRefData || {};
+      return (
+        <AudioRefBlock audioFileUrl={audioFileUrl} audioTitle={audioTitle} />
+      );
+    },
+    quoteRef: ({ value }) => {
+      const { quoteTitle, quoteImage, className } = value.quoteRef || {};
+      return (
+        <QuoteRefBlock
+          quote={quoteTitle}
+          image={quoteImage}
+          className={className}
+        />
+      );
+    },
+  },
+};
+
+export {
+  DarkTemplate,
+  LightTemplate,
+  TeamTemplate,
+  VideoTemplate,
+  PortfolioTemplate,
+};

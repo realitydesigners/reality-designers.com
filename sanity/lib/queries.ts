@@ -8,6 +8,7 @@ const blockFragment = groq`
   image,
   tags,
   layout,
+  theme,
   title,
   publicationDate,
   team->{

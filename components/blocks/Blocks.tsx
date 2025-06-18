@@ -23,14 +23,15 @@ export interface ContentBlockProps {
     content: PortableTextBlock[];
     className?: string;
     layout?: LayoutTheme;
+    theme?: string;
   };
   layout?: string | undefined;
   theme?: string | undefined;
 }
 
-export type LayoutTheme = "dark" | "light" | "team" | "video";
+export type LayoutTheme = "dark" | "light" | "team" | "video" | "portfolio";
 
-export type TemplateTheme = "dark" | "light" | "transparent";
+export type TemplateTheme = "dark" | "light" | "transparent" | "portfolio";
 export interface ThemeProps {
   textColor?: string;
   isInset?: boolean;
@@ -60,6 +61,7 @@ const Blocks: React.FC<{ block: BlockProps }> = ({ block }) => {
     block: { ...block, layout: block.layout, className: block.layout },
   };
 
+  console.log(BlockProps);
   return (
     <div className="relative w-full">
       <BlockComponent {...BlockProps} />
