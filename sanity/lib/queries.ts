@@ -169,6 +169,86 @@ export const postsBySlugQuery = groq`
 }
 `;
 
+export const portfolioQuery = groq`
+ *[_type == "portfolio"] | order(publishedAt desc, _createdAt desc)[0...40] {
+    _id,
+    title,
+    subtitle,
+    description,
+    slug,
+    category,
+    featured,
+    image {
+      asset-> {
+        url
+      },
+      alt
+    },
+    technologies,
+    client,
+    year,
+    liveUrl,
+    githubUrl,
+    splineScene,
+    team[]-> {
+      name,
+      role,
+      image
+    },
+    publishedAt
+ }`;
+
+export const portfolioBySlugQuery = groq`
+*[_type == "portfolio" && slug.current == $slug][0] {
+    _id,
+    title,
+    subtitle,
+    description,
+    slug,
+    category,
+    featured,
+    image {
+      asset-> {
+        url
+      },
+      alt
+    },
+    gallery[] {
+      asset-> {
+        url
+      },
+      alt,
+      caption
+    },
+    technologies,
+    client,
+    year,
+    liveUrl,
+    githubUrl,
+    splineScene,
+    block[] {
+        ${blockFragment}
+        _type == "imageCanvasBlock" => {
+            layout,
+            image->,
+            ${teamFragment}
+            alt,
+        },
+        ${imageRefFragment}
+        ${contentFragment}
+    },
+    team[]-> {
+      _id,
+      name,
+      role,
+      shortBio,
+      image,
+      slug
+    },
+    publishedAt
+}
+`;
+
 export const categoryQuery = groq`
 *[_type == "category"] {
    _id,

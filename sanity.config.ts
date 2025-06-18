@@ -18,6 +18,7 @@ import {
   img,
   library,
   model,
+  portfolio,
   posts,
   quote,
   team,
@@ -27,8 +28,6 @@ import { myTheme } from "@/sanity/ui/theme";
 
 import { CustomItem } from "@/sanity/ui/CustomItem";
 import { CustomField } from "@/sanity/ui/CustomField";
-
-import { vercelDeployTool } from "sanity-plugin-vercel-deploy";
 
 const title =
   process.env.NEXT_PUBLIC_SANITY_PROJECT_TITLE || "Reality Designers";
@@ -41,6 +40,7 @@ export default defineConfig({
   schema: {
     types: [
       posts,
+      portfolio,
       img,
       audio,
       video,
@@ -64,11 +64,5 @@ export default defineConfig({
     },
   },
   theme: myTheme,
-  plugins: [
-    structureTool({}),
-
-    visionTool({ defaultApiVersion: apiVersion }),
-    // biome-ignore lint/suspicious/noExplicitAny: <explanation>
-    vercelDeployTool() as any,
-  ],
+  plugins: [structureTool({}), visionTool({ defaultApiVersion: apiVersion })],
 });
