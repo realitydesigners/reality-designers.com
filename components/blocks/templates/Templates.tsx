@@ -37,7 +37,7 @@ const Heading: React.FC<{
   theme: TemplateTheme;
 }> = React.memo(({ level, children, theme }) => {
   const className = headingStyles[theme];
-  const Tag = `h${level}` as keyof JSX.IntrinsicElements;
+  const Tag = `h${level}` as any;
   return (
     <div className="flex w-full justify-center p-3">
       {React.createElement(Tag, { className }, children)}
