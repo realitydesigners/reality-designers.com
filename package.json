@@ -22,6 +22,8 @@
     "@splinetool/react-spline": "^4.0.0",
     "@splinetool/runtime": "^1.10.7",
     "@splinetool/viewer": "^1.10.7",
+    "@supabase/ssr": "^0.6.1",
+    "@supabase/supabase-js": "^2.50.0",
     "@tailwindcss/typography": "0.5.10",
     "@vercel/analytics": "1.2.0",
     "aframe": "1.5.0",
