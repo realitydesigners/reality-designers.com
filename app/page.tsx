@@ -1,5 +1,5 @@
 import { Metadata } from "next";
-import ServicesHeroSection from "@/components/sections/ServicesHeroSection";
+import ServicesHeroSection from "@/components/sections/HomePageHeroSection";
 import NewsletterSignup from "@/components/forms/NewsletterSignup";
 import BlogPostsSection from "@/components/sections/BlogPostsSection";
 import { sanityFetch } from "@/sanity/lib/client";

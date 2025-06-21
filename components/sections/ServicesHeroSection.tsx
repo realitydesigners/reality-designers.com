@@ -1,513 +1,376 @@
 "use client";
-import { useState, useEffect, useRef, useCallback } from "react";
-import Spline from "@splinetool/react-spline";
-import Button from "@/components/ui/Button";
-import { floatingCards } from "@/constants";
-
-// Advanced particle system with stable initial state for SSR
+import { useState, useEffect, useRef } from "react";
+import { serviceCategories } from "@/constants/services-data";
 
 export default function ServicesHeroSection() {
-	const [scrollY, setScrollY] = useState(0);
-	const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
-	const [visibleCards, setVisibleCards] = useState<number[]>([]);
-	const [isLoaded, setIsLoaded] = useState(false);
-	const [scrollProgress, setScrollProgress] = useState(0);
-	const containerRef = useRef<HTMLDivElement>(null);
-	const heroRef = useRef<HTMLDivElement>(null);
+  const [isLoaded, setIsLoaded] = useState(false);
+  const [hoveredCategory, setHoveredCategory] = useState<string | null>(null);
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const [scrollProgress, setScrollProgress] = useState(0);
+  const [mouseParallaxX, setMouseParallaxX] = useState(0);
+  const [mouseParallaxY, setMouseParallaxY] = useState(0);
+  const containerRef = useRef<HTMLDivElement>(null);
 
-	// Advanced scroll handling with performance optimization and scroll progress
-	useEffect(() => {
-		let ticking = false;
-		const handleScroll = () => {
-			if (!ticking) {
-				requestAnimationFrame(() => {
-					const currentScrollY = window.scrollY;
-					setScrollY(currentScrollY);
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsLoaded(true);
+    }, 100);
+    return () => clearTimeout(timer);
+  }, []);
 
-					// Calculate scroll progress for smooth transitions
-					const heroHeight = window.innerHeight;
-					const progress = Math.min(currentScrollY / heroHeight, 1);
-					setScrollProgress(progress);
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      if (containerRef.current) {
+        const rect = containerRef.current.getBoundingClientRect();
+        setMousePosition({
+          x: ((e.clientX - rect.left) / rect.width) * 100,
+          y: ((e.clientY - rect.top) / rect.height) * 100,
+        });
 
-					ticking = false;
-				});
-				ticking = true;
-			}
-		};
+        // Mouse parallax for grid animation (matching ServicesHeroSection)
+        const x = ((e.clientX - rect.left) / rect.width) * 100;
+        const y = ((e.clientY - rect.top) / rect.height) * 100;
+        setMouseParallaxX((x - 50) * 0.02);
+        setMouseParallaxY((y - 50) * 0.02);
+      }
+    };
 
-		window.addEventListener("scroll", handleScroll, { passive: true });
-		return () => window.removeEventListener("scroll", handleScroll);
-	}, []);
+    const container = containerRef.current;
+    if (container) {
+      container.addEventListener("mousemove", handleMouseMove);
+      return () => container.removeEventListener("mousemove", handleMouseMove);
+    }
+  }, []);
 
-	// Sophisticated mouse tracking with smooth interpolation
-	const handleMouseMove = useCallback((e: MouseEvent) => {
-		if (!containerRef.current) return;
-		const rect = containerRef.current.getBoundingClientRect();
-		const x = ((e.clientX - rect.left) / rect.width) * 100;
-		const y = ((e.clientY - rect.top) / rect.height) * 100;
+  useEffect(() => {
+    const handleScroll = () => {
+      if (containerRef.current) {
+        const rect = containerRef.current.getBoundingClientRect();
+        const elementTop = rect.top;
+        const elementHeight = rect.height;
+        const windowHeight = window.innerHeight;
 
-		setMousePosition({ x, y });
-	}, []);
+        // Calculate scroll progress (0 to 1)
+        const progress = Math.max(
+          0,
+          Math.min(
+            1,
+            (windowHeight - elementTop) / (windowHeight + elementHeight)
+          )
+        );
 
-	useEffect(() => {
-		const container = containerRef.current;
-		if (!container) return;
+        setScrollProgress(progress);
+      }
+    };
 
-		container.addEventListener("mousemove", handleMouseMove, { passive: true });
-		return () => container.removeEventListener("mousemove", handleMouseMove);
-	}, [handleMouseMove]);
+    window.addEventListener("scroll", handleScroll);
+    handleScroll(); // Initial calculation
 
-	// Enhanced entrance animations
-	useEffect(() => {
-		const timer = setTimeout(() => {
-			setIsLoaded(true);
-		}, 100);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
-		return () => clearTimeout(timer);
-	}, []);
+  const scrollToSection = (targetSection: string) => {
+    const element = document.querySelector(`[data-section="${targetSection}"]`);
+    if (element) {
+      element.scrollIntoView({ behavior: "smooth" });
+    }
+  };
 
-	// Dynamic floating cards with advanced timing
-	useEffect(() => {
-		// Use deterministic pattern for card visibility to prevent hydration mismatch
-		let visibilityIndex = 0;
-		const visibilityPatterns = [
-			[0, 2, 4], // Show cards 0, 2, 4
-			[1, 3, 5], // Show cards 1, 3, 5
-			[0, 1, 3], // Show cards 0, 1, 3
-			[2, 4, 5], // Show cards 2, 4, 5
-			[1, 2, 4], // Show cards 1, 2, 4
-		];
+  // Smooth scroll-based transformations
+  const scrollTransform = {
+    scale: 1 + scrollProgress * 0.1,
+    opacity: 1 - scrollProgress * 0.3,
+    blur: scrollProgress * 2,
+    gridOpacity: (1 - scrollProgress * 1.2) * 0.4,
+    parallaxIntensity: 1 - scrollProgress * 0.5,
+  };
 
-		const interval = setInterval(() => {
-			const pattern =
-				visibilityPatterns[visibilityIndex % visibilityPatterns.length];
-			const newVisibleCards = floatingCards
-				.filter((card, index) => pattern.includes(index))
-				.map((card) => card.id);
+  return (
+    <section
+      ref={containerRef}
+      className="relative min-h-screen overflow-hidden bg-gradient-to-br from-slate-50 via-white to-blue-50/30"
+      data-theme="light"
+    >
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 pt-32 pb-20">
+        {/* Enhanced Hero Header */}
+        <div className="text-center mb-20">
+          <div
+            className={`inline-flex items-center gap-4 mb-8 p-6 rounded-2xl bg-white/80 border border-white/60 backdrop-blur-xl shadow-2xl opacity-0 ${
+              isLoaded ? "animate-quickFadeIn" : ""
+            }`}
+            style={{ animationDelay: "0.1s" }}
+          >
+            <div className="relative">
+              <div className="w-3 h-3 rounded-full bg-gradient-to-r from-purple-500 to-blue-500 animate-pulse"></div>
+              <div className="absolute inset-0 w-3 h-3 rounded-full bg-gradient-to-r from-purple-500 to-blue-500 blur-sm opacity-60"></div>
+            </div>
+            <span className="font-russo text-sm tracking-[0.4em] uppercase font-black text-transparent bg-gradient-to-r from-gray-800 to-gray-600 bg-clip-text">
+              SERVICE ARCHITECTURE
+            </span>
+            <div className="relative">
+              <div className="w-3 h-3 rounded-full bg-gradient-to-r from-blue-500 to-cyan-500 animate-pulse delay-500"></div>
+              <div className="absolute inset-0 w-3 h-3 rounded-full bg-gradient-to-r from-blue-500 to-cyan-500 blur-sm opacity-60"></div>
+            </div>
+          </div>
 
-			setVisibleCards(newVisibleCards);
-			visibilityIndex++;
-		}, 4000);
+          <h1
+            className={`font-russo text-4xl sm:text-5xl lg:text-8xl font-black mb-8 text-gray-900 leading-[0.9] tracking-tight opacity-0 ${
+              isLoaded ? "animate-digitalReveal" : ""
+            }`}
+            style={{ animationDelay: "0.2s" }}
+          >
+            WE'LL DESIGN YOUR
+            <br />
+            <span className="relative">
+              <span className="text-gray-900">DIGITAL REALITY</span>
+            </span>
+          </h1>
 
-		// Staggered initial appearance
-		floatingCards.forEach((card, index) => {
-			setTimeout(() => {
-				setVisibleCards((prev) => [...prev, card.id]);
-			}, card.delay);
-		});
+          <p
+            className={`text-lg sm:text-xl lg:text-2xl text-gray-600 max-w-4xl mx-auto leading-relaxed font-outfit font-medium opacity-0 ${
+              isLoaded ? "animate-quickFadeIn" : ""
+            }`}
+            style={{ animationDelay: "0.4s" }}
+          >
+            Three dimensions of transformation await. Choose your path to
+            digital evolution and discover services crafted to manifest the
+            impossible.
+          </p>
+        </div>
 
-		return () => clearInterval(interval);
-	}, []);
+        {/* Enhanced Service Categories Grid */}
+        <div className="grid md:grid-cols-3 gap-6 lg:gap-8 mb-20">
+          {serviceCategories.map((category, index) => {
+            // Get the right icon for each category
+            const getIcon = () => {
+              switch (category.id) {
+                case "individual":
+                  return (
+                    <svg
+                      width="28"
+                      height="28"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2.5"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
+                      <rect x="3" y="3" width="7" height="7" />
+                      <rect x="14" y="3" width="7" height="7" />
+                      <rect x="3" y="14" width="7" height="7" />
+                      <rect x="14" y="14" width="7" height="7" />
+                    </svg>
+                  );
+                case "memberships":
+                  return (
+                    <svg
+                      width="28"
+                      height="28"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2.5"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
+                      <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                      <circle cx="9" cy="7" r="4" />
+                      <path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" />
+                    </svg>
+                  );
+                case "packages":
+                  return (
+                    <svg
+                      width="28"
+                      height="28"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2.5"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
+                      <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
+                      <polyline points="3.27,6.96 12,12.01 20.73,6.96" />
+                      <line x1="12" y1="22.08" x2="12" y2="12" />
+                    </svg>
+                  );
+                default:
+                  return (
+                    <svg
+                      width="28"
+                      height="28"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2.5"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
+                      <circle cx="12" cy="12" r="3" />
+                      <path d="M12 1v6m0 6v6m11-7h-6m-6 0H1" />
+                    </svg>
+                  );
+              }
+            };
 
-	const getColorClasses = (color: string) => {
-		const colors = {
-			emerald: {
-				bg: "bg-emerald-500",
-				glow: "shadow-emerald-500/25",
-				border: "border-emerald-500/30",
-			},
-			purple: {
-				bg: "bg-purple-500",
-				glow: "shadow-purple-500/25",
-				border: "border-purple-500/30",
-			},
-			blue: {
-				bg: "bg-blue-500",
-				glow: "shadow-blue-500/25",
-				border: "border-blue-500/30",
-			},
-			pink: {
-				bg: "bg-pink-500",
-				glow: "shadow-pink-500/25",
-				border: "border-pink-500/30",
-			},
-			amber: {
-				bg: "bg-amber-500",
-				glow: "shadow-amber-500/25",
-				border: "border-amber-500/30",
-			},
-			violet: {
-				bg: "bg-violet-500",
-				glow: "shadow-violet-500/25",
-				border: "border-violet-500/30",
-			},
-		};
-		return colors[color as keyof typeof colors] || colors.blue;
-	};
+            const getGlowColor = () => {
+              switch (category.color) {
+                case "emerald":
+                  return "16, 185, 129";
+                case "purple":
+                  return "168, 85, 247";
+                case "blue":
+                  return "59, 130, 246";
+                default:
+                  return "16, 185, 129";
+              }
+            };
 
-	const mouseParallaxX = (mousePosition.x - 50) * 0.02;
-	const mouseParallaxY = (mousePosition.y - 50) * 0.02;
+            return (
+              <div
+                key={category.id}
+                className={`group relative p-6 sm:p-8 lg:p-10 rounded-3xl bg-gradient-to-br ${category.gradient} border-2 border-white/40 hover:border-white/60 transition-all duration-300 ease-out hover:scale-[1.02] hover:-translate-y-2 shadow-2xl hover:shadow-4xl cursor-pointer opacity-0 ${
+                  isLoaded ? "animate-quickFadeIn" : ""
+                }`}
+                style={{
+                  animationDelay: `${0.6 + index * 0.15}s`,
+                  boxShadow:
+                    hoveredCategory === category.id
+                      ? `0 40px 80px -12px rgba(${getGlowColor()}, 0.4), 0 0 0 1px rgba(${getGlowColor()}, 0.1)`
+                      : undefined,
+                }}
+                onMouseEnter={() => setHoveredCategory(category.id)}
+                onMouseLeave={() => setHoveredCategory(null)}
+                onClick={() => scrollToSection(category.targetSection)}
+              >
+                {/* Floating Category Number */}
+                <div className="absolute -top-6 -left-6 w-16 h-16 bg-gradient-to-br from-white via-white to-gray-50 rounded-3xl shadow-2xl flex items-center justify-center transform rotate-12 group-hover:rotate-0 transition-all duration-300 ease-out border-2 border-white/60 z-20">
+                  <span className="font-russo text-xl font-black text-gray-800">
+                    {String(index + 1).padStart(2, "0")}
+                  </span>
+                  <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-white/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                </div>
 
-	// Smooth scroll-based transformations
-	const scrollTransform = {
-		scale: 1 + scrollProgress * 0.1,
-		opacity: 1 - scrollProgress * 0.3,
-		blur: scrollProgress * 2,
-		gridOpacity: (1 - scrollProgress * 1.2) * 0.4,
-		parallaxIntensity: 1 - scrollProgress * 0.5,
-	};
+                {/* Glowing Category Icon */}
+                <div className="mb-6 lg:mb-8 relative z-10">
+                  <div
+                    className={`w-16 h-16 lg:w-20 lg:h-20 rounded-2xl bg-gradient-to-br from-white to-gray-50 border-2 border-white/60 flex items-center justify-center shadow-xl transition-all duration-300 ease-out`}
+                    style={{
+                      boxShadow:
+                        hoveredCategory === category.id
+                          ? `0 20px 40px -8px rgba(${getGlowColor()}, 0.4)`
+                          : undefined,
+                    }}
+                  >
+                    <div className="text-gray-800 group-hover:scale-110 transition-transform duration-300 ease-out">
+                      {getIcon()}
+                    </div>
+                    {hoveredCategory === category.id && (
+                      <div
+                        className="absolute inset-0 rounded-2xl opacity-20 transition-opacity duration-300"
+                        style={{
+                          background: `radial-gradient(circle, rgba(${getGlowColor()}, 0.3) 0%, transparent 70%)`,
+                        }}
+                      ></div>
+                    )}
+                  </div>
+                </div>
 
-	return (
-		<>
-			<section
-				ref={containerRef}
-				className="relative h-auto pt-24 xl:pt-0 xl:h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50/30 overflow-hidden"
-				data-theme="light"
-			>
-				{/* Revolutionary Dynamic Background with Scroll Effects */}
-				<div
-					className="absolute inset-0 pointer-events-none transition-all duration-300 ease-out"
-					style={{
-						transform: `scale(${scrollTransform.scale}) translateZ(0)`,
-						opacity: scrollTransform.opacity,
-						filter: `blur(${scrollTransform.blur}px)`,
-					}}
-				>
-					{/* Revolutionary grid system with scroll morphing */}
-					<div
-						className="absolute inset-0 transition-all duration-500 ease-out"
-						style={{
-							opacity: scrollTransform.gridOpacity,
-							backgroundImage: `
-							linear-gradient(rgba(59, 130, 246, ${0.08 * (1 - scrollProgress)}) 1px, transparent 1px),
-							linear-gradient(90deg, rgba(59, 130, 246, ${
-								0.08 * (1 - scrollProgress)
-							}) 1px, transparent 1px),
-							linear-gradient(rgba(168, 85, 247, ${0.04 * (1 - scrollProgress)}) 1px, transparent 1px),
-							linear-gradient(90deg, rgba(168, 85, 247, ${
-								0.04 * (1 - scrollProgress)
-							}) 1px, transparent 1px)
-						`,
-							backgroundSize: `${120 + scrollProgress * 60}px ${
-								120 + scrollProgress * 60
-							}px, ${120 + scrollProgress * 60}px ${
-								120 + scrollProgress * 60
-							}px, ${40 + scrollProgress * 20}px ${
-								40 + scrollProgress * 20
-							}px, ${40 + scrollProgress * 20}px ${40 + scrollProgress * 20}px`,
-							transform: `translate(${
-								mouseParallaxX * 2 * scrollTransform.parallaxIntensity
-							}px, ${
-								mouseParallaxY * 2 * scrollTransform.parallaxIntensity
-							}px) rotate(${scrollProgress * 5}deg) translateZ(0)`,
-						}}
-					/>
-				</div>
+                {/* Enhanced Category Content */}
+                <div className="relative z-10">
+                  <div className="flex items-center gap-3 mb-3">
+                    <div
+                      className={`w-2 h-2 rounded-full ${
+                        category.color === "purple"
+                          ? "bg-purple-500"
+                          : category.color === "blue"
+                            ? "bg-blue-500"
+                            : "bg-emerald-500"
+                      } shadow-lg`}
+                    ></div>
+                    <span className="font-russo text-xs tracking-[0.3em] uppercase text-gray-600 font-black">
+                      {category.subtitle}
+                    </span>
+                  </div>
 
-				{/* Scroll-triggered overlay for smooth blending */}
-				<div
-					className="absolute inset-0 pointer-events-none transition-all duration-500 ease-out"
-					style={{
-						background: `linear-gradient(180deg, transparent ${
-							(1 - scrollProgress) * 100
-						}%, rgba(248, 250, 252, ${scrollProgress * 0.9}) 100%)`,
-						opacity: scrollProgress,
-					}}
-				/>
+                  <h3 className="font-russo text-2xl lg:text-3xl font-black text-gray-900 mb-4 group-hover:text-gray-800 transition-colors duration-300">
+                    {category.title}
+                  </h3>
 
-				{/* Main Content Container */}
-				<div
-					ref={heroRef}
-					className="relative z-10 h-auto xl:h-screen flex items-center transition-all duration-500 ease-out"
-					style={{
-						transform: `translateY(${scrollProgress * -50}px) translateZ(0)`,
-						opacity: 1 - scrollProgress * 0.6,
-					}}
-				>
-					<div className="w-full px-4 lg:px-32 pt-20">
-						<div className="flex items-center h-full">
-							{/* Left Column - Revolutionary Content */}
-							<div className="w-full xl:w-1/2 space-y-8 xl:space-y-12 text-center xl:text-left">
-								{/* Future Agency Badge - Enhanced */}
-								<div
-									className={`inline-flex items-center gap-4 px-4 py-4 rounded-2xl backdrop-blur-xl bg-white/70 border border-white/30 shadow-2xl transition-all duration-300 hover:shadow-blue-500/20 hover:scale-105 hover:bg-white/80 group opacity-0 ${
-										isLoaded ? "animate-quickFadeIn" : ""
-									}`}
-									style={{ animationDelay: "0.1s" }}
-								>
-									<span className="font-russo text-black text-xs tracking-[0.3em] uppercase font-bold group-hover:text-gray-900 transition-colors">
-										DESIGN AGENCY FROM THE FUTURE
-									</span>
-								</div>
+                  {/* Simplified Content - Always Show Details */}
+                  <div className="mb-6 min-h-[140px] lg:min-h-[160px]">
+                    <p className="text-sm lg:text-base text-gray-700 font-outfit leading-relaxed mb-4 font-medium">
+                      {category.detailedDescription}
+                    </p>
+                    <div className="space-y-2">
+                      {category.highlights.map((highlight, idx) => (
+                        <div
+                          key={idx}
+                          className="flex items-center gap-2 text-xs lg:text-sm text-gray-600"
+                        >
+                          <div
+                            className={`w-1 h-1 rounded-full ${
+                              category.color === "purple"
+                                ? "bg-purple-500"
+                                : category.color === "blue"
+                                  ? "bg-blue-500"
+                                  : "bg-emerald-500"
+                            }`}
+                          ></div>
+                          <span className="font-outfit">{highlight}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
 
-								{/* Revolutionary Headline */}
-								<div className="mb-4">
-									<h1 className="font-russo font-black leading-[0.9] tracking-tight">
-										<div className="overflow-hidden">
-											<span
-												className={`block text-6xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl text-black opacity-0 ${
-													isLoaded ? "animate-digitalReveal" : ""
-												}`}
-												style={{ animationDelay: "0.15s" }}
-											>
-												WE BUILD<br></br> WORLDS FROM
-												<br className="sm:hidden" /> YOUR IDEAS
-											</span>
-										</div>
-									</h1>
-								</div>
+                  {/* Enhanced Stats */}
+                  <div className="grid grid-cols-2 gap-3 lg:gap-4 mb-6">
+                    <div className="text-center p-3 lg:p-4 bg-white/50 rounded-xl backdrop-blur-sm border border-white/40">
+                      <div className="font-russo font-black text-lg lg:text-xl text-gray-900">
+                        {category.services}
+                      </div>
+                      <div className="text-xs text-gray-500 font-outfit">
+                        Services
+                      </div>
+                    </div>
+                    <div className="text-center p-3 lg:p-4 bg-white/50 rounded-xl backdrop-blur-sm border border-white/40">
+                      <div className="font-russo font-black text-xs lg:text-sm text-gray-900">
+                        {category.priceRange}
+                      </div>
+                      <div className="text-xs text-gray-500 font-outfit">
+                        Range
+                      </div>
+                    </div>
+                  </div>
 
-								{/* Mission Statement */}
-								<div
-									className={`max-w-lg mx-auto xl:mx-0 mb-10 opacity-0 ${
-										isLoaded ? "animate-quickFadeIn" : ""
-									}`}
-									style={{ animationDelay: "0.4s" }}
-								>
-									<p className="text-lg sm:text-xl xl:text-2xl text-black leading-tight font-outfit font-medium">
-										Code breakers crafting experiences beyond the ordinary.
-									</p>
-								</div>
+                  {/* Enhanced Explore Button */}
+                  <button className="w-full py-3 lg:py-4 px-4 lg:px-6 bg-gradient-to-r from-white/80 to-white/60 hover:from-white hover:to-white/80 border-2 border-white/60 hover:border-white rounded-2xl font-russo font-black text-sm uppercase tracking-wider text-gray-800 hover:text-gray-900 transition-all duration-300 backdrop-blur-xl shadow-xl hover:shadow-2xl">
+                    <span className="flex items-center justify-center gap-2">
+                      {category.ctaText ||
+                        `EXPLORE ${category.title.toUpperCase()}`}
+                      <span className="transform group-hover:translate-x-1 transition-transform duration-300">
+                        →
+                      </span>
+                    </span>
+                  </button>
+                </div>
 
-								{/* Stats */}
-								<div
-									className={`flex gap-8 sm:gap-12 xl:gap-16 pt-6 border-t border-gray-200 justify-center xl:justify-start opacity-0 ${
-										isLoaded ? "animate-scanlineReveal" : ""
-									}`}
-									style={{ animationDelay: "0.6s" }}
-								>
-									<div className="text-center xl:text-left">
-										<div className="text-3xl sm:text-4xl font-russo font-black text-black mb-1">
-											∞
-										</div>
-										<div className="text-xs text-gray-500 uppercase tracking-[0.2em] font-russo font-bold">
-											REALITIES
-										</div>
-									</div>
-									<div className="text-center xl:text-left">
-										<div className="text-3xl sm:text-4xl font-russo font-black text-black mb-1">
-											2025
-										</div>
-										<div className="text-xs text-gray-500 uppercase tracking-[0.2em] font-russo font-bold">
-											AWAKENING
-										</div>
-									</div>
-									<div className="text-center xl:text-left">
-										<div className="text-3xl sm:text-4xl font-russo font-black text-black mb-1">
-											01
-										</div>
-										<div className="text-xs text-gray-500 uppercase tracking-[0.2em] font-russo font-bold">
-											COLLECTIVE
-										</div>
-									</div>
-								</div>
-
-								{/* Call to Action */}
-								<div
-									className={`space-y-6 pt-6 opacity-0 ${
-										isLoaded ? "animate-quickFadeIn" : ""
-									}`}
-									style={{ animationDelay: "0.8s" }}
-								>
-									<div className="flex flex-col sm:flex-row gap-4">
-										<Button
-											variant="primary"
-											size="md"
-											theme="light"
-											className="text-base px-8 py-3 font-semibold transform hover:scale-105 transition-all duration-300"
-										>
-											<span className="flex items-center">
-												START PROJECT
-												<svg
-													className="w-4 h-4 ml-2 transform group-hover:translate-x-1 transition-transform duration-300"
-													fill="none"
-													stroke="currentColor"
-													viewBox="0 0 24 24"
-												>
-													<path
-														strokeLinecap="round"
-														strokeLinejoin="round"
-														strokeWidth={2}
-														d="M17 8l4 4m0 0l-4 4m4-4H3"
-													/>
-												</svg>
-											</span>
-										</Button>
-										<Button
-											variant="outline"
-											size="md"
-											theme="light"
-											className="text-base px-8 py-3 font-semibold transform hover:scale-105 transition-all duration-300"
-										>
-											VIEW WORK
-										</Button>
-									</div>
-								</div>
-							</div>
-
-							{/* Spline 3D Scene - Desktop Only */}
-							<div
-								className="hidden xl:block absolute top-0 right-0 w-2/3 h-screen z-10 transition-all duration-500 ease-out"
-								style={{
-									transform: `translate(${mouseParallaxX * 0.5}px, ${
-										mouseParallaxY * 0.5 + scrollProgress * 30
-									}px) scale(${1 - scrollProgress * 0.1}) translateZ(0)`,
-									opacity: 1 - scrollProgress * 0.4,
-								}}
-							>
-								<div className="absolute inset-0 w-full h-full">
-									<Spline scene="https://prod.spline.design/ETshMG9lS-5Ab7VN/scene.splinecode" />
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-
-				{/* Floating Cards - Desktop Only with Scroll Effects */}
-				<div
-					className="hidden xl:block absolute inset-0 pointer-events-none z-50 transition-all duration-500 ease-out"
-					style={{
-						transform: `translateY(${scrollProgress * 100}px) translateZ(0)`,
-						opacity: 1 - scrollProgress * 1.2,
-					}}
-				>
-					{floatingCards.map((card) => (
-						<div
-							key={card.id}
-							className={`absolute backdrop-blur-xl bg-white/95 rounded-2xl max-w-xs transition-all duration-1000 transform hover:scale-110 group cursor-pointer pointer-events-auto hover:rotate-1 ${
-								visibleCards.includes(card.id)
-									? "opacity-100 scale-100 translate-y-0"
-									: "opacity-0 scale-95 translate-y-4"
-							}`}
-							style={{
-								...card.desktopPosition,
-								zIndex: 20,
-								animationDelay: `${card.delay}ms`,
-								transform: `translate(${mouseParallaxX * 0.2}px, ${
-									mouseParallaxY * 0.2 + scrollProgress * 50
-								}px) ${
-									visibleCards.includes(card.id) ? "scale(1)" : "scale(0.95)"
-								} translateZ(0)`,
-								boxShadow: `
-								0 25px 50px -12px rgba(0, 0, 0, 0.15),
-								0 10px 25px -5px rgba(0, 0, 0, 0.1),
-								0 0 0 1px rgba(255, 255, 255, 0.2),
-								inset 0 1px 0 0 rgba(255, 255, 255, 0.3)
-							`,
-							}}
-						>
-							{/* Enhanced card content */}
-							<div className="p-6 relative">
-								{/* Top section with status */}
-								<div className="flex items-center justify-between mb-2">
-									<div className="flex items-center gap-3">
-										<div className="relative">
-											<div
-												className={`w-3 h-3 ${
-													getColorClasses(card.color).bg
-												} rounded-full shadow-lg`}
-											></div>
-											<div
-												className={`absolute inset-0 w-3 h-3 ${
-													getColorClasses(card.color).bg
-												} rounded-full blur-sm opacity-60 animate-pulse`}
-											></div>
-										</div>
-										<span className="font-russo text-[10px] text-gray-400 uppercase tracking-[0.15em] font-bold">
-											{card.status}
-										</span>
-									</div>
-
-									{/* Floating indicator */}
-									<div className="w-2 h-2 bg-gradient-to-r from-blue-400 to-purple-400 rounded-full opacity-60"></div>
-								</div>
-
-								{/* Main content */}
-								<div className="space-y-2">
-									<h3 className="text-base text-gray-900 font-outfit font-semibold leading-tight group-hover:text-black transition-colors">
-										{card.message}
-									</h3>
-									<p className="text-xs text-gray-500 font-outfit">
-										Premium service
-									</p>
-								</div>
-
-								{/* Subtle corner decoration */}
-								<div className="absolute top-3 right-3 w-1 h-1 bg-gray-300 rounded-full opacity-40"></div>
-								<div className="absolute top-5 right-3 w-0.5 h-0.5 bg-gray-300 rounded-full opacity-30"></div>
-							</div>
-						</div>
-					))}
-				</div>
-			</section>
-
-			<section className="xl:hidden relative h-[70vh] xl:min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50/30 overflow-hidden">
-				{/* Mobile Spline Scene */}
-				<div className="relative w-full h-full">
-					<Spline scene="https://prod.spline.design/ETshMG9lS-5Ab7VN/scene.splinecode" />
-				</div>
-
-				{/* Mobile Floating Cards */}
-				<div className="absolute inset-0 pointer-events-none z-50">
-					{floatingCards.map((card) => (
-						<div
-							key={`mobile-${card.id}`}
-							className={`absolute backdrop-blur-xl bg-white/95 rounded-2xl max-w-xs transition-all duration-1000 transform hover:scale-110 group cursor-pointer pointer-events-auto hover:rotate-1 ${
-								visibleCards.includes(card.id)
-									? "opacity-100 scale-100 translate-y-0"
-									: "opacity-0 scale-95 translate-y-4"
-							}`}
-							style={{
-								...card.mobilePosition,
-								zIndex: 20,
-								animationDelay: `${card.delay}ms`,
-								transform: `translate(${mouseParallaxX * 0.1}px, ${
-									mouseParallaxY * 0.1
-								}px) ${
-									visibleCards.includes(card.id) ? "scale(1)" : "scale(0.95)"
-								}`,
-								boxShadow: `
-								0 25px 50px -12px rgba(0, 0, 0, 0.15),
-								0 10px 25px -5px rgba(0, 0, 0, 0.1),
-								0 0 0 1px rgba(255, 255, 255, 0.2),
-								inset 0 1px 0 0 rgba(255, 255, 255, 0.3)
-							`,
-							}}
-						>
-							{/* Enhanced card content */}
-							<div className="p-6 relative">
-								{/* Top section with status */}
-								<div className="flex items-center justify-between mb-2">
-									<div className="flex items-center gap-3">
-										<div className="relative">
-											<div
-												className={`w-3 h-3 ${
-													getColorClasses(card.color).bg
-												} rounded-full shadow-lg`}
-											></div>
-											<div
-												className={`absolute inset-0 w-3 h-3 ${
-													getColorClasses(card.color).bg
-												} rounded-full blur-sm opacity-60 animate-pulse`}
-											></div>
-										</div>
-										<span className="font-russo text-[10px] text-gray-400 uppercase tracking-[0.15em] font-bold">
-											{card.status}
-										</span>
-									</div>
-
-									{/* Floating indicator */}
-									<div className="w-2 h-2 bg-gradient-to-r from-blue-400 to-purple-400 rounded-full opacity-60"></div>
-								</div>
-
-								{/* Main content */}
-								<div className="space-y-2">
-									<h3 className="text-base text-gray-900 font-outfit font-semibold leading-tight group-hover:text-black transition-colors">
-										{card.message}
-									</h3>
-									<p className="text-xs text-gray-500 font-outfit">
-										Premium service
-									</p>
-								</div>
-
-								{/* Subtle corner decoration */}
-								<div className="absolute top-3 right-3 w-1 h-1 bg-gray-300 rounded-full opacity-40"></div>
-								<div className="absolute top-5 right-3 w-0.5 h-0.5 bg-gray-300 rounded-full opacity-30"></div>
-							</div>
-						</div>
-					))}
-				</div>
-			</section>
-		</>
-	);
+                {/* Simplified Hover Effects */}
+                <div
+                  className="absolute inset-0 rounded-3xl opacity-0 group-hover:opacity-100 transition-all duration-300 ease-out -z-10"
+                  style={{
+                    background: `radial-gradient(circle at 50% 50%, rgba(${getGlowColor()}, 0.1) 0%, transparent 70%)`,
+                    filter: "blur(20px)",
+                  }}
+                ></div>
+                <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    </section>
+  );
 }

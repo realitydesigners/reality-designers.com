@@ -1,5 +1,5 @@
 import { Metadata } from "next";
-import HeroNarrativeSection from "@/components/sections/HeroNarrativeSection";
+import HeroNarrativeSection from "@/components/sections/ServicesHeroSection";
 import ServicesNarrativeSection from "@/components/sections/ServicesNarrativeSection";
 import TechnologyShowcaseSection from "@/components/sections/TechnologyShowcaseSection";
 import ProcessTimelineSection from "@/components/sections/ProcessTimelineSection";
@@ -8,6 +8,8 @@ import PortfolioSection from "@/components/sections/PortfolioSection";
 import { sanityFetch } from "@/sanity/lib/client";
 import { portfolioQuery } from "@/sanity/lib/queries";
 import { PortfolioPayload } from "@/types";
+import HomePageHeroSection from "@/components/sections/HomePageHeroSection";
+import ServicesHeroSection from "@/components/sections/ServicesHeroSection";
 
 export const metadata: Metadata = {
   title: "Services | Reality Designers - Digital Experience Architecture",
@@ -40,7 +42,7 @@ export default async function ServicesPage() {
 
   return (
     <main className="min-h-screen">
-      <HeroNarrativeSection />
+      <ServicesHeroSection />
       <ServicesNarrativeSection />
       {/* <ProcessTimelineSection />
       <TechnologyShowcaseSection />

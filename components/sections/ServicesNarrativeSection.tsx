@@ -1,5 +1,10 @@
 "use client";
 import { useState, useEffect, useRef } from "react";
+import {
+  individualServices,
+  communityMemberships,
+  agencyPackages,
+} from "@/constants/services-data";
 
 export default function ServicesNarrativeSection() {
   const [isLoaded, setIsLoaded] = useState(false);
@@ -91,92 +96,7 @@ export default function ServicesNarrativeSection() {
 
           {/* Individual Services Grid */}
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 lg:gap-8">
-            {[
-              {
-                name: "Monthly Article",
-                price: "$25",
-                category: "Content",
-                description:
-                  "800-word exclusive article with exercises & research",
-                gradient: "from-emerald-500/20 to-teal-600/10",
-                borderColor:
-                  "border-emerald-300/40 hover:border-emerald-400/60",
-                glowColor: "emerald-500",
-                categoryColor: "bg-emerald-100 text-emerald-700",
-              },
-              {
-                name: "Guided Meditation",
-                price: "$15",
-                category: "Content",
-                description: "10-15 min exclusive audio with transcript PDF",
-                gradient: "from-emerald-500/20 to-teal-600/10",
-                borderColor:
-                  "border-emerald-300/40 hover:border-emerald-400/60",
-                glowColor: "emerald-500",
-                categoryColor: "bg-emerald-100 text-emerald-700",
-              },
-              {
-                name: "Behind-the-Scenes Video",
-                price: "$35",
-                category: "Content",
-                description: "5-10 min exclusive 1080p walkthrough content",
-                gradient: "from-emerald-500/20 to-teal-600/10",
-                borderColor:
-                  "border-emerald-300/40 hover:border-emerald-400/60",
-                glowColor: "emerald-500",
-                categoryColor: "bg-emerald-100 text-emerald-700",
-              },
-              {
-                name: "Live Workshop",
-                price: "$50",
-                category: "Education",
-                description: "1-hour exclusive live session with replay access",
-                gradient: "from-teal-500/20 to-cyan-600/10",
-                borderColor: "border-teal-300/40 hover:border-teal-400/60",
-                glowColor: "teal-500",
-                categoryColor: "bg-teal-100 text-teal-700",
-              },
-              {
-                name: "Tutorial Creation",
-                price: "$75",
-                category: "Education",
-                description: "15-20 min exclusive tutorial with project files",
-                gradient: "from-teal-500/20 to-cyan-600/10",
-                borderColor: "border-teal-300/40 hover:border-teal-400/60",
-                glowColor: "teal-500",
-                categoryColor: "bg-teal-100 text-teal-700",
-              },
-              {
-                name: "1-on-1 Coaching Call",
-                price: "$150",
-                category: "Coaching",
-                description: "30-min personalized guidance session",
-                gradient: "from-cyan-500/20 to-blue-600/10",
-                borderColor: "border-cyan-300/40 hover:border-cyan-400/60",
-                glowColor: "cyan-500",
-                categoryColor: "bg-cyan-100 text-cyan-700",
-              },
-              {
-                name: "Early Content Access",
-                price: "$20",
-                category: "Perks",
-                description: "48-hour exclusive pre-release window",
-                gradient: "from-blue-500/20 to-indigo-600/10",
-                borderColor: "border-blue-300/40 hover:border-blue-400/60",
-                glowColor: "blue-500",
-                categoryColor: "bg-blue-100 text-blue-700",
-              },
-              {
-                name: "Discord Community Access",
-                price: "$10",
-                category: "Community",
-                description: "Exclusive channels + weekly voice hangouts",
-                gradient: "from-indigo-500/20 to-purple-600/10",
-                borderColor: "border-indigo-300/40 hover:border-indigo-400/60",
-                glowColor: "indigo-500",
-                categoryColor: "bg-indigo-100 text-indigo-700",
-              },
-            ].map((service, index) => (
+            {individualServices.map((service, index) => (
               <div
                 key={service.name}
                 className={`group relative p-6 lg:p-8 rounded-3xl bg-gradient-to-br ${service.gradient} border-2 ${service.borderColor} transition-all duration-700 transform hover:scale-105 hover:-translate-y-4 shadow-2xl hover:shadow-4xl backdrop-blur-sm cursor-pointer opacity-0 ${
@@ -312,64 +232,7 @@ export default function ServicesNarrativeSection() {
 
           {/* Community Membership Tiers - Horizontal Layout */}
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
-            {[
-              {
-                tier: "DREAMER",
-                price: "$10",
-                period: "/mo",
-                savings: "Save $65/mo",
-                includes: [
-                  "Monthly Article ($25 value)",
-                  "Guided Meditation ($15 value)",
-                  "Behind-the-Scenes Video ($35 value)",
-                  "Discord Community Access ($10 value)",
-                  "10% Merch Discount",
-                ],
-                level: "01",
-                gradient: "from-purple-500/15 to-pink-500/10",
-                glowColor: "purple-500",
-                narrative:
-                  "Every dreamer needs the foundation to manifest their vision into reality.",
-              },
-              {
-                tier: "CREATOR",
-                price: "$25",
-                period: "/mo",
-                savings: "Save $160/mo",
-                includes: [
-                  "Everything in Dreamer ($85 value)",
-                  "Live Workshop ($50 value)",
-                  "Tutorial Creation ($75 value)",
-                  "Creator Discord Channel",
-                  "20% Merch + 10% Agency Discount",
-                ],
-                level: "02",
-                gradient: "from-purple-500/20 to-blue-500/15",
-                glowColor: "blue-500",
-                narrative:
-                  "Creators transform inspiration into experiences that touch souls across dimensions.",
-                featured: true,
-              },
-              {
-                tier: "VISIONARY",
-                price: "$50",
-                period: "/mo",
-                savings: "Save $220/mo",
-                includes: [
-                  "Everything in Creator ($210 value)",
-                  "Quarterly Coaching Call ($150 value)",
-                  "Early Content Access ($20 value)",
-                  "VIP Discord + Monthly AMAs",
-                  "Annual Limited-Edition Merch",
-                  "20% Agency Discount",
-                ],
-                level: "03",
-                gradient: "from-purple-500/25 to-indigo-500/20",
-                glowColor: "indigo-500",
-                narrative:
-                  "Visionaries see beyond the veil and architect the impossible into existence.",
-              },
-            ].map((tier, index) => (
+            {communityMemberships.map((tier, index) => (
               <div
                 key={tier.tier}
                 className={`group relative p-6 lg:p-8 rounded-3xl bg-gradient-to-br ${tier.gradient} border-2 border-white/50 hover:border-white/70 transition-all duration-700 transform hover:scale-105 hover:-translate-y-4 shadow-2xl hover:shadow-4xl backdrop-blur-xl cursor-pointer opacity-0 ${
@@ -533,62 +396,7 @@ export default function ServicesNarrativeSection() {
 
           {/* Agency Package Tiers */}
           <div className="space-y-8">
-            {[
-              {
-                package: "VISION STARTER",
-                price: "$5,000",
-                savings: "Save $2,300",
-                includes: [
-                  "Website 3-5 pages ($2,500 value)",
-                  "Hero Animation ($1,200 value)",
-                  "Logo Package ($800 value)",
-                  "Messaging Deck ($800 value)",
-                  "Figma Files + CMS Training",
-                  "Vercel Deployment",
-                ],
-                level: "01",
-                gradient: "from-blue-500/15 to-cyan-500/10",
-                glowColor: "blue-500",
-                narrative:
-                  "Every vision needs a foundation to manifest into digital reality.",
-              },
-              {
-                package: "REALITY ARCHITECT",
-                price: "$15,000",
-                savings: "Save $7,400",
-                includes: [
-                  "Everything in Vision Starter ($5,000 value)",
-                  "Expanded Website 7-10 pages ($4,500 value)",
-                  "2 Custom Animations ($4,000 value)",
-                  "Complete Brand Book ($2,500 value)",
-                  "Social Launch Kit ($600 value)",
-                  "Analytics Setup (GA4 + Hotjar)",
-                ],
-                level: "02",
-                gradient: "from-blue-500/20 to-teal-500/15",
-                glowColor: "teal-500",
-                narrative:
-                  "Architects design the infrastructure where consciousness meets technology.",
-              },
-              {
-                package: "COSMIC CREATOR",
-                price: "$25,000",
-                savings: "Save $12,200",
-                includes: [
-                  "Everything in Reality Architect ($15,000 value)",
-                  "Narrative Strategy Guide ($1,800 value)",
-                  "Custom Music Track ($1,500 value)",
-                  "NFT Artwork ($2,000 value)",
-                  "Signature Animation ($3,500 value)",
-                  "30-Day VIP Support (2 sprints)",
-                ],
-                level: "03",
-                gradient: "from-blue-500/25 to-indigo-500/20",
-                glowColor: "indigo-500",
-                narrative:
-                  "Cosmic creators transcend boundaries and architect impossible realities.",
-              },
-            ].map((pkg, index) => (
+            {agencyPackages.map((pkg, index) => (
               <div
                 key={pkg.package}
                 className={`group relative p-8 lg:p-12 rounded-4xl bg-gradient-to-br ${pkg.gradient} border-3 border-white/50 hover:border-white/70 transition-all duration-700 transform hover:scale-105 hover:-translate-y-6 shadow-2xl hover:shadow-4xl backdrop-blur-xl cursor-pointer opacity-0 ${
